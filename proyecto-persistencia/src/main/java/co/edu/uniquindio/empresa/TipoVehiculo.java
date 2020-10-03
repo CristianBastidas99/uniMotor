@@ -1,0 +1,6 @@
+package co.edu.uniquindio.empresa;
+
+public enum TipoVehiculo {
+
+	MONOVOLUMEN, SEDAN, CUPE, HATCHBACK, DESCAPOTABLE, ROADSTER, FAMILIAR, TODOTERRENO, CROSSOVER, SUV, DEPORTIVO, PICKUP
+}
