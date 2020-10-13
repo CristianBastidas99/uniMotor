@@ -11,7 +11,7 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import co.edu.uniquindio.empresa.Persona;
+import co.edu.uniquindio.empresa.Cliente;
 
 @RunWith(Arquillian.class)
 public class ModeloTest {
@@ -23,7 +23,7 @@ public class ModeloTest {
 	public static Archive<?> createTestArchive() {
 		return ShrinkWrap.create(WebArchive.class,
 
-				"prueba.war").addPackage(Persona.class.getPackage()).addAsResource("persistenceForTest.xml",
+				"prueba.war").addPackage(Cliente.class.getPackage()).addAsResource("persistenceForTest.xml",
 
 						"META-INF/persistence.xml")
 

@@ -1,8 +1,5 @@
 package co.edu.uniquindio.empresa;
 
-import co.edu.uniquindio.empresa.Persona;
-import co.edu.uniquindio.empresa.Vehiculo;
-import co.edu.uniquindio.empresa.VehiculoPersonaPK;
 import java.io.Serializable;
 import java.lang.String;
 import java.util.Date;
@@ -25,9 +22,9 @@ public class Pregunta implements Serializable {
 	private Vehiculo vehiculo;
 
 	@ManyToOne
-	@MapsId("mi_persona")
-	@JoinColumn(name = "codigo_persona", foreignKey = @ForeignKey(name = "FK_persona"))
-	private Persona persona;
+	@MapsId("mi_usuario")
+	@JoinColumn(name = "codigo_usuario", foreignKey = @ForeignKey(name = "FK_usuario"))
+	private Cliente cliente;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "fecha", nullable = false)
@@ -40,6 +37,31 @@ public class Pregunta implements Serializable {
 
 	public Pregunta() {
 		super();
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((llave == null) ? 0 : llave.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Pregunta other = (Pregunta) obj;
+		if (llave == null) {
+			if (other.llave != null)
+				return false;
+		} else if (!llave.equals(other.llave))
+			return false;
+		return true;
 	}
 
 	public VehiculoPersonaPK getLlave() {
@@ -58,12 +80,12 @@ public class Pregunta implements Serializable {
 		this.vehiculo = vehiculo;
 	}
 
-	public Persona getPersona() {
-		return this.persona;
+	public Cliente getPersona() {
+		return this.cliente;
 	}
 
-	public void setPersona(Persona persona) {
-		this.persona = persona;
+	public void setPersona(Cliente cliente) {
+		this.cliente = cliente;
 	}
 
 	public Date getFecha() {
@@ -80,6 +102,20 @@ public class Pregunta implements Serializable {
 
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
+	}
+
+	/**
+	 * @return the cliente
+	 */
+	public Cliente getCliente() {
+		return cliente;
+	}
+
+	/**
+	 * @param cliente the cliente to set
+	 */
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
 	}
 
 }

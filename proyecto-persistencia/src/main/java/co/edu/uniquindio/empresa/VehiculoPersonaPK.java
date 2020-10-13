@@ -12,7 +12,7 @@ import javax.persistence.*;
 public class VehiculoPersonaPK implements Serializable {
 
 	private String mi_vehiculo;
-	private String mi_persona;
+	private String mi_usuario;
 	private static final long serialVersionUID = 1L;
 
 	public VehiculoPersonaPK() {
@@ -23,7 +23,7 @@ public class VehiculoPersonaPK implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((mi_persona == null) ? 0 : mi_persona.hashCode());
+		result = prime * result + ((mi_usuario == null) ? 0 : mi_usuario.hashCode());
 		result = prime * result + ((mi_vehiculo == null) ? 0 : mi_vehiculo.hashCode());
 		return result;
 	}
@@ -37,10 +37,10 @@ public class VehiculoPersonaPK implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		VehiculoPersonaPK other = (VehiculoPersonaPK) obj;
-		if (mi_persona == null) {
-			if (other.mi_persona != null)
+		if (mi_usuario == null) {
+			if (other.mi_usuario != null)
 				return false;
-		} else if (!mi_persona.equals(other.mi_persona))
+		} else if (!mi_usuario.equals(other.mi_usuario))
 			return false;
 		if (mi_vehiculo == null) {
 			if (other.mi_vehiculo != null)
@@ -59,11 +59,11 @@ public class VehiculoPersonaPK implements Serializable {
 	}
 
 	public String getCodigo_persona() {
-		return this.mi_persona;
+		return this.mi_usuario;
 	}
 
 	public void setCodigo_persona(String codigo_persona) {
-		this.mi_persona = codigo_persona;
+		this.mi_usuario = codigo_persona;
 	}
 
 }

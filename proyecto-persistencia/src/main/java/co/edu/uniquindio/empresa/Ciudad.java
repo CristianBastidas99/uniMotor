@@ -15,13 +15,16 @@ public class Ciudad implements Serializable {
 
 	@Id
 	@Column(name = "codigo_ciudad")
-	private int codigo_ciudad;
+	private String codigo_ciudad;
 
 	@Column(name = "nombre", nullable = false)
 	private String nombre;
 
-	@OneToMany(mappedBy = "ciudad")
-	private List<Persona> personas;
+	@OneToMany(mappedBy = "codigo_ciudad")
+	private List<Cliente> clientes;
+
+	@OneToMany(mappedBy = "codigo_ciudad")
+	private List<Vehiculo> vehiculos;
 
 	private static final long serialVersionUID = 1L;
 
@@ -33,7 +36,7 @@ public class Ciudad implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + codigo_ciudad;
+		result = prime * result + ((codigo_ciudad == null) ? 0 : codigo_ciudad.hashCode());
 		return result;
 	}
 
@@ -46,16 +49,19 @@ public class Ciudad implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Ciudad other = (Ciudad) obj;
-		if (codigo_ciudad != other.codigo_ciudad)
+		if (codigo_ciudad == null) {
+			if (other.codigo_ciudad != null)
+				return false;
+		} else if (!codigo_ciudad.equals(other.codigo_ciudad))
 			return false;
 		return true;
 	}
 
-	public int getCodigo_ciudad() {
+	public String getCodigo_ciudad() {
 		return this.codigo_ciudad;
 	}
 
-	public void setCodigo_ciudad(int codigo_ciudad) {
+	public void setCodigo_ciudad(String codigo_ciudad) {
 		this.codigo_ciudad = codigo_ciudad;
 	}
 
@@ -76,15 +82,43 @@ public class Ciudad implements Serializable {
 	/**
 	 * @return the personas
 	 */
-	public List<Persona> getPersonas() {
-		return personas;
+	public List<Cliente> getPersonas() {
+		return clientes;
 	}
 
 	/**
-	 * @param personas the personas to set
+	 * @param clientes the personas to set
 	 */
-	public void setPersonas(List<Persona> personas) {
-		this.personas = personas;
+	public void setPersonas(List<Cliente> clientes) {
+		this.clientes = clientes;
+	}
+
+	/**
+	 * @return the clientes
+	 */
+	public List<Cliente> getClientes() {
+		return clientes;
+	}
+
+	/**
+	 * @param clientes the clientes to set
+	 */
+	public void setClientes(List<Cliente> clientes) {
+		this.clientes = clientes;
+	}
+
+	/**
+	 * @return the vehiculos
+	 */
+	public List<Vehiculo> getVehiculos() {
+		return vehiculos;
+	}
+
+	/**
+	 * @param vehiculos the vehiculos to set
+	 */
+	public void setVehiculos(List<Vehiculo> vehiculos) {
+		this.vehiculos = vehiculos;
 	}
 
 }
