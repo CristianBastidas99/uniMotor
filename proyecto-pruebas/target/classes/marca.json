@@ -1,24 +1,16 @@
 {
-	"imagenes_proyecto": [
+	"marca": [
 		{
-			"codigo_proyecto": "PROY1",
-			"imagen": "imagenes/proyectos/imagen2.jpg"
+			"codigo_marca": "1",
+			"nombre": "Audi"
 		},
 		{
-			"codigo_proyecto": "PROY1",
-			"imagen": "imagenes/proyectos/imagen2.jpg"
+			"codigo_marca": "2",
+			"nombre": "Mazda"
 		},
 		{
-			"codigo_proyecto": "PROY2",
-			"imagen": "imagenes/proyectos/imagen3.jpg"
-		},
-		{
-			"codigo_proyecto": "PROY2",
-			"imagen": "imagenes/proyectos/imagen4.jpg"
-		},
-		{
-			"codigo_proyecto": "PROY3",
-			"imagen": "imagenes/proyectos/imagen5.jpg"
+			"codigo_marca": "3",
+			"nombre": "Renoult"
 		}
 	]
 }
