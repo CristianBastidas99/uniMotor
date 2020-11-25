@@ -1,0 +1,16 @@
+{
+	"caracteristica": [
+		{
+			"codigo_caracteristica": "1",
+			"nombre": "Aire Acondicionado"
+		},
+		{
+			"codigo_caracteristica": "2",
+			"nombre": "Luces Led"
+		},
+		{
+			"codigo_caracteristica": "3",
+			"nombre": "Asientos de Cuero"
+		}
+	]
+}

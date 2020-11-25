@@ -1,0 +1,19 @@
+{
+	"modelo": [
+		{
+			"codigo_modelo": "1",
+			"marca": "Audi",
+			"nombre": "A1"
+		},
+		{
+			"codigo_modelo": "2",
+			"marca": "Mazda",
+			"nombre": "3"
+		},
+		{
+			"codigo_modelo": "3",
+			"marca": "Renoult",
+			"nombre": "4"
+		}
+	]
+}

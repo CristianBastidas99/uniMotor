@@ -1,0 +1,58 @@
+{
+	"vehiculo": [
+		{
+			"codigo_vehiculo": "1",
+			"cilindraje": 2000,
+			"color": "Negro",
+			"condicion": "NUEVO",
+			"descripcion": "Bolido perfectamente cuidado, con menos de mil kilometros, practicamente nuevo",
+			"kilometros": 10000,
+			"numero_puertas": 2,
+			"placa": "VEV592",
+			"precio": 26000000,
+			"tipo_combustible": "GASOLINA",
+			"tipo_trasmision": "MECANICO",
+			"tipo_vehiculo": "CARRO",
+			"year": 2018,
+			"codigo_ciudad": "1",
+			"codigo_dueno": "4",
+			"codigo_modelo": "2"
+		},
+		{
+			"codigo_vehiculo": "2",
+			"cilindraje": 3000,
+			"color": "Gris",
+			"condicion": "USADO",
+			"descripcion": "Modelo viejo pero confiable",
+			"kilometros": 100000,
+			"numero_puertas": 4,
+			"placa": "NCV903",
+			"precio": 6000000,
+			"tipo_combustible": "GASOLINA",
+			"tipo_trasmision": "MECANICO",
+			"tipo_vehiculo": "CARRO",
+			"year": 1990,
+			"codigo_ciudad": "1",
+			"codigo_dueno": "6",
+			"codigo_modelo": "3"
+		},
+		{
+			"codigo_vehiculo": "3",
+			"cilindraje": 2500,
+			"color": "Azul Claro",
+			"condicion": "NUEVO",
+			"descripcion": "Elegante sedan con la mas alta comodidad",
+			"kilometros": 0,
+			"numero_puertas": 2,
+			"placa": "NO TIENE",
+			"precio": 64000000,
+			"tipo_combustible": "GASOLINA",
+			"tipo_trasmision": "AUTOMATICO",
+			"tipo_vehiculo": "CARRO",
+			"year": 2020,
+			"codigo_ciudad": "2",
+			"codigo_dueno": "4",
+			"codigo_modelo": "1"
+		}
+	]
+}

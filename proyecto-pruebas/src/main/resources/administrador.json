@@ -1,22 +1,16 @@
 {
 	"administrador": [
 		{
-			"codigo_usuario": "ADMIN1",
-			"email": "cristia@proyecto.com",
-			"nombre_administrador": "Cristian Bastidas",
-			"password": "123"
+			"codigo_usuario": "1",
+			"nombre_administrador": "Cristian Bastidas"
 		},
 		{
-			"codigo_usuario": "ADMIN2",
-			"email": "Jhon@proyecto.com",
-			"nombre_administrador": "Jhon Zambrano",
-			"password": "1234"
+			"codigo_usuario": "2",
+			"nombre_administrador": "Jhon Zambrano"
 		},
 		{
-			"codigo_usuario": "ADMIN3",
-			"email": "profesor@proyecto.com",
-			"nombre_administrador": "Profesor",
-			"password": "444"
+			"codigo_usuario": "3",
+			"nombre_administrador": "Profesor"
 		}
 	]
 }

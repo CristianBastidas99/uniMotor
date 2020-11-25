@@ -1,0 +1,19 @@
+{
+	"telefono_usuario": [
+		{
+			"codigo_usuario": "4",
+			"telefono": "3135638905",
+			"TELEFONO_KEY": "Personal"
+		},
+		{
+			"codigo_usuario": "5",
+			"telefono": "7356789",
+			"TELEFONO_KEY": "Casa"
+		},
+		{
+			"codigo_usuario": "4",
+			"telefono": "3155679045",
+			"TELEFONO_KEY": "Personal 2"
+		}
+	]
+}

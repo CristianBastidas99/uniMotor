@@ -11,40 +11,47 @@ import javax.persistence.*;
  *
  */
 @Entity
-
 public class Vehiculo implements Serializable {
 
 	@Id
 	@Column(name = "codigo_vehiculo")
 	private String codigo_vehiculo;
 
-	@Column(name = "precio", nullable = false)
-	private int precio;
-
 	@Column(name = "descripcion", nullable = false)
 	private String descripcion;
 
 	@Column(name = "color", nullable = false)
 	private String color;
+	
+	@Column(name = "placa", nullable = false)
+	private String placa;
+	
+	@Column(name = "precio", nullable = false)
+	private int precio;
 
 	@Column(name = "year", nullable = false)
 	private int year;
-
+	
+	@Column(name = "cilindraje", nullable = false)
+	private int cilindraje;
+	
+	@Column(name = "numero_puertas")
+	private int numero_puertas;
+	
+	@Column(name = "kilometros", nullable = false)
+	private int kilometros;
+	
 	@JoinColumn(name = "codigo_ciudad", nullable = false)
 	@ManyToOne
 	private Ciudad codigo_ciudad;
 
-	@JoinColumn(name = "codigo_dueño", nullable = false)
+	@JoinColumn(name = "codigo_dueno", nullable = false)
 	@ManyToOne
-	private Cliente codigo_dueño;
+	private Cliente codigo_dueno; 
 
 	@JoinColumn(name = "codigo_venta")
 	@OneToOne(mappedBy = "codigo_vehiculo")
 	private Venta codigo_venta;
-
-	@JoinColumn(name = "codigo_marca", nullable = false)
-	@ManyToOne
-	private Marca codigo_marca;
 
 	@JoinColumn(name = "codigo_modelo", nullable = false)
 	@ManyToOne
@@ -57,7 +64,15 @@ public class Vehiculo implements Serializable {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "tipo_vehiculo", nullable = false)
 	private TipoVehiculo tipo_vehiculo;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "tipo_trasmision", nullable = false)
+	private TipoTrasmision tipo_trasmision;
 
+	@Enumerated(EnumType.STRING)
+	@Column(name = "condicion", nullable = false)
+	private Condicion condicion;
+	
 	@OneToMany(mappedBy = "vehiculo")
 	private List<Pregunta> preguntas;
 
@@ -162,14 +177,14 @@ public class Vehiculo implements Serializable {
 	 * @return the codigo_dueño
 	 */
 	public Cliente getCodigo_dueño() {
-		return codigo_dueño;
+		return codigo_dueno;
 	}
 
 	/**
 	 * @param codigo_dueño the codigo_dueño to set
 	 */
 	public void setCodigo_dueño(Cliente codigo_dueño) {
-		this.codigo_dueño = codigo_dueño;
+		this.codigo_dueno = codigo_dueño;
 	}
 
 	/**
@@ -186,19 +201,6 @@ public class Vehiculo implements Serializable {
 		this.codigo_venta = codigo_venta;
 	}
 
-	/**
-	 * @return the codigo_marca
-	 */
-	public Marca getCodigo_marca() {
-		return codigo_marca;
-	}
-
-	/**
-	 * @param codigo_marca the codigo_marca to set
-	 */
-	public void setCodigo_marca(Marca codigo_marca) {
-		this.codigo_marca = codigo_marca;
-	}
 
 	/**
 	 * @return the codigo_modelo
@@ -297,5 +299,105 @@ public class Vehiculo implements Serializable {
 	public void setCaracteristicas(List<Caracteristica> caracteristicas) {
 		this.caracteristicas = caracteristicas;
 	}
+
+	/**
+	 * @return the placa
+	 */
+	public String getPlaca() {
+		return placa;
+	}
+
+	/**
+	 * @param placa the placa to set
+	 */
+	public void setPlaca(String placa) {
+		this.placa = placa;
+	}
+
+	/**
+	 * @return the cilindraje
+	 */
+	public int getCilindraje() {
+		return cilindraje;
+	}
+
+	/**
+	 * @param cilindraje the cilindraje to set
+	 */
+	public void setCilindraje(int cilindraje) {
+		this.cilindraje = cilindraje;
+	}
+
+	/**
+	 * @return the numero_puertas
+	 */
+	public int getNumero_puertas() {
+		return numero_puertas;
+	}
+
+	/**
+	 * @param numero_puertas the numero_puertas to set
+	 */
+	public void setNumero_puertas(int numero_puertas) {
+		this.numero_puertas = numero_puertas;
+	}
+
+	/**
+	 * @return the kilometros
+	 */
+	public int getKilometros() {
+		return kilometros;
+	}
+
+	/**
+	 * @param kilometros the kilometros to set
+	 */
+	public void setKilometros(int kilometros) {
+		this.kilometros = kilometros;
+	}
+
+	/**
+	 * @return the codigo_dueno
+	 */
+	public Cliente getCodigo_dueno() {
+		return codigo_dueno;
+	}
+
+	/**
+	 * @param codigo_dueno the codigo_dueno to set
+	 */
+	public void setCodigo_dueno(Cliente codigo_dueno) {
+		this.codigo_dueno = codigo_dueno;
+	}
+
+	/**
+	 * @return the tipo_trasmision
+	 */
+	public TipoTrasmision getTipo_trasmision() {
+		return tipo_trasmision;
+	}
+
+	/**
+	 * @param tipo_trasmision the tipo_trasmision to set
+	 */
+	public void setTipo_trasmision(TipoTrasmision tipo_trasmision) {
+		this.tipo_trasmision = tipo_trasmision;
+	}
+
+	/**
+	 * @return the condicion
+	 */
+	public Condicion getCondicion() {
+		return condicion;
+	}
+
+	/**
+	 * @param condicion the condicion to set
+	 */
+	public void setCondicion(Condicion condicion) {
+		this.condicion = condicion;
+	}
+	
+	
 
 }

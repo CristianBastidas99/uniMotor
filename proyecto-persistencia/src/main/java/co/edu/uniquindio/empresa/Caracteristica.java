@@ -11,6 +11,9 @@ import javax.persistence.*;
  *
  */
 @Entity
+@NamedQueries({
+	@NamedQuery(name = Caracteristica.FIND_BY_ID, query = "select c from Caracteristica c where c.nombre = :nombre"),
+	@NamedQuery(name = Caracteristica.GETALL, query = "select c from Caracteristica c") })
 
 public class Caracteristica implements Serializable {
 
@@ -26,6 +29,8 @@ public class Caracteristica implements Serializable {
 	private List<Vehiculo> vehiculos;
 
 	private static final long serialVersionUID = 1L;
+	public static final String GETALL = "Caracteristica_GetAll";
+	public static final String FIND_BY_ID = "Caracteristica_findById";
 
 	public Caracteristica() {
 		super();

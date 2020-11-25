@@ -1,0 +1,29 @@
+{
+	"pregunta": [
+		{
+			"descripcion": "Cuantos kilometros tiene el coche?",
+			"fecha": "2020-09-24",
+			"codigo_usuario": "5",
+			"codigo_vehiculo": "2"
+		},
+		{
+			"descripcion": "Tiene al dia los papeles?",
+			"fecha": "2020-10-11",
+			"codigo_usuario": "5",
+			"codigo_vehiculo": "1"
+		},
+		{
+			"descripcion": "Viene con rueda de recambio?",
+			"fecha": "2020-09-30",
+			"codigo_usuario": "4",
+			"codigo_vehiculo": "2"
+		},
+		{
+			"descripcion": "Me interesa",
+			"fecha": "2020-10-19",
+			"codigo_usuario": "4",
+			"codigo_vehiculo": "3"
+		}
+		
+	]
+}

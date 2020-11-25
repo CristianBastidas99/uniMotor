@@ -1,0 +1,16 @@
+{
+	"caracteristica_vehiculo": [
+		{
+			"codigo_caracteristica": "1",
+			"codigo_vehiculo": "3"
+		},
+		{
+			"codigo_caracteristica": "1",
+			"codigo_vehiculo": "1"
+		},
+		{
+			"codigo_caracteristica": "2",
+			"codigo_vehiculo": "2"
+		}
+	]
+}

@@ -1,0 +1,22 @@
+{
+	"cliente": [
+		{
+			"codigo_usuario": "4",
+			"direccion": "B/ la clarita Mz F #45",
+			"nombre_completo": "Hector Rodriguez",
+			"codigo_ciudad": "1"
+		},
+		{
+			"codigo_usuario": "5",
+			"direccion": "Cra 5 #23-45",
+			"nombre_completo": "Rodolfo el Grande",
+			"codigo_ciudad": "3"
+		},
+		{
+			"codigo_usuario": "6",
+			"direccion": "Calle 2 #10-12",
+			"nombre_completo": "Ruben zuluaga",
+			"codigo_ciudad": "2"
+		}
+	]
+}

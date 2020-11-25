@@ -1,0 +1,40 @@
+{
+	"usuario": [
+		{
+			"codigo_usuario": "1",
+			"DTYPE": "Administrador",
+			"email": "cristia@proyecto.com",
+			"password": "123"
+		},
+		{
+			"codigo_usuario": "2",
+			"DTYPE": "Administrador",
+			"email": "Jhon@proyecto.com",
+			"password": "1234"
+		},
+		{
+			"codigo_usuario": "3",
+			"DTYPE": "Administrador",
+			"email": "profesor@proyecto.com",
+			"password": "444"
+		},
+		{
+			"codigo_usuario": "4",
+			"DTYPE": "Cliente",
+			"email": "usuario1@servidor.com",
+			"password": "12345"
+		},
+		{
+			"codigo_usuario": "5",
+			"DTYPE": "Cliente",
+			"email": "usuario2@servidor.com",
+			"password": "12345"
+		},
+		{
+			"codigo_usuario": "6",
+			"DTYPE": "Cliente",
+			"email": "usuario3@servidor.com",
+			"password": "12345"
+		}
+	]
+}

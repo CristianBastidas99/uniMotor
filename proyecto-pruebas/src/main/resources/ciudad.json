@@ -1,0 +1,16 @@
+{
+	"ciudad": [
+		{
+			"codigo_ciudad": "1",
+			"nombre": "Armenia"
+		},
+		{
+			"codigo_ciudad": "2",
+			"nombre": "Buenavista"
+		},
+		{
+			"codigo_ciudad": "3",
+			"nombre": "Pijao"
+		}
+	]
+}

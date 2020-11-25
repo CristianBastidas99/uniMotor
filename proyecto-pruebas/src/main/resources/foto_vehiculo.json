@@ -1,0 +1,28 @@
+{
+	"foto_vehiculo": [
+		{
+			"codigo_vehiculo": "1",
+			"url_foto": "/imagenes/imagen1.jpg"
+		},
+		{
+			"codigo_vehiculo": "1",
+			"url_foto": "/imagenes/imagen2.jpg"
+		},
+		{
+			"codigo_vehiculo": "2",
+			"url_foto": "/imagenes/imagen3.jpg"
+		},
+		{
+			"codigo_vehiculo": "2",
+			"url_foto": "/imagenes/imagen4.jpg"
+		},
+		{
+			"codigo_vehiculo": "2",
+			"url_foto": "/imagenes/imagen5.jpg"
+		},
+		{
+			"codigo_vehiculo": "3",
+			"url_foto": "/imagenes/imagen6.jpg"
+		}
+	]
+}

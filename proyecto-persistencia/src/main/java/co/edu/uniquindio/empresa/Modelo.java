@@ -11,7 +11,6 @@ import javax.persistence.*;
  *
  */
 @Entity
-
 public class Modelo implements Serializable {
 
 	@Id
@@ -20,6 +19,9 @@ public class Modelo implements Serializable {
 
 	@Column(name = "nombre", nullable = false)
 	private String nombre;
+
+	@Column(name = "marca", nullable = false)
+	private String marca;
 
 	@OneToMany(mappedBy = "codigo_modelo")
 	private List<Vehiculo> vehiculos;
@@ -77,6 +79,20 @@ public class Modelo implements Serializable {
 
 	public void setVehiculos(List<Vehiculo> vehiculos) {
 		this.vehiculos = vehiculos;
+	}
+
+	/**
+	 * @return the marca
+	 */
+	public String getMarca() {
+		return marca;
+	}
+
+	/**
+	 * @param marca the marca to set
+	 */
+	public void setMarca(String marca) {
+		this.marca = marca;
 	}
 
 }

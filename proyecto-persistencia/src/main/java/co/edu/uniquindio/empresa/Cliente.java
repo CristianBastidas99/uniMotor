@@ -36,8 +36,8 @@ public class Cliente extends Usuario implements Serializable {
 	@ManyToMany(mappedBy = "clientes")
 	private List<Vehiculo> vehiculos_favoritos;
 	
-	@OneToMany(mappedBy = "codigo_dueño")
-	private List<Vehiculo> vehiculos_Venta;
+	@OneToMany(mappedBy = "codigo_dueno")
+	private List<Vehiculo> vehiculos_venta;
 	
 	@OneToMany(mappedBy = "codigo_comprador")
 	private List<Venta> mis_compras;

@@ -9,10 +9,8 @@ import javax.persistence.*;
  *
  */
 @Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-@NamedQueries({
-		@NamedQuery(name = Usuario.AUTENTIFICAR_USUARO, query = "select u from Usuario u where u.email = :email and u.password = :password"),
-		@NamedQuery(name = Usuario.AUTENTIFICAR_EMAIL, query = "select u from Usuario u where u.email = :email"), })
+@Inheritance(strategy = InheritanceType.JOINED)
+@MappedSuperclass
 public class Usuario implements Serializable {
 
 	@Id

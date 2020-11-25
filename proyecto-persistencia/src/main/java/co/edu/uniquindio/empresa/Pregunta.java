@@ -18,12 +18,12 @@ public class Pregunta implements Serializable {
 
 	@ManyToOne
 	@MapsId("mi_vehiculo")
-	@JoinColumn(name = "codigo_vehiculo", foreignKey = @ForeignKey(name = "FK_vehiculo"))
+	@JoinColumn(name = "codigo_vehiculo")
 	private Vehiculo vehiculo;
 
 	@ManyToOne
 	@MapsId("mi_usuario")
-	@JoinColumn(name = "codigo_usuario", foreignKey = @ForeignKey(name = "FK_usuario"))
+	@JoinColumn(name = "codigo_usuario")
 	private Cliente cliente;
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -37,31 +37,6 @@ public class Pregunta implements Serializable {
 
 	public Pregunta() {
 		super();
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((llave == null) ? 0 : llave.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Pregunta other = (Pregunta) obj;
-		if (llave == null) {
-			if (other.llave != null)
-				return false;
-		} else if (!llave.equals(other.llave))
-			return false;
-		return true;
 	}
 
 	public VehiculoPersonaPK getLlave() {
