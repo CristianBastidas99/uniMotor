@@ -70,9 +70,8 @@ public class NegocioTest {
 	public void autentificarUsuarioTest(String email, String password) throws Exception {
 		// TODO Auto-generated method stub
 		
-		//System.out.print(personaEJB.autentificarAdministrador("cfbastidaso@uqvirtual.edu.co", "12345"));
 		try {
-			System.out.print(personaEJB.autentificarUsuario("cristia@proyecto.com", "123"));
+			System.out.print(personaEJB.autentificarUsuario("cristia@proyecto.coom", "123"));
 		} catch (AutentificacionEcxeption e) {
 			// TODO: handle exception
 			e.printStackTrace();

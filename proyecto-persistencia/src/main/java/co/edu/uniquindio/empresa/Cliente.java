@@ -12,7 +12,9 @@ import javax.persistence.*;
  *
  */
 @Entity
-
+@NamedQueries({
+	@NamedQuery(name = Cliente.FIND_BY_ID, query = "select c from Cliente c where c.codigo_usuario = :codigo"),
+	@NamedQuery(name = Cliente.GETALL, query = "select c from Cliente c") })
 public class Cliente extends Usuario implements Serializable {
 
 	@Column(name = "nombre_completo", nullable = false)
@@ -27,7 +29,7 @@ public class Cliente extends Usuario implements Serializable {
 	private Map<String, String> telefono;
 
 	@JoinColumn(name = "codigo_ciudad", nullable = false)
-	@ManyToOne
+	@ManyToOne 
 	private Ciudad codigo_ciudad;
 
 	@OneToMany(mappedBy = "cliente")
@@ -43,6 +45,14 @@ public class Cliente extends Usuario implements Serializable {
 	private List<Venta> mis_compras;
 
 	private static final long serialVersionUID = 1L;
+	public static final String LISTA_FAVORITO_CLIENTE = "Cliente_ListaFavorito";
+	public static final String LISTA_FAVORITO_CLIENTE2 = "Cliente_ListaFavorito2";
+	public static final String LISTA_FAVORITO_CLIENTE_JOIN = "Cliente_ListaFavoritoJoin";
+	public static final String LISTA_VEHICULOS_VENTA = "Cliente_ListaVehiculosVenta";
+	public static final String LISTA_CIUDAD_CLIENTE = "Cliente_ListaCiudad";
+	public static final String FIND_BY_ID = "Cliente_findById";
+	public static final String GETALL = "Cliente_GetAll";
+
 
 	public Cliente() {
 		super();

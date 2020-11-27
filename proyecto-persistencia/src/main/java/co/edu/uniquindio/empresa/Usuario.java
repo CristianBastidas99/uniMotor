@@ -30,6 +30,7 @@ public class Usuario implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public static final String AUTENTIFICAR_USUARO = "Usuario_Auntentificar";
 	public static final String AUTENTIFICAR_EMAIL = "Usuario_AutentificarEmail";
+	
 
 	public Usuario() {
 		super();
