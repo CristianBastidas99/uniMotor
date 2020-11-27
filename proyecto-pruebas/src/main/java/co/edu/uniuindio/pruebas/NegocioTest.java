@@ -17,6 +17,7 @@ import org.junit.runner.RunWith;
 import co.edu.uniquindio.empresa.Usuario;
 import co.edu.uniquindio.empresa.Vehiculo;
 import co.edu.uniquinio.unimotor.ejb.PersonaEJB;
+import co.edu.uniquinio.unimotor.excepciones.AutentificacionEcxeption;
 
 @RunWith(Arquillian.class)
 public class NegocioTest {
@@ -66,11 +67,16 @@ public class NegocioTest {
 		"usuario.json",
 		"vehiculo.json",
 		"venta.json"})
-	public void autentificarAdministradorTest(String email, String password) throws Exception {
+	public void autentificarUsuarioTest(String email, String password) throws Exception {
 		// TODO Auto-generated method stub
 		
 		//System.out.print(personaEJB.autentificarAdministrador("cfbastidaso@uqvirtual.edu.co", "12345"));
-		
+		try {
+			personaEJB.autentificarUsuario("cristia@proyecto.com", "123");
+		} catch (AutentificacionEcxeption e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
 	}
 
 }
