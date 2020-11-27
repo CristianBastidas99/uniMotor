@@ -84,4 +84,10 @@ public class Usuario implements Serializable {
 		this.password = password;
 	}
 
+	@Override
+	public String toString() {
+		return "Usuario [codigo_usuario=" + codigo_usuario + ", email=" + email + ", password=" + password + "]";
+	}
+	
+
 }

@@ -72,7 +72,7 @@ public class NegocioTest {
 		
 		//System.out.print(personaEJB.autentificarAdministrador("cfbastidaso@uqvirtual.edu.co", "12345"));
 		try {
-			personaEJB.autentificarUsuario("cristia@proyecto.com", "123");
+			System.out.print(personaEJB.autentificarUsuario("cristia@proyecto.com", "123"));
 		} catch (AutentificacionEcxeption e) {
 			// TODO: handle exception
 			e.printStackTrace();
