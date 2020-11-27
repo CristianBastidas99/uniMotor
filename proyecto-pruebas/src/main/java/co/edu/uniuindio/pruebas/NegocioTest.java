@@ -47,6 +47,25 @@ public class NegocioTest {
 		"usuario.json",
 		"vehiculo.json",
 		"venta.json"})
+	public void generarTest() {
+
+	}
+	
+	@Test
+	@Transactional(value = TransactionMode.ROLLBACK)
+	@UsingDataSet({"modelo.json", 
+		"administrador.json", 
+		"caracteristica.json",
+		"caracteristica_vehiculo.json",
+		"ciudad.json",
+		"cliente.json",
+		"favorito.json",
+		"foto_vehiculo.json",
+		"pregunta.json",
+		"telefono_usuario.json",
+		"usuario.json",
+		"vehiculo.json",
+		"venta.json"})
 	public void autentificarAdministradorTest(String email, String password) throws Exception {
 		// TODO Auto-generated method stub
 		
