@@ -184,12 +184,12 @@ public class EntidadTest {
 			"telefono_usuario.json", "usuario.json", "vehiculo.json", "venta.json" })
 	public void listarFavoritoCLiente() {
 
-		TypedQuery<Object> query = entityManager.createNamedQuery(Cliente.LISTA_FAVORITO_CLIENTE, Object.class);
+		TypedQuery<Vehiculo> query = entityManager.createNamedQuery(Cliente.LISTA_FAVORITO_CLIENTE, Vehiculo.class);
 		query.setParameter("email", "usuario1@servidor.com");
-		List<Object> resultados = query.getResultList();
 
-		System.out.print(resultados);
-
+		for (Vehiculo o : query.getResultList()) {
+			System.out.print(o + "\n");
+		}
 	}
 
 }
