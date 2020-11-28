@@ -165,7 +165,7 @@ public class EntidadTest {
 	@UsingDataSet({ "modelo.json", "administrador.json", "caracteristica.json", "caracteristica_vehiculo.json",
 			"ciudad.json", "cliente.json", "favorito.json", "foto_vehiculo.json", "pregunta.json",
 			"telefono_usuario.json", "usuario.json", "vehiculo.json", "venta.json" })
-	public void obtenerImagenesProyecto() {
+	public void listarCiudadCLiente() {
 
 		TypedQuery<Object[]> query = entityManager.createNamedQuery(Cliente.LISTA_CIUDAD_CLIENTE, Object[].class);
 
@@ -174,6 +174,21 @@ public class EntidadTest {
 			System.out.print(o[0] + " - " + o[1] + "\n");
 
 		}
+
+	}
+
+	@Test
+	@Transactional(value = TransactionMode.ROLLBACK)
+	@UsingDataSet({ "modelo.json", "administrador.json", "caracteristica.json", "caracteristica_vehiculo.json",
+			"ciudad.json", "cliente.json", "favorito.json", "foto_vehiculo.json", "pregunta.json",
+			"telefono_usuario.json", "usuario.json", "vehiculo.json", "venta.json" })
+	public void listarFavoritoCLiente() {
+
+		TypedQuery<Object> query = entityManager.createNamedQuery(Cliente.LISTA_FAVORITO_CLIENTE, Object.class);
+		query.setParameter("email", "usuario1@servidor.com");
+		List<Object> resultados = query.getResultList();
+
+		System.out.print(resultados);
 
 	}
 

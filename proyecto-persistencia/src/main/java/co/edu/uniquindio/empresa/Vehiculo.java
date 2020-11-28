@@ -22,32 +22,32 @@ public class Vehiculo implements Serializable {
 
 	@Column(name = "color", nullable = false)
 	private String color;
-	
+
 	@Column(name = "placa", nullable = false)
 	private String placa;
-	
+
 	@Column(name = "precio", nullable = false)
 	private int precio;
 
 	@Column(name = "year", nullable = false)
 	private int year;
-	
+
 	@Column(name = "cilindraje", nullable = false)
 	private int cilindraje;
-	
+
 	@Column(name = "numero_puertas")
 	private int numero_puertas;
-	
+
 	@Column(name = "kilometros", nullable = false)
 	private int kilometros;
-	
+
 	@JoinColumn(name = "codigo_ciudad", nullable = false)
 	@ManyToOne
 	private Ciudad codigo_ciudad;
 
 	@JoinColumn(name = "codigo_dueno", nullable = false)
 	@ManyToOne
-	private Cliente codigo_dueno; 
+	private Cliente codigo_dueno;
 
 	@JoinColumn(name = "codigo_venta")
 	@OneToOne(mappedBy = "codigo_vehiculo")
@@ -64,7 +64,7 @@ public class Vehiculo implements Serializable {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "tipo_vehiculo", nullable = false)
 	private TipoVehiculo tipo_vehiculo;
-	
+
 	@Enumerated(EnumType.STRING)
 	@Column(name = "tipo_trasmision", nullable = false)
 	private TipoTrasmision tipo_trasmision;
@@ -72,7 +72,7 @@ public class Vehiculo implements Serializable {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "condicion", nullable = false)
 	private Condicion condicion;
-	
+
 	@OneToMany(mappedBy = "vehiculo")
 	private List<Pregunta> preguntas;
 
@@ -200,7 +200,6 @@ public class Vehiculo implements Serializable {
 	public void setCodigo_venta(Venta codigo_venta) {
 		this.codigo_venta = codigo_venta;
 	}
-
 
 	/**
 	 * @return the codigo_modelo
@@ -397,7 +396,11 @@ public class Vehiculo implements Serializable {
 	public void setCondicion(Condicion condicion) {
 		this.condicion = condicion;
 	}
-	
-	
+
+	@Override
+	public String toString() {
+		return "Vehiculo [codigo_vehiculo=" + codigo_vehiculo + ", descripcion=" + descripcion + ", placa=" + placa
+				+ "]";
+	}
 
 }
