@@ -121,4 +121,9 @@ public class Ciudad implements Serializable {
 		this.vehiculos = vehiculos;
 	}
 
+	@Override
+	public String toString() {
+		return "Ciudad [codigo_ciudad=" + codigo_ciudad + ", nombre=" + nombre + "]";
+	}
+
 }
