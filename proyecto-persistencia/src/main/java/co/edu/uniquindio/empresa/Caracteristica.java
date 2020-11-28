@@ -12,14 +12,15 @@ import javax.persistence.*;
  */
 @Entity
 @NamedQueries({
-	@NamedQuery(name = Caracteristica.FIND_BY_ID, query = "select c from Caracteristica c where c.nombre = :nombre"),
-	@NamedQuery(name = Caracteristica.GETALL, query = "select c from Caracteristica c") })
+		@NamedQuery(name = Caracteristica.FIND_BY_ID, query = "select c from Caracteristica c where c.nombre = :nombre"),
+		@NamedQuery(name = Caracteristica.GETALL, query = "select c from Caracteristica c") })
 
 public class Caracteristica implements Serializable {
 
 	@Id
 	@Column(name = "codigo_caracteristica")
-	private String codigo_caracteristica;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long codigo_caracteristica;
 
 	@Column(name = "nombre", nullable = false)
 	private String nombre;
@@ -34,6 +35,11 @@ public class Caracteristica implements Serializable {
 
 	public Caracteristica() {
 		super();
+	}
+
+	public Caracteristica(String nombre) {
+		super();
+		this.nombre = nombre;
 	}
 
 	@Override
@@ -61,11 +67,11 @@ public class Caracteristica implements Serializable {
 		return true;
 	}
 
-	public String getCodigo_caracteristica() {
+	public Long getCodigo_caracteristica() {
 		return this.codigo_caracteristica;
 	}
 
-	public void setCodigo_caracteristica(String codigo_caracteristica) {
+	public void setCodigo_caracteristica(Long codigo_caracteristica) {
 		this.codigo_caracteristica = codigo_caracteristica;
 	}
 

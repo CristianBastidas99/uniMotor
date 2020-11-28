@@ -15,12 +15,13 @@ import javax.persistence.*;
 @NamedQueries({
 		@NamedQuery(name = Cliente.FIND_BY_ID, query = "select c from Cliente c where c.codigo_usuario = :codigo"),
 		@NamedQuery(name = Cliente.GETALL, query = "select c from Cliente c"),
+		@NamedQuery(name = Cliente.CANTIDAD_DE_CLIENTES, query = "select count(c) from Cliente c"),
 		@NamedQuery(name = Cliente.LISTA_FAVORITO_CLIENTE, query = "select f from Cliente c, IN (c.vehiculos_favoritos) f where c.email = :email"),
 		@NamedQuery(name = Cliente.LISTA_FAVORITO_CLIENTE2, query = "select f, c.nombre_completo from Cliente c, IN (c.vehiculos_favoritos) f where c.email = :email"),
 		@NamedQuery(name = Cliente.LISTA_FAVORITO_CLIENTE_JOIN, query = "select f from Cliente c join (c.vehiculos_favoritos) f where c.email = :email"),
 		@NamedQuery(name = Cliente.LISTA_VEHICULOS_VENTA, query = "select c.email, f from Cliente c join (c.vehiculos_venta) f"),
-		@NamedQuery(name = Cliente.LISTA_CIUDAD_CLIENTE, query = "select ci, c from Cliente c join (c.codigo_ciudad) ci ") 
-		
+		@NamedQuery(name = Cliente.LISTA_CIUDAD_CLIENTE, query = "select ci, c from Cliente c join (c.codigo_ciudad) ci ")
+
 })
 public class Cliente extends Usuario implements Serializable {
 
@@ -59,9 +60,27 @@ public class Cliente extends Usuario implements Serializable {
 	public static final String LISTA_CIUDAD_CLIENTE = "Cliente_ListaCiudad";
 	public static final String FIND_BY_ID = "Cliente_findById";
 	public static final String GETALL = "Cliente_GetAll";
+	public static final String CANTIDAD_DE_CLIENTES = "Cliente_NumeroDeClientes";
 
 	public Cliente() {
 		super();
+	}
+
+	/**
+	 * @param email
+	 * @param password
+	 * @param nombre_completo
+	 * @param direccion
+	 * @param telefono
+	 * @param codigo_ciudad
+	 */
+	public Cliente(String email, String password, String nombre_completo, String direccion,
+			Map<String, String> telefono, Ciudad codigo_ciudad) {
+		super(email, password);
+		this.nombre_completo = nombre_completo;
+		this.direccion = direccion;
+		this.telefono = telefono;
+		this.codigo_ciudad = codigo_ciudad;
 	}
 
 	/**
@@ -194,8 +213,8 @@ public class Cliente extends Usuario implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Cliente [nombre_completo=" + nombre_completo + ", direccion=" + direccion + ", telefono=" + telefono.toString()
-				+ ", codigo_ciudad=" + codigo_ciudad.getNombre() + "]";
+		return "Cliente [nombre_completo=" + nombre_completo + ", direccion=" + direccion + ", telefono="
+				+ telefono.toString() + ", codigo_ciudad=" + codigo_ciudad.getNombre() + "]";
 	}
 
 }

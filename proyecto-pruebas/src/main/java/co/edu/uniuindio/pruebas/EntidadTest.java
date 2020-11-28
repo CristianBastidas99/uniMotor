@@ -19,6 +19,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+
 import co.edu.uniquindio.empresa.*;
 
 @RunWith(Arquillian.class)
@@ -47,6 +48,12 @@ public class EntidadTest {
 	public void buscarTests() {
 
 	}
+	
+	@Test
+	@Transactional(value = TransactionMode.ROLLBACK)
+	public void buscarTests2() {
+
+	}
 
 	@Test
 	@Transactional(value = TransactionMode.ROLLBACK)
@@ -57,14 +64,14 @@ public class EntidadTest {
 
 		Administrador miAdministrador = new Administrador();
 
-		miAdministrador.setCodigo_usuario("7");
+		miAdministrador.setCodigo_usuario(7l);
 		miAdministrador.setNombre_administrador("Pepito");
 		miAdministrador.setEmail("pepito@email.com");
 		miAdministrador.setPassword("123");
 
 		entityManager.persist(miAdministrador);
 
-		Administrador administradorbuscado = entityManager.find(Administrador.class, "7");
+		Administrador administradorbuscado = entityManager.find(Administrador.class, 7l);
 
 		Assert.assertEquals("pepito@email.com", administradorbuscado.getEmail());
 
@@ -77,13 +84,13 @@ public class EntidadTest {
 			"telefono_usuario.json", "usuario.json", "vehiculo.json", "venta.json" })
 	public void mergeAdministradorTest() {
 
-		Administrador administradorbuscado = entityManager.find(Administrador.class, "1");
+		Administrador administradorbuscado = entityManager.find(Administrador.class, 1l);
 
 		administradorbuscado.setNombre_administrador("Fabian");
 
 		entityManager.merge(administradorbuscado);
 
-		Administrador miAdministrador = entityManager.find(Administrador.class, "1");
+		Administrador miAdministrador = entityManager.find(Administrador.class, 1l);
 
 		Assert.assertEquals("Fabian", miAdministrador.getNombre_administrador());
 
@@ -96,7 +103,7 @@ public class EntidadTest {
 			"telefono_usuario.json", "usuario.json", "vehiculo.json", "venta.json" })
 	public void removeAdministradorTest() {
 
-		Administrador administradorEliminar = entityManager.find(Administrador.class, "3");
+		Administrador administradorEliminar = entityManager.find(Administrador.class, 3l);
 		entityManager.remove(administradorEliminar);
 
 		TypedQuery<Administrador> query = entityManager.createNamedQuery(Administrador.GETALL, Administrador.class);
@@ -114,12 +121,12 @@ public class EntidadTest {
 
 		Caracteristica miCaracteristica = new Caracteristica();
 
-		miCaracteristica.setCodigo_caracteristica("4");
+		miCaracteristica.setCodigo_caracteristica(4l);
 		miCaracteristica.setNombre("Frenos ABS");
 
 		entityManager.persist(miCaracteristica);
 
-		Caracteristica buscado = entityManager.find(Caracteristica.class, "4");
+		Caracteristica buscado = entityManager.find(Caracteristica.class, 4l);
 
 		Assert.assertEquals("Frenos ABS", buscado.getNombre());
 
@@ -132,13 +139,13 @@ public class EntidadTest {
 			"telefono_usuario.json", "usuario.json", "vehiculo.json", "venta.json" })
 	public void mergeCaracteristicaTest() {
 
-		Caracteristica buscado = entityManager.find(Caracteristica.class, "1");
+		Caracteristica buscado = entityManager.find(Caracteristica.class, 1l);
 
 		buscado.setNombre("Aire Acondicionado");
 
 		entityManager.merge(buscado);
 
-		Caracteristica miCaracteristica = entityManager.find(Caracteristica.class, "1");
+		Caracteristica miCaracteristica = entityManager.find(Caracteristica.class, 1l);
 
 		Assert.assertEquals("Aire Acondicionado", miCaracteristica.getNombre());
 
@@ -151,7 +158,7 @@ public class EntidadTest {
 			"telefono_usuario.json", "usuario.json", "vehiculo.json", "venta.json" })
 	public void removeCaracteristicaTest() {
 
-		Caracteristica eliminar = entityManager.find(Caracteristica.class, "3");
+		Caracteristica eliminar = entityManager.find(Caracteristica.class, 3l);
 		entityManager.remove(eliminar);
 
 		TypedQuery<Caracteristica> query = entityManager.createNamedQuery(Caracteristica.GETALL, Caracteristica.class);
@@ -190,6 +197,29 @@ public class EntidadTest {
 		for (Vehiculo o : query.getResultList()) {
 			System.out.print(o + "\n");
 		}
+	}
+	
+	@Test
+	@Transactional(value = TransactionMode.ROLLBACK)
+	@UsingDataSet({"modelo.json", 
+		"administrador.json", 
+		"caracteristica.json",
+		"caracteristica_vehiculo.json",
+		"ciudad.json",
+		"cliente.json",
+		"favorito.json",
+		"foto_vehiculo.json",
+		"pregunta.json",
+		"telefono_usuario.json",
+		"usuario.json",
+		"vehiculo.json",
+		"venta.json"})
+	public void cantidadDePersonasTest() {
+
+		TypedQuery<Long> query = entityManager.createNamedQuery(Cliente.CANTIDAD_DE_CLIENTES, Long.class);
+
+			System.out.print(query.getSingleResult());
+		
 	}
 
 }

@@ -1,7 +1,6 @@
 package co.edu.uniquindio.empresa;
 
 import java.io.Serializable;
-import java.lang.String;
 import javax.persistence.*;
 
 /**
@@ -11,8 +10,8 @@ import javax.persistence.*;
 @Embeddable
 public class VehiculoPersonaPK implements Serializable {
 
-	private String mi_vehiculo;
-	private String mi_usuario;
+	private Long mi_vehiculo;
+	private Long mi_usuario;
 	private static final long serialVersionUID = 1L;
 
 	public VehiculoPersonaPK() {
@@ -50,19 +49,19 @@ public class VehiculoPersonaPK implements Serializable {
 		return true;
 	}
 
-	public String getCodigo_vehiculo() {
+	public Long getCodigo_vehiculo() {
 		return this.mi_vehiculo;
 	}
 
-	public void setCodigo_vehiculo(String codigo_vehiculo) {
+	public void setCodigo_vehiculo(Long codigo_vehiculo) {
 		this.mi_vehiculo = codigo_vehiculo;
 	}
 
-	public String getCodigo_persona() {
+	public Long getCodigo_persona() {
 		return this.mi_usuario;
 	}
 
-	public void setCodigo_persona(String codigo_persona) {
+	public void setCodigo_persona(Long codigo_persona) {
 		this.mi_usuario = codigo_persona;
 	}
 

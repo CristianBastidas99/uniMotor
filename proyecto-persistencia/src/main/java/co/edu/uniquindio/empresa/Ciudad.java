@@ -15,7 +15,8 @@ public class Ciudad implements Serializable {
 
 	@Id
 	@Column(name = "codigo_ciudad")
-	private String codigo_ciudad;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long codigo_ciudad;
 
 	@Column(name = "nombre", nullable = false)
 	private String nombre;
@@ -30,6 +31,11 @@ public class Ciudad implements Serializable {
 
 	public Ciudad() {
 		super();
+	}
+
+	public Ciudad(String nombre) {
+		super();
+		this.nombre = nombre;
 	}
 
 	@Override
@@ -57,11 +63,11 @@ public class Ciudad implements Serializable {
 		return true;
 	}
 
-	public String getCodigo_ciudad() {
+	public Long getCodigo_ciudad() {
 		return this.codigo_ciudad;
 	}
 
-	public void setCodigo_ciudad(String codigo_ciudad) {
+	public void setCodigo_ciudad(Long codigo_ciudad) {
 		this.codigo_ciudad = codigo_ciudad;
 	}
 

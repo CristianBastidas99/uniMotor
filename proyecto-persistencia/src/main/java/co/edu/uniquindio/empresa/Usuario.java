@@ -12,14 +12,14 @@ import javax.persistence.*;
 @Inheritance(strategy = InheritanceType.JOINED)
 @MappedSuperclass
 @NamedQueries({
-	@NamedQuery(name = Usuario.AUTENTIFICAR_USUARO, query = "select u from Usuario u where u.email = :email and u.password = :password"),
-	@NamedQuery(name = Usuario.AUTENTIFICAR_EMAIL, query = "select u from Usuario u where u.email = :email"),
-	})
+		@NamedQuery(name = Usuario.AUTENTIFICAR_USUARO, query = "select u from Usuario u where u.email = :email and u.password = :password"),
+		@NamedQuery(name = Usuario.AUTENTIFICAR_EMAIL, query = "select u from Usuario u where u.email = :email"), })
 public class Usuario implements Serializable {
 
 	@Id
 	@Column(name = "codigo_usuario")
-	private String codigo_usuario;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long codigo_usuario;
 
 	@Column(name = "email", nullable = false, unique = true)
 	private String email;
@@ -30,10 +30,15 @@ public class Usuario implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public static final String AUTENTIFICAR_USUARO = "Usuario_Auntentificar";
 	public static final String AUTENTIFICAR_EMAIL = "Usuario_AutentificarEmail";
-	
 
 	public Usuario() {
 		super();
+	}
+
+	public Usuario(String email, String password) {
+		super();
+		this.email = email;
+		this.password = password;
 	}
 
 	@Override
@@ -61,11 +66,11 @@ public class Usuario implements Serializable {
 		return true;
 	}
 
-	public String getCodigo_usuario() {
+	public Long getCodigo_usuario() {
 		return this.codigo_usuario;
 	}
 
-	public void setCodigo_usuario(String codigo_usuario) {
+	public void setCodigo_usuario(Long codigo_usuario) {
 		this.codigo_usuario = codigo_usuario;
 	}
 
@@ -89,6 +94,5 @@ public class Usuario implements Serializable {
 	public String toString() {
 		return "Usuario [codigo_usuario=" + codigo_usuario + ", email=" + email + ", password=" + password + "]";
 	}
-	
 
 }

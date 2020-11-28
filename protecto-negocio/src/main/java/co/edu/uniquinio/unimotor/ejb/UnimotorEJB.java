@@ -8,7 +8,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
+import co.edu.uniquindio.empresa.Caracteristica;
+import co.edu.uniquindio.empresa.Ciudad;
+import co.edu.uniquindio.empresa.Modelo;
 import co.edu.uniquindio.empresa.Usuario;
+import co.edu.uniquindio.empresa.Vehiculo;
 import co.edu.uniquinio.unimotor.excepciones.AutentificacionEcxeption;
 
 /**
@@ -16,7 +20,7 @@ import co.edu.uniquinio.unimotor.excepciones.AutentificacionEcxeption;
  */
 @Stateless
 @LocalBean
-public class PersonaEJB implements PersonaEJBRemote {
+public class UnimotorEJB implements UnimotorEJBRemote {
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -24,7 +28,7 @@ public class PersonaEJB implements PersonaEJBRemote {
 	/**
 	 * Default constructor.
 	 */
-	public PersonaEJB() {
+	public UnimotorEJB() {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -69,6 +73,54 @@ public class PersonaEJB implements PersonaEJBRemote {
 		}
 
 		return usuarios.get(0);
+	}
+
+	@Override
+	public void registrarVehiculos(Vehiculo vehiculo) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public List<Vehiculo> obtenerListaVehiculo() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void modificarVehiculos(Vehiculo vehiculo) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void EliminarVehiculos(Vehiculo vehiculo) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public List<Caracteristica> obtenerListaCaracteristica() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Ciudad> obtenerListaCiudad() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Modelo> obtenerListaModelos() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void enviarEmail(String asunto, String mensaje, String destinatario) throws Exception {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

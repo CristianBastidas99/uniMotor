@@ -15,7 +15,8 @@ public class Vehiculo implements Serializable {
 
 	@Id
 	@Column(name = "codigo_vehiculo")
-	private String codigo_vehiculo;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long codigo_vehiculo;
 
 	@Column(name = "descripcion", nullable = false)
 	private String descripcion;
@@ -94,6 +95,47 @@ public class Vehiculo implements Serializable {
 		super();
 	}
 
+	/**
+	 * @param descripcion
+	 * @param color
+	 * @param placa
+	 * @param precio
+	 * @param year
+	 * @param cilindraje
+	 * @param numero_puertas
+	 * @param kilometros
+	 * @param codigo_ciudad
+	 * @param codigo_dueno
+	 * @param codigo_venta
+	 * @param codigo_modelo
+	 * @param tipo_combustible
+	 * @param tipo_vehiculo
+	 * @param tipo_trasmision
+	 * @param condicion
+	 */
+	public Vehiculo(String descripcion, String color, String placa, int precio, int year, int cilindraje,
+			int numero_puertas, int kilometros, Ciudad codigo_ciudad, Cliente codigo_dueno, Venta codigo_venta,
+			Modelo codigo_modelo, TipoCombustible tipo_combustible, TipoVehiculo tipo_vehiculo,
+			TipoTrasmision tipo_trasmision, Condicion condicion) {
+		super();
+		this.descripcion = descripcion;
+		this.color = color;
+		this.placa = placa;
+		this.precio = precio;
+		this.year = year;
+		this.cilindraje = cilindraje;
+		this.numero_puertas = numero_puertas;
+		this.kilometros = kilometros;
+		this.codigo_ciudad = codigo_ciudad;
+		this.codigo_dueno = codigo_dueno;
+		this.codigo_venta = codigo_venta;
+		this.codigo_modelo = codigo_modelo;
+		this.tipo_combustible = tipo_combustible;
+		this.tipo_vehiculo = tipo_vehiculo;
+		this.tipo_trasmision = tipo_trasmision;
+		this.condicion = condicion;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -119,11 +161,11 @@ public class Vehiculo implements Serializable {
 		return true;
 	}
 
-	public String getCodigo_vehiculo() {
+	public Long getCodigo_vehiculo() {
 		return this.codigo_vehiculo;
 	}
 
-	public void setCodigo_vehiculo(String codigo_vehiculo) {
+	public void setCodigo_vehiculo(Long codigo_vehiculo) {
 		this.codigo_vehiculo = codigo_vehiculo;
 	}
 

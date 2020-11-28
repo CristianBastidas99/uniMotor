@@ -15,7 +15,8 @@ public class Venta implements Serializable {
 
 	@Id
 	@Column(name = "codigo_venta")
-	private String codigo_venta;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long codigo_venta;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "fecha", nullable = false)
@@ -33,6 +34,18 @@ public class Venta implements Serializable {
 
 	public Venta() {
 		super();
+	}
+
+	/**
+	 * @param fecha
+	 * @param codigo_vehiculo
+	 * @param codigo_comprador
+	 */
+	public Venta(Date fecha, Vehiculo codigo_vehiculo, Cliente codigo_comprador) {
+		super();
+		this.fecha = fecha;
+		this.codigo_vehiculo = codigo_vehiculo;
+		this.codigo_comprador = codigo_comprador;
 	}
 
 	@Override
@@ -60,11 +73,11 @@ public class Venta implements Serializable {
 		return true;
 	}
 
-	public String getCodigo_venta() {
+	public Long getCodigo_venta() {
 		return this.codigo_venta;
 	}
 
-	public void setCodigo_venta(String codigo_venta) {
+	public void setCodigo_venta(Long codigo_venta) {
 		this.codigo_venta = codigo_venta;
 	}
 

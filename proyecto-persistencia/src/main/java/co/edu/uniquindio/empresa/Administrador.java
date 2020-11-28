@@ -25,6 +25,16 @@ public class Administrador extends Usuario implements Serializable {
 		super();
 	}
 
+	/**
+	 * @param email
+	 * @param password
+	 * @param nombre_administrador
+	 */
+	public Administrador(String email, String password, String nombre_administrador) {
+		super(email, password);
+		this.nombre_administrador = nombre_administrador;
+	}
+
 	public String getNombre_administrador() {
 		return this.nombre_administrador;
 	}

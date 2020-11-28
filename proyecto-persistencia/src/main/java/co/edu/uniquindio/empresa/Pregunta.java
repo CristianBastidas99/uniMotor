@@ -14,6 +14,7 @@ import javax.persistence.*;
 public class Pregunta implements Serializable {
 
 	@EmbeddedId
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private VehiculoPersonaPK llave;
 
 	@ManyToOne
@@ -37,6 +38,14 @@ public class Pregunta implements Serializable {
 
 	public Pregunta() {
 		super();
+	}
+
+	public Pregunta(Vehiculo vehiculo, Cliente cliente, Date fecha, String descripcion) {
+		super();
+		this.vehiculo = vehiculo;
+		this.cliente = cliente;
+		this.fecha = fecha;
+		this.descripcion = descripcion;
 	}
 
 	public VehiculoPersonaPK getLlave() {

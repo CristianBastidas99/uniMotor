@@ -15,7 +15,8 @@ public class Modelo implements Serializable {
 
 	@Id
 	@Column(name = "codigo_modelo")
-	private String codigo_modelo;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long codigo_modelo;
 
 	@Column(name = "nombre", nullable = false)
 	private String nombre;
@@ -30,6 +31,12 @@ public class Modelo implements Serializable {
 
 	public Modelo() {
 		super();
+	}
+
+	public Modelo(String nombre, String marca) {
+		super();
+		this.nombre = nombre;
+		this.marca = marca;
 	}
 
 	@Override
@@ -57,11 +64,11 @@ public class Modelo implements Serializable {
 		return true;
 	}
 
-	public String getCodigo_modelo() {
+	public Long getCodigo_modelo() {
 		return this.codigo_modelo;
 	}
 
-	public void setCodigo_modelo(String codigo_modelo) {
+	public void setCodigo_modelo(Long codigo_modelo) {
 		this.codigo_modelo = codigo_modelo;
 	}
 
