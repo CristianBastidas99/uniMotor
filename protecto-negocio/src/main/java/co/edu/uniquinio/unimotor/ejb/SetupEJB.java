@@ -20,27 +20,27 @@ public class SetupEJB {
 
 	@PersistenceContext
 	private EntityManager entityManager;
-	
-    /**
-     * Default constructor. 
-     */
-    public SetupEJB() {
-        // TODO Auto-generated constructor stub
-    }
-    
-    @PostConstruct
-    public void config() {
-boolean bandera = isAdministrador();
-		
-		if(!bandera) {
-			
+
+	/**
+	 * Default constructor.
+	 */
+	public SetupEJB() {
+		// TODO Auto-generated constructor stub
+	}
+
+	@PostConstruct
+	public void config() {
+		boolean bandera = isAdministrador();
+
+		if (!bandera) {
+
 			Administrador administrador = new Administrador();
-			
+
 			administrador.setCodigo_usuario((long) 1);
 			administrador.setEmail("cristia@proyecto.com");
 			administrador.setNombre_administrador("Cristian Bastidas");
 			administrador.setPassword("123");
-			
+
 			entityManager.persist(administrador);
 		}
 
@@ -57,6 +57,5 @@ boolean bandera = isAdministrador();
 
 		return true;
 	}
-
 
 }
