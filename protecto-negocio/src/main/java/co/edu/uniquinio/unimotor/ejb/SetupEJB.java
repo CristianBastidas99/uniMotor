@@ -24,6 +24,7 @@ public class SetupEJB {
 	/**
 	 * Default constructor.
 	 */
+
 	public SetupEJB() {
 		// TODO Auto-generated constructor stub
 	}
@@ -36,7 +37,7 @@ public class SetupEJB {
 
 			Administrador administrador = new Administrador();
 
-			administrador.setCodigo_usuario((long) 1);
+			administrador.setCodigo_usuario(1l);
 			administrador.setEmail("cristia@proyecto.com");
 			administrador.setNombre_administrador("Cristian Bastidas");
 			administrador.setPassword("123");

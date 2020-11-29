@@ -123,4 +123,10 @@ public class UnimotorEJB implements UnimotorEJBRemote {
 		
 	}
 
+	@Override
+	public List<Vehiculo> obtenerListaVehiculoCiudad() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

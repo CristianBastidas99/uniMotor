@@ -94,7 +94,7 @@
 		</dependency>
 		<dependency>
 			<groupId>co.edu.uniquindio.grid</groupId>
-			<artifactId>protecto-negocio</artifactId>
+			<artifactId>proyecto-negocio</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 			<type>ejb</type>
 		</dependency>

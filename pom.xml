@@ -69,5 +69,6 @@
 		<module>proyecto-pruebas</module>
 		<module>proyecto-ear</module>
 		<module>protecto-negocio</module>
+		<module>proyecto-escritorio</module>
 	</modules>
 </project>

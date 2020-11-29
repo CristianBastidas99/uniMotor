@@ -7,23 +7,22 @@
 		<artifactId>proyecto-padre</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>proyecto-negocio</artifactId>
-	<packaging>ejb</packaging>
-	<name>Proyecto de Negocio</name>
-	<description>Proyecto que representa la capa de negocio EJB</description>
+	<artifactId>proyecto-escritorio</artifactId>
+	<name>Proyecto Escritorio</name>
+	<description>Este proyecto optiene la interfas grafica de usuario para los administradores</description>
 
 	<dependencies>
 		<dependency>
-			<groupId>javax</groupId>
-			<artifactId>javaee-api</artifactId>
-			<version>8.0</version>
-			<scope>provided</scope>
+			<groupId>fish.payara.extras</groupId>
+			<artifactId>payara-embedded-all</artifactId>
+			<version>5.201</version>
+			<type>jar</type>
 		</dependency>
 		<dependency>
 			<groupId>co.edu.uniquindio.grid</groupId>
-			<artifactId>proyecto-persistencia</artifactId>
+			<artifactId>proyecto-negocio</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
+			<type>ejb</type>
 		</dependency>
 	</dependencies>
-
 </project>
