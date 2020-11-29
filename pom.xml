@@ -70,5 +70,6 @@
 		<module>proyecto-ear</module>
 		<module>protecto-negocio</module>
 		<module>proyecto-escritorio</module>
+		<module>proyecto-web</module>
 	</modules>
 </project>

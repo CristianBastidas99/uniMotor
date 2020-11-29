@@ -17,6 +17,7 @@
 			<artifactId>payara-embedded-all</artifactId>
 			<version>5.201</version>
 			<type>jar</type>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>co.edu.uniquindio.grid</groupId>
