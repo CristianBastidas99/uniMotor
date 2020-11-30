@@ -11,6 +11,18 @@ import javax.persistence.*;
  *
  */
 @Entity
+@NamedQueries({
+	@NamedQuery(name = Vehiculo.FIND_BY_ID, query = "select v from Vehiculo v where v.codigo_vehiculo = :codigo"),
+	@NamedQuery(name = Vehiculo.GETALL, query = "select v from Vehiculo v"),
+	@NamedQuery(name = Vehiculo.FIND_BY_PLACA, query = "select v from Vehiculo v where v.placa = :placa"),
+	@NamedQuery(name = Vehiculo.GET_ALL_COLOR, query = "select DISTINCT v.color from Vehiculo v"),
+	@NamedQuery(name = Vehiculo.FIND_BY_COLOR, query = "select v from Vehiculo v where v.color = :color"),
+	@NamedQuery(name = Vehiculo.FIND_BY_MIN_PRECIO, query = "select v from Vehiculo v where v.precio > :precio"),
+	@NamedQuery(name = Vehiculo.FIND_BY_MAX_PRECIO, query = "select v from Vehiculo v where v.precio < :precio"),
+	@NamedQuery(name = Vehiculo.FIND_BY_RANGO_PRECIO, query = "select v from Vehiculo v where v.precio between :precioMin and :precioMax"),
+	@NamedQuery(name = Vehiculo.FIND_BY_ASCENDENTE_PRECIO, query = "select v from Vehiculo v order by v.precio ASC"),
+	@NamedQuery(name = Vehiculo.FIND_BY_DESCENDENTE_PRECIO, query = "select v from Vehiculo v order by v.precio DESC")
+})
 public class Vehiculo implements Serializable {
 
 	@Id
@@ -90,6 +102,16 @@ public class Vehiculo implements Serializable {
 	private List<Caracteristica> caracteristicas;
 
 	private static final long serialVersionUID = 1L;
+	public static final String FIND_BY_ID = "Vehiculo_findById";
+	public static final String GETALL = "Vehiculo_GetAll";
+	public static final String FIND_BY_PLACA = "Vehiculo_findByPlaca";
+	public static final String GET_ALL_COLOR = "Vehiculo_GetAllColor";
+	public static final String FIND_BY_COLOR = "Vehiculo_findByColor";
+	public static final String FIND_BY_MIN_PRECIO = "Vehiculo_findByMinPrecio";
+	public static final String FIND_BY_MAX_PRECIO = "Vehiculo_findByMaxPrecio";
+	public static final String FIND_BY_RANGO_PRECIO = "Vehiculo_findByRangoPrecio";
+	public static final String FIND_BY_ASCENDENTE_PRECIO = "Vehiculo_findByAscendentePrecio";
+	public static final String FIND_BY_DESCENDENTE_PRECIO = "Vehiculo_findByDescendentePrecio";
 
 	public Vehiculo() {
 		super();

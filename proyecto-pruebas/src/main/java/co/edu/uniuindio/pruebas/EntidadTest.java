@@ -221,5 +221,47 @@ public class EntidadTest {
 			System.out.print(query.getSingleResult());
 		
 	}
+	
+	@Test
+	@Transactional(value = TransactionMode.ROLLBACK)
+	@UsingDataSet({ "modelo.json", "administrador.json", "caracteristica.json", "caracteristica_vehiculo.json",
+			"ciudad.json", "cliente.json", "favorito.json", "foto_vehiculo.json", "pregunta.json",
+			"telefono_usuario.json", "usuario.json", "vehiculo.json", "venta.json" })
+	public void listarColoresVehiculo() {
+
+		TypedQuery<String> query = entityManager.createNamedQuery(Vehiculo.GET_ALL_COLOR, String.class);
+
+		for (String o : query.getResultList()) {
+			System.out.print(o + "\n");
+		}
+	}
+	
+	@Test
+	@Transactional(value = TransactionMode.ROLLBACK)
+	@UsingDataSet({ "modelo.json", "administrador.json", "caracteristica.json", "caracteristica_vehiculo.json",
+			"ciudad.json", "cliente.json", "favorito.json", "foto_vehiculo.json", "pregunta.json",
+			"telefono_usuario.json", "usuario.json", "vehiculo.json", "venta.json" })
+	public void listarPrecioAscendente() {
+
+		TypedQuery<Vehiculo> query = entityManager.createNamedQuery(Vehiculo.FIND_BY_ASCENDENTE_PRECIO, Vehiculo.class);
+
+		for (Vehiculo o : query.getResultList()) {
+			System.out.print(o + "\n");
+		}
+	}
+	
+	@Test
+	@Transactional(value = TransactionMode.ROLLBACK)
+	@UsingDataSet({ "modelo.json", "administrador.json", "caracteristica.json", "caracteristica_vehiculo.json",
+			"ciudad.json", "cliente.json", "favorito.json", "foto_vehiculo.json", "pregunta.json",
+			"telefono_usuario.json", "usuario.json", "vehiculo.json", "venta.json" })
+	public void listarPrecioDescendente() {
+
+		TypedQuery<Vehiculo> query = entityManager.createNamedQuery(Vehiculo.FIND_BY_DESCENDENTE_PRECIO, Vehiculo.class);
+
+		for (Vehiculo o : query.getResultList()) {
+			System.out.print(o + "\n");
+		}
+	}
 
 }

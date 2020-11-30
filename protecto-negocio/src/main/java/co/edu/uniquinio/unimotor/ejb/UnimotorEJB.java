@@ -78,7 +78,29 @@ public class UnimotorEJB implements UnimotorEJBRemote {
 	@Override
 	public void registrarVehiculos(Vehiculo vehiculo) throws Exception {
 		// TODO Auto-generated method stub
-		
+		/*
+		 * if (entityManager.find(Vehiculo.class, vehiculo.getCodigo_vehiculo()) !=
+		 * null) { throw new Exception("El Vehiculo ya se encuentra registrado"); } if
+		 * (buscarEmail(usuario.getEmail())) { throw new
+		 * Exception("El email ya se encuentra en uso"); }
+		 * entityManager.persist(usuario);
+		 */
+	}
+	
+	public boolean buscarPlaca(String placa) {
+		boolean bandera = true;
+		/*
+		 * TypedQuery<Vehiculo> query =
+		 * entityManager.createNamedQuery(Usuario.AUTENTIFICAR_EMAIL, Usuario.class);
+		 * query.setParameter("email", email);
+		 * 
+		 * List<Usuario> usuarios = query.getResultList();
+		 * 
+		 * if (usuarios.isEmpty()) {
+		 * 
+		 * bandera = false; }
+		 */
+		return bandera;
 	}
 
 	@Override
