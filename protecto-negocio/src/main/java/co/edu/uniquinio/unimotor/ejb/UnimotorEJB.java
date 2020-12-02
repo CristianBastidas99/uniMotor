@@ -8,8 +8,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
+import co.edu.uniquindio.empresa.Administrador;
 import co.edu.uniquindio.empresa.Caracteristica;
 import co.edu.uniquindio.empresa.Ciudad;
+import co.edu.uniquindio.empresa.Cliente;
 import co.edu.uniquindio.empresa.Modelo;
 import co.edu.uniquindio.empresa.Usuario;
 import co.edu.uniquindio.empresa.Vehiculo;
@@ -34,13 +36,27 @@ public class UnimotorEJB implements UnimotorEJBRemote {
 
 	@Override
 	public void registrarUsuario(Usuario usuario) throws Exception {
-		if (entityManager.find(Usuario.class, usuario.getCodigo_usuario()) != null) {
-			throw new Exception("El usuario ya se encuentra registrado");
+		if (usuario.getCodigo_usuario() != null) {
+			if (entityManager.find(Usuario.class, usuario.getCodigo_usuario()) != null) {
+				throw new Exception("El usuario ya se encuentra registrado");
+			}
 		}
 		if (buscarEmail(usuario.getEmail())) {
 			throw new Exception("El email ya se encuentra en uso");
 		}
 		entityManager.persist(usuario);
+	}
+
+	@Override
+	public void registrarCliente(Cliente cliente) throws Exception {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void registrarAdministrador(Administrador administrador) throws Exception {
+		// TODO Auto-generated method stub
+
 	}
 
 	public boolean buscarEmail(String email) {
@@ -86,7 +102,7 @@ public class UnimotorEJB implements UnimotorEJBRemote {
 		 * entityManager.persist(usuario);
 		 */
 	}
-	
+
 	public boolean buscarPlaca(String placa) {
 		boolean bandera = true;
 		/*
@@ -112,13 +128,13 @@ public class UnimotorEJB implements UnimotorEJBRemote {
 	@Override
 	public void modificarVehiculos(Vehiculo vehiculo) throws Exception {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void EliminarVehiculos(Vehiculo vehiculo) throws Exception {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -142,7 +158,7 @@ public class UnimotorEJB implements UnimotorEJBRemote {
 	@Override
 	public void enviarEmail(String asunto, String mensaje, String destinatario) throws Exception {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override

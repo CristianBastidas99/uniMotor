@@ -16,6 +16,10 @@ public interface UnimotorEJBRemote {
 
 	Usuario autentificarUsuario(String email, String password) throws AutentificacionEcxeption;
 	
+	void registrarCliente(Cliente cliente) throws Exception;
+	
+	void registrarAdministrador(Administrador administrador) throws Exception;
+	
 	void registrarVehiculos(Vehiculo vehiculo) throws Exception;
 	
 	List<Vehiculo> obtenerListaVehiculo();

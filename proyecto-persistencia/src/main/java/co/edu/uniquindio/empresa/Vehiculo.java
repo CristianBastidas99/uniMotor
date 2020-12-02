@@ -21,7 +21,8 @@ import javax.persistence.*;
 	@NamedQuery(name = Vehiculo.FIND_BY_MAX_PRECIO, query = "select v from Vehiculo v where v.precio < :precio"),
 	@NamedQuery(name = Vehiculo.FIND_BY_RANGO_PRECIO, query = "select v from Vehiculo v where v.precio between :precioMin and :precioMax"),
 	@NamedQuery(name = Vehiculo.FIND_BY_ASCENDENTE_PRECIO, query = "select v from Vehiculo v order by v.precio ASC"),
-	@NamedQuery(name = Vehiculo.FIND_BY_DESCENDENTE_PRECIO, query = "select v from Vehiculo v order by v.precio DESC")
+	@NamedQuery(name = Vehiculo.FIND_BY_DESCENDENTE_PRECIO, query = "select v from Vehiculo v order by v.precio DESC"),
+	@NamedQuery(name = Vehiculo.FIND_BY_YEAR, query = "select v from Vehiculo v where v.year = :year")
 })
 public class Vehiculo implements Serializable {
 
@@ -112,6 +113,7 @@ public class Vehiculo implements Serializable {
 	public static final String FIND_BY_RANGO_PRECIO = "Vehiculo_findByRangoPrecio";
 	public static final String FIND_BY_ASCENDENTE_PRECIO = "Vehiculo_findByAscendentePrecio";
 	public static final String FIND_BY_DESCENDENTE_PRECIO = "Vehiculo_findByDescendentePrecio";
+	public static final String FIND_BY_YEAR = "Vehiculo_findByYear";
 
 	public Vehiculo() {
 		super();
@@ -136,7 +138,7 @@ public class Vehiculo implements Serializable {
 	 * @param condicion
 	 */
 	public Vehiculo(String descripcion, String color, String placa, int precio, int year, int cilindraje,
-			int numero_puertas, int kilometros, Ciudad codigo_ciudad, Cliente codigo_dueno, Venta codigo_venta,
+			int numero_puertas, int kilometros, Ciudad codigo_ciudad, Cliente codigo_dueno,
 			Modelo codigo_modelo, TipoCombustible tipo_combustible, TipoVehiculo tipo_vehiculo,
 			TipoTrasmision tipo_trasmision, Condicion condicion) {
 		super();
@@ -150,7 +152,6 @@ public class Vehiculo implements Serializable {
 		this.kilometros = kilometros;
 		this.codigo_ciudad = codigo_ciudad;
 		this.codigo_dueno = codigo_dueno;
-		this.codigo_venta = codigo_venta;
 		this.codigo_modelo = codigo_modelo;
 		this.tipo_combustible = tipo_combustible;
 		this.tipo_vehiculo = tipo_vehiculo;

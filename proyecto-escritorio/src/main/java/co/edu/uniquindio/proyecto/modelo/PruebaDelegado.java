@@ -5,8 +5,10 @@ import java.util.List;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import co.edu.uniquindio.empresa.Administrador;
 import co.edu.uniquindio.empresa.Caracteristica;
 import co.edu.uniquindio.empresa.Ciudad;
+import co.edu.uniquindio.empresa.Cliente;
 import co.edu.uniquindio.empresa.Modelo;
 import co.edu.uniquindio.empresa.Usuario;
 import co.edu.uniquindio.empresa.Vehiculo;
@@ -133,6 +135,18 @@ public class PruebaDelegado implements UnimotorEJBRemote {
 	 */
 	public void enviarEmail(String asunto, String mensaje, String destinatario) throws Exception {
 		unimotorEJB.enviarEmail(asunto, mensaje, destinatario);
+	}
+
+	@Override
+	public void registrarCliente(Cliente cliente) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void registrarAdministrador(Administrador administrador) throws Exception {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
