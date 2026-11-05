@@ -1,0 +1,122 @@
+# ==========================================================
+#  uniMotor - .gitignore
+#  Proyecto Maven multimódulo (Java EE / Payara / JavaFX)
+# ==========================================================
+
+# ----------------------------------------------------------
+# Notas locales (documentación personal, no versionar)
+# ----------------------------------------------------------
+notas/
+
+# ----------------------------------------------------------
+# Maven
+# ----------------------------------------------------------
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+.flattened-pom.xml
+
+# ----------------------------------------------------------
+# Java
+# ----------------------------------------------------------
+*.class
+*.log
+*.ctxt
+hs_err_pid*
+replay_pid*
+
+# Artefactos empaquetados
+*.jar
+*.war
+*.ear
+*.nar
+*.zip
+*.tar.gz
+*.rar
+
+# ----------------------------------------------------------
+# Eclipse (m2e regenera estos archivos al importar
+# el proyecto como "Existing Maven Project")
+# ----------------------------------------------------------
+.metadata/
+.project
+.classpath
+.settings/
+.factorypath
+.apt_generated/
+.apt_generated_tests/
+.recommenders/
+.loadpath
+.externalToolBuilders/
+*.launch
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+
+# ----------------------------------------------------------
+# IntelliJ IDEA
+# ----------------------------------------------------------
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# ----------------------------------------------------------
+# NetBeans
+# ----------------------------------------------------------
+nbproject/private/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+# ----------------------------------------------------------
+# VS Code
+# ----------------------------------------------------------
+.vscode/
+
+# ----------------------------------------------------------
+# Payara / GlassFish (logs y dominios locales)
+# ----------------------------------------------------------
+server.log*
+derby.log
+glassfish/domains/*/logs/
+payara*/glassfish/domains/*/logs/
+
+# ----------------------------------------------------------
+# Sistema operativo
+# ----------------------------------------------------------
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Linux
+*~
+.directory
+
+# ----------------------------------------------------------
+# Configuración local / secretos
+# ----------------------------------------------------------
+.env
+*.env.local
