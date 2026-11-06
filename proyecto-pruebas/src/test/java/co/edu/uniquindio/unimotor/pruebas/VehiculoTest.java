@@ -26,6 +26,10 @@ import co.edu.uniquindio.unimotor.entidades.*;
  * Calificacion. Todas corren en una transaccion con rollback sobre los datasets
  * JSON. Datos usados: clientes 4, 5 y 6; ciudad 1; modelo 1; caracteristicas 1 y 2;
  * vehiculos 1 a 7 (vendidos: 2, 6 y 7); calificaciones 5 a 6, 4 a 6 y 6 a 5.
+ * <p>
+ * Datasets: se cargan los 14 JSON de src/test/resources (modelo, administrador, caracteristica, caracteristica_vehiculo, ciudad, cliente, favorito, foto_vehiculo, pregunta, telefono_usuario, usuario, vehiculo, venta y calificacion) sobre la
+ * base {@code prueba}; cada prueba hace rollback al terminar, por lo que los datos
+ * vuelven siempre al estado del JSON.
  */
 @RunWith(Arquillian.class)
 @UsingDataSet({ Datasets.MODELO, Datasets.ADMINISTRADOR, Datasets.CARACTERISTICA, Datasets.CARACTERISTICA_VEHICULO,

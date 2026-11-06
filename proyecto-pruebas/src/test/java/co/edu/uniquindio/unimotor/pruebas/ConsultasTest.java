@@ -30,7 +30,13 @@ import co.edu.uniquindio.unimotor.entidades.*;
  * Pruebas de las NamedQueries de negocio y de estadisticas, con valores
  * esperados calculados a mano a partir de los datasets JSON de
  * src/test/resources. Datos clave: vehiculos activos = 1, 3, 4, 5; duenos:
- * 4 -> {1,4,5}, 5 -> {3,6}, 6 -> {2,7}.
+ * 4 &rarr; {1,4,5}, 5 &rarr; {3,6}, 6 &rarr; {2,7}.
+ * <p>
+ * Hay una prueba por NamedQuery (vehiculos, estadisticas con {@link EstadisticaDTO} y
+ * {@link PuntoDTO}, preguntas, clientes, autenticacion, catalogos, ventas y calificaciones).
+ * Datasets: los 14 JSON de src/test/resources (modelo, administrador, caracteristica, caracteristica_vehiculo, ciudad, cliente, favorito, foto_vehiculo, pregunta, telefono_usuario, usuario, vehiculo, venta y calificacion) cargados sobre la base
+ * {@code prueba}. Cada prueba corre con {@code TransactionMode.ROLLBACK}; las consultas
+ * son de solo lectura, asi que los datos no cambian entre pruebas.
  */
 @RunWith(Arquillian.class)
 @UsingDataSet({ Datasets.MODELO, Datasets.ADMINISTRADOR, Datasets.CARACTERISTICA, Datasets.CARACTERISTICA_VEHICULO,
@@ -70,7 +76,7 @@ public class ConsultasTest {
 		return entityManager.createNamedQuery(consulta, EstadisticaDTO.class).getResultList();
 	}
 
-	/** Convierte la lista en mapa etiqueta -> valor (long), verificando que no haya etiquetas repetidas. */
+	/** Convierte la lista en mapa etiqueta &rarr; valor (long), verificando que no haya etiquetas repetidas. */
 	private Map<String, Long> aMapaLong(List<EstadisticaDTO> lista) {
 		Map<String, Long> mapa = new HashMap<>();
 		for (EstadisticaDTO e : lista) {

@@ -7,6 +7,10 @@ package co.edu.uniquindio.unimotor.pruebas;
  * dependencias entre tablas (DBUnit inserta en ese orden).
  * Uso: poner {@code @UsingDataSet({ Datasets.MODELO, ... })} a nivel de clase (ver EntidadTest);
  * {@code @UsingDataSet} a nivel de clase aplica a todos los metodos de la clase.
+ * <p>
+ * Cada constante corresponde a un archivo JSON de src/test/resources cuya clave de tabla
+ * es el nombre exacto de la tabla en MySQL (por ejemplo USUARIO, VEHICULO, CALIFICACION,
+ * foto_Vehiculo). DBUnit los carga en la base {@code prueba} (schema configurado en arquillian.xml).
  */
 public final class Datasets {
 

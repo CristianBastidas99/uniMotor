@@ -1,0 +1,146 @@
+@startuml diagrama-er
+!pragma layout smetana
+title uniMotor — Modelo entidad-relación
+hide circle
+skinparam shadowing false
+skinparam entity {
+  BackgroundColor #FFFFFF
+  BorderColor #444444
+}
+
+entity CIUDAD {
+  * codigo_ciudad : bigint <<PK>>
+  --
+  * nombre : varchar(100)
+}
+entity MODELO {
+  * codigo_modelo : bigint <<PK>>
+  --
+  * marca : varchar(50)
+  * nombre : varchar(50)
+}
+entity CARACTERISTICA {
+  * codigo_caracteristica : bigint <<PK>>
+  --
+  * nombre : varchar(50) <<UNIQUE>>
+}
+
+entity USUARIO {
+  * codigo_usuario : bigint <<PK>>
+  --
+  DTYPE : varchar(31)
+  * email : varchar(100) <<UNIQUE>>
+  * password : varchar(100)
+}
+entity ADMINISTRADOR {
+  * codigo_usuario : bigint <<PK,FK>>
+  --
+  * nombre_administrador : varchar(100)
+}
+entity CLIENTE {
+  * codigo_usuario : bigint <<PK,FK>>
+  --
+  * nombre_completo : varchar(100)
+  * direccion : varchar(200)
+  * codigo_ciudad : bigint <<FK>>
+}
+entity telefono_usuario <<EC>> #FFF2CC {
+  codigo_usuario : bigint <<FK>>
+  telefono : varchar(255)
+  TELEFONO_KEY : varchar(255)
+}
+
+entity VEHICULO {
+  * codigo_vehiculo : bigint <<PK>>
+  --
+  * placa : varchar(10) <<UNIQUE>>
+  * year : int
+  * color : varchar(30)
+  * cilindraje : int
+  * kilometros : int
+  numero_puertas : int
+  * precio : double
+  * descripcion : varchar(1000)
+  * fecha_publicacion : datetime
+  * numero_busquedas : int
+  * activo : tinyint(1)
+  * condicion : varchar(255)
+  * tipo_combustible : varchar(255)
+  * tipo_trasmision : varchar(255)
+  * tipo_vehiculo : varchar(255)
+  * codigo_ciudad : bigint <<FK>>
+  * codigo_dueno : bigint <<FK>>
+  * codigo_modelo : bigint <<FK>>
+}
+entity foto_Vehiculo <<EC>> #FFF2CC {
+  codigo_vehiculo : bigint <<FK>>
+  url_foto : varchar(255)
+}
+entity caracteristica_vehiculo <<MM>> #DAE8FC {
+  * codigo_vehiculo : bigint <<PK,FK>>
+  * codigo_caracteristica : bigint <<PK,FK>>
+}
+entity favorito <<MM>> #DAE8FC {
+  * codigo_vehiculo : bigint <<PK,FK>>
+  * codigo_persona : bigint <<PK,FK>>
+}
+entity PREGUNTA {
+  * codigo_pregunta : bigint <<PK>>
+  --
+  * descripcion : varchar(500)
+  * fecha : datetime
+  respuesta : varchar(1000)
+  fecha_respuesta : datetime
+  * codigo_usuario : bigint <<FK>>
+  * codigo_vehiculo : bigint <<FK>>
+}
+entity VENTA <<EXTRA>> #D5F0DA {
+  * codigo_venta : bigint <<PK>>
+  --
+  * fecha : datetime
+  * codigo_usuario : bigint <<FK>>
+  * codigo_vehiculo : bigint <<FK>>
+}
+entity CALIFICACION <<EXTRA>> #D5F0DA {
+  * codigo_calificacion : bigint <<PK>>
+  --
+  * estrellas : int
+  comentario : varchar(500)
+  * fecha : datetime
+  * codigo_calificador : bigint <<FK>>
+  * codigo_vendedor : bigint <<FK>>
+  UNIQUE(codigo_calificador, codigo_vendedor)
+}
+
+' Herencia JOINED
+USUARIO <|-- ADMINISTRADOR : JOINED
+USUARIO <|-- CLIENTE : JOINED
+
+' Catalogos arriba
+CIUDAD ||-down-o{ VEHICULO
+MODELO ||-down-o{ VEHICULO
+CIUDAD ||-left-o{ CLIENTE
+CARACTERISTICA ||-down-o{ caracteristica_vehiculo
+VEHICULO ||-down-o{ caracteristica_vehiculo
+
+USUARIO ||-down-o{ telefono_usuario
+VEHICULO ||-down-o{ foto_Vehiculo
+USUARIO ||-right-o{ VEHICULO : dueno
+USUARIO ||-down-o{ favorito
+VEHICULO ||-down-o{ favorito
+USUARIO ||-down-o{ PREGUNTA
+VEHICULO ||-down-o{ PREGUNTA
+USUARIO ||-down-o{ VENTA : comprador
+VEHICULO ||-down-o{ VENTA
+USUARIO ||-down-o{ CALIFICACION : calificador
+USUARIO ||-down-o{ CALIFICACION : vendedor
+
+legend right
+  |= Color |= Significado |
+  |<#FFFFFF> | Entidad normal |
+  |<#FFF2CC> | Tabla de @ElementCollection |
+  |<#DAE8FC> | Tabla de @ManyToMany |
+  |<#D5F0DA> | Funcionalidad extra (VENTA, CALIFICACION) |
+  | * | Columna NOT NULL |
+endlegend
+@enduml

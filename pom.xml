@@ -25,6 +25,20 @@
 						<target>1.8</target>
 					</configuration>
 				</plugin>
+				<!-- Generacion de Javadoc en UTF-8 y en espanol -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>3.6.3</version>
+					<configuration>
+						<source>8</source>
+						<encoding>UTF-8</encoding>
+						<docencoding>UTF-8</docencoding>
+						<charset>UTF-8</charset>
+						<locale>es</locale>
+						<doclint>all,-missing</doclint>
+					</configuration>
+				</plugin>
 				<!-- Establecer la version de EAR a ser usada -->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>

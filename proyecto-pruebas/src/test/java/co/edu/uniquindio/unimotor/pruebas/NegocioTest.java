@@ -26,6 +26,14 @@ import co.edu.uniquindio.unimotor.entidades.Vehiculo;
 import co.edu.uniquindio.unimotor.ejb.UnimotorEJB;
 import co.edu.uniquindio.unimotor.excepciones.AutentificacionEcxeption;
 
+/**
+ * Pruebas del EJB de negocio {@link UnimotorEJB} (autenticacion y registro de usuarios).
+ * <p>
+ * Toda la clase esta marcada con {@code @Ignore} (por eso aparece como 1 prueba omitida):
+ * queda pendiente para la Fase 2.7 y por ahora los metodos son esqueletos sin asserts.
+ * Cuando se active, cada metodo carga los JSON de src/test/resources sobre la base {@code prueba}
+ * y hace rollback al terminar.
+ */
 @Ignore("Fase 2.7: pruebas de negocio")
 @RunWith(Arquillian.class)
 public class NegocioTest {
@@ -41,6 +49,9 @@ public class NegocioTest {
 
 	}
 
+	/**
+	 * Esqueleto: solo carga los datasets; pendiente de implementar en la Fase 2.7.
+	 */
 	@Test
 	@Transactional(value = TransactionMode.ROLLBACK)
 	@UsingDataSet({ "modelo.json", "administrador.json", "caracteristica.json", "caracteristica_vehiculo.json",
@@ -50,6 +61,9 @@ public class NegocioTest {
 
 	}
 
+	/**
+	 * Esqueleto: intenta autenticar a un usuario del JSON con {@code UnimotorEJB.autentificarUsuario}; pendiente de completar (tiene parametros que JUnit no puede inyectar) en la Fase 2.7.
+	 */
 	@Test
 	@Transactional(value = TransactionMode.ROLLBACK)
 	@UsingDataSet({ "modelo.json", "administrador.json", "caracteristica.json", "caracteristica_vehiculo.json",
@@ -66,6 +80,9 @@ public class NegocioTest {
 		}
 	}
 	
+	/**
+	 * Esqueleto: registra un cliente nuevo con {@code UnimotorEJB.registrarUsuario}; pendiente de agregar asserts en la Fase 2.7.
+	 */
 	@Test
 	@Transactional(value = TransactionMode.ROLLBACK)
 	@UsingDataSet({ "modelo.json", "administrador.json", "caracteristica.json", "caracteristica_vehiculo.json",

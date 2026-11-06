@@ -13,12 +13,19 @@ import co.edu.uniquindio.unimotor.entidades.Cliente;
  * &#64;Deployment
  * public static WebArchive crear() { return Despliegue.crear(); }
  * </pre>
+ * El archivo {@code prueba.war} incluye las entidades y los DTO, el persistenceForTest.xml
+ * (como META-INF/persistence.xml, unidad que usa el recurso {@code jdbc/prueba}) y un beans.xml vacio.
  */
 public final class Despliegue {
 
 	private Despliegue() {
 	}
 
+	/**
+	 * Arma el WAR de prueba con ShrinkWrap para desplegarlo en el GlassFish embebido.
+	 * 
+	 * @return archivo {@code prueba.war} listo para {@code @Deployment}
+	 */
 	public static WebArchive crear() {
 		return ShrinkWrap.create(WebArchive.class, "prueba.war")
 				.addPackage(Cliente.class.getPackage())

@@ -6,8 +6,9 @@ import java.util.List;
 import javax.persistence.*;
 
 /**
- * Entity implementation class for Entity: Ciudad
- *
+ * Ciudad donde vive un cliente o donde está ubicado un vehículo publicado.
+ * <p>
+ * Tabla: {@code Ciudad}. Relaciones uno a muchos con {@link Cliente} y {@link Vehiculo}.
  */
 @Entity
 @NamedQueries({
@@ -16,33 +17,68 @@ import javax.persistence.*;
 
 public class Ciudad implements Serializable {
 
+	/**
+	 * Identificador único autogenerado (clave primaria).
+	 */
 	@Id
 	@Column(name = "codigo_ciudad")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long codigo_ciudad;
 
+	/**
+	 * Nombre de la ciudad; obligatorio, máximo 100 caracteres.
+	 */
 	@Column(name = "nombre", nullable = false, length = 100)
 	private String nombre;
 
+	/**
+	 * Clientes que residen en la ciudad (lado inverso de {@link Cliente#getCodigo_ciudad()}).
+	 */
 	@OneToMany(mappedBy = "codigo_ciudad")
 	private List<Cliente> clientes;
 
+	/**
+	 * Vehículos ubicados en la ciudad (lado inverso de {@link Vehiculo#getCodigo_ciudad()}).
+	 */
 	@OneToMany(mappedBy = "codigo_ciudad")
 	private List<Vehiculo> vehiculos;
 
+	/**
+	 * Versión de serialización.
+	 */
 	private static final long serialVersionUID = 1L;
+	/**
+	 * NamedQuery sin parámetros que lista todas las ciudades ordenadas alfabéticamente por nombre.
+	 */
 	public static final String CIUDADES_ORDENADAS = "Ciudad_CIUDADES_ORDENADAS";
+	/**
+	 * NamedQuery que busca una ciudad por nombre.
+	 * Parámetro: {@code :nombre} (String). Devuelve la entidad {@link Ciudad}.
+	 */
 	public static final String CIUDAD_POR_NOMBRE = "Ciudad_CIUDAD_POR_NOMBRE";
 
+	/**
+	 * Constructor vacío requerido por JPA.
+	 */
 	public Ciudad() {
 		super();
 	}
 
+	/**
+	 * Crea una ciudad.
+	 *
+	 * @param nombre nombre de la ciudad
+	 */
 	public Ciudad(String nombre) {
 		super();
 		this.nombre = nombre;
 	}
 
+	/**
+	 * Calcula el hash a partir del identificador {@code codigo_ciudad}.
+	 *
+	 * @return código hash de la ciudad
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -51,6 +87,12 @@ public class Ciudad implements Serializable {
 		return result;
 	}
 
+	/**
+	 * Dos ciudades son iguales si son de la misma clase y tienen el mismo {@code codigo_ciudad}.
+	 *
+	 * @param obj objeto a comparar
+	 * @return {@code true} si representan la misma ciudad
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -68,10 +110,20 @@ public class Ciudad implements Serializable {
 		return true;
 	}
 
+	/**
+	 * Obtiene el valor de {@code Codigo_ciudad}.
+	 *
+	 * @return valor de {@code Codigo_ciudad}
+	 */
 	public Long getCodigo_ciudad() {
 		return this.codigo_ciudad;
 	}
 
+	/**
+	 * Establece el valor de {@code Codigo_ciudad}.
+	 *
+	 * @param codigo_ciudad nuevo valor
+	 */
 	public void setCodigo_ciudad(Long codigo_ciudad) {
 		this.codigo_ciudad = codigo_ciudad;
 	}
@@ -132,6 +184,11 @@ public class Ciudad implements Serializable {
 		this.vehiculos = vehiculos;
 	}
 
+	/**
+	 * Representación en texto de la ciudad.
+	 *
+	 * @return texto descriptivo del objeto
+	 */
 	@Override
 	public String toString() {
 		return "Ciudad [codigo_ciudad=" + codigo_ciudad + ", nombre=" + nombre + "]";

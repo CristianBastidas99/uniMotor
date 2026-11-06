@@ -1,13 +1,18 @@
-/**
- * 
- */
 package co.edu.uniquindio.unimotor.entidades;
 
 /**
- * @author Cristian
+ * Tipo de transmisión (caja de cambios) de un vehículo.
+ * (El nombre conserva la grafía "Trasmision" usada en toda la aplicación.)
  *
+ * @author Cristian
  */
 public enum TipoTrasmision {
-
-	AUTOMATICO, MECANICO
+	/**
+	 * Transmisión automática.
+	 */
+	AUTOMATICO,
+	/**
+	 * Transmisión mecánica (manual).
+	 */
+	MECANICO
 }

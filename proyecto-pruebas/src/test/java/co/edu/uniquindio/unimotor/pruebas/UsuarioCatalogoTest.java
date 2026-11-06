@@ -23,6 +23,12 @@ import co.edu.uniquindio.unimotor.entidades.Modelo;
 /**
  * Pruebas de persist/find, merge y remove para Cliente (con telefonos),
  * Ciudad y Modelo. Los ids de las entidades nuevas los genera IDENTITY.
+ * <p>
+ * Datasets: se cargan los 14 JSON de src/test/resources (modelo, administrador, caracteristica, caracteristica_vehiculo, ciudad, cliente, favorito, foto_vehiculo, pregunta, telefono_usuario, usuario, vehiculo, venta y calificacion) sobre la
+ * base {@code prueba}. Cada prueba corre con {@code TransactionMode.ROLLBACK}, asi que
+ * los cambios no persisten y no afectan a las demas pruebas.
+ * <p>
+ * Datos del JSON usados: cliente 4, ciudad 3 (Pijao) y modelo 2 (Mazda 3).
  */
 @RunWith(Arquillian.class)
 @UsingDataSet({ Datasets.MODELO, Datasets.ADMINISTRADOR, Datasets.CARACTERISTICA, Datasets.CARACTERISTICA_VEHICULO,

@@ -22,6 +22,16 @@ import org.junit.runner.RunWith;
 
 import co.edu.uniquindio.unimotor.entidades.*;
 
+/**
+ * Pruebas de persistencia de Administrador y Caracteristica (persist/find, merge y remove)
+ * y de algunas NamedQueries de Cliente y Vehiculo (listados que solo imprimen resultados).
+ * <p>
+ * Datasets: se cargan los 14 JSON de src/test/resources (modelo, administrador, caracteristica, caracteristica_vehiculo, ciudad, cliente, favorito, foto_vehiculo, pregunta, telefono_usuario, usuario, vehiculo, venta y calificacion) con DBUnit antes de cada
+ * prueba, sobre la base {@code prueba}. Cada prueba corre con {@code TransactionMode.ROLLBACK},
+ * por lo que los cambios no se conservan y las pruebas son independientes entre si.
+ * <p>
+ * Datos usados: administradores 1 y 3 (hay 3 en total) y caracteristicas 1 y 3 (hay 3 en total).
+ */
 @RunWith(Arquillian.class)
 @UsingDataSet({ Datasets.MODELO, Datasets.ADMINISTRADOR, Datasets.CARACTERISTICA, Datasets.CARACTERISTICA_VEHICULO,
 		Datasets.CIUDAD, Datasets.CLIENTE, Datasets.FAVORITO, Datasets.FOTO_VEHICULO, Datasets.PREGUNTA,
@@ -36,18 +46,27 @@ public class EntidadTest {
 		return Despliegue.crear();
 	}
 
+	/**
+	 * Prueba vacia reservada; solo comprueba que el despliegue y la carga de los datasets funcionan.
+	 */
 	@Test
 	@Transactional(value = TransactionMode.ROLLBACK)
 	public void buscarTests() {
 
 	}
 	
+	/**
+	 * Prueba vacia reservada; solo comprueba que el despliegue y la carga de los datasets funcionan.
+	 */
 	@Test
 	@Transactional(value = TransactionMode.ROLLBACK)
 	public void buscarTests2() {
 
 	}
 
+	/**
+	 * Persiste un administrador nuevo (codigo 7) y verifica su email al buscarlo con find.
+	 */
 	@Test
 	@Transactional(value = TransactionMode.ROLLBACK)
 	public void persistFindAdministradorTest() {
@@ -67,6 +86,9 @@ public class EntidadTest {
 
 	}
 
+	/**
+	 * Cambia el nombre del administrador 1 del JSON y verifica que el cambio se refleja al buscarlo.
+	 */
 	@Test
 	@Transactional(value = TransactionMode.ROLLBACK)
 	public void mergeAdministradorTest() {
@@ -83,6 +105,9 @@ public class EntidadTest {
 
 	}
 
+	/**
+	 * Elimina el administrador 3 del JSON y verifica con {@code Administrador.GETALL} que quedan 2.
+	 */
 	@Test
 	@Transactional(value = TransactionMode.ROLLBACK)
 	public void removeAdministradorTest() {
@@ -96,6 +121,9 @@ public class EntidadTest {
 		Assert.assertEquals(2, resultados.size());
 	}
 
+	/**
+	 * Persiste la caracteristica 4 ("Frenos ABS") y verifica su nombre al buscarla.
+	 */
 	@Test
 	@Transactional(value = TransactionMode.ROLLBACK)
 	public void persistFindCaracteristicaTest() {
@@ -113,6 +141,9 @@ public class EntidadTest {
 
 	}
 
+	/**
+	 * Cambia el nombre de la caracteristica 1 del JSON y verifica que se actualizo.
+	 */
 	@Test
 	@Transactional(value = TransactionMode.ROLLBACK)
 	public void mergeCaracteristicaTest() {
@@ -129,6 +160,9 @@ public class EntidadTest {
 
 	}
 
+	/**
+	 * Elimina la caracteristica 3 del JSON y verifica con {@code Caracteristica.GETALL} que quedan 2.
+	 */
 	@Test
 	@Transactional(value = TransactionMode.ROLLBACK)
 	public void removeCaracteristicaTest() {
@@ -142,6 +176,9 @@ public class EntidadTest {
 		Assert.assertEquals(2, resultados.size());
 	}
 
+	/**
+	 * Ejecuta {@code Cliente.LISTA_CIUDAD_CLIENTE} sobre los clientes del JSON e imprime cada par (no tiene asserts).
+	 */
 	@Test
 	@Transactional(value = TransactionMode.ROLLBACK)
 	public void listarCiudadCLiente() {
@@ -156,6 +193,9 @@ public class EntidadTest {
 
 	}
 
+	/**
+	 * Ejecuta {@code Cliente.LISTA_FAVORITO_CLIENTE} para usuario1@servidor.com (favorito.json) e imprime los vehiculos (no tiene asserts).
+	 */
 	@Test
 	@Transactional(value = TransactionMode.ROLLBACK)
 	public void listarFavoritoCLiente() {
@@ -168,6 +208,9 @@ public class EntidadTest {
 		}
 	}
 	
+	/**
+	 * Ejecuta {@code Cliente.CANTIDAD_DE_CLIENTES} e imprime el total de clientes del JSON (no tiene asserts).
+	 */
 	@Test
 	@Transactional(value = TransactionMode.ROLLBACK)
 	public void cantidadDePersonasTest() {
@@ -178,6 +221,9 @@ public class EntidadTest {
 		
 	}
 	
+	/**
+	 * Ejecuta {@code Vehiculo.GET_ALL_COLOR} e imprime los colores de los vehiculos del JSON (no tiene asserts).
+	 */
 	@Test
 	@Transactional(value = TransactionMode.ROLLBACK)
 	public void listarColoresVehiculo() {
@@ -189,6 +235,9 @@ public class EntidadTest {
 		}
 	}
 	
+	/**
+	 * Ejecuta {@code Vehiculo.FIND_BY_ASCENDENTE_PRECIO} e imprime los vehiculos de menor a mayor precio (no tiene asserts).
+	 */
 	@Test
 	@Transactional(value = TransactionMode.ROLLBACK)
 	public void listarPrecioAscendente() {
@@ -200,6 +249,9 @@ public class EntidadTest {
 		}
 	}
 	
+	/**
+	 * Ejecuta {@code Vehiculo.FIND_BY_DESCENDENTE_PRECIO} e imprime los vehiculos de mayor a menor precio (no tiene asserts).
+	 */
 	@Test
 	@Transactional(value = TransactionMode.ROLLBACK)
 	public void listarPrecioDescendente() {
