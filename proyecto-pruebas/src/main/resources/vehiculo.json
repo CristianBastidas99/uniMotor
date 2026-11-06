@@ -1,5 +1,5 @@
 {
-	"vehiculo": [
+	"VEHICULO": [
 		{
 			"codigo_vehiculo": "1",
 			"cilindraje": 2000,
@@ -16,7 +16,10 @@
 			"year": 2018,
 			"codigo_ciudad": "1",
 			"codigo_dueno": "4",
-			"codigo_modelo": "2"
+			"codigo_modelo": "2",
+			"activo": 1,
+			"fecha_publicacion": "2020-09-01 10:30:00",
+			"numero_busquedas": 57
 		},
 		{
 			"codigo_vehiculo": "2",
@@ -34,7 +37,10 @@
 			"year": 1990,
 			"codigo_ciudad": "1",
 			"codigo_dueno": "6",
-			"codigo_modelo": "3"
+			"codigo_modelo": "3",
+			"activo": 0,
+			"fecha_publicacion": "2020-08-15 09:00:00",
+			"numero_busquedas": 120
 		},
 		{
 			"codigo_vehiculo": "3",
@@ -52,7 +58,10 @@
 			"year": 2006,
 			"codigo_ciudad": "1",
 			"codigo_dueno": "5",
-			"codigo_modelo": "2"
+			"codigo_modelo": "2",
+			"activo": 1,
+			"fecha_publicacion": "2020-09-20 16:45:00",
+			"numero_busquedas": 33
 		},
 		{
 			"codigo_vehiculo": "4",
@@ -70,7 +79,10 @@
 			"year": 2015,
 			"codigo_ciudad": "1",
 			"codigo_dueno": "4",
-			"codigo_modelo": "1"
+			"codigo_modelo": "1",
+			"activo": 1,
+			"fecha_publicacion": "2020-10-02 11:15:00",
+			"numero_busquedas": 8
 		},
 		{
 			"codigo_vehiculo": "5",
@@ -88,7 +100,51 @@
 			"year": 2020,
 			"codigo_ciudad": "2",
 			"codigo_dueno": "4",
-			"codigo_modelo": "1"
+			"codigo_modelo": "1",
+			"activo": 1,
+			"fecha_publicacion": "2020-10-10 14:00:00",
+			"numero_busquedas": 95
+		},
+		{
+			"codigo_vehiculo": "6",
+			"activo": 0,
+			"cilindraje": 250,
+			"color": "Rojo",
+			"condicion": "USADO",
+			"descripcion": "Moto ideal para la ciudad, buen estado",
+			"fecha_publicacion": "2020-07-20 08:00:00",
+			"kilometros": 15000,
+			"numero_busquedas": 21,
+			"placa": "MTR45A",
+			"precio": 4500000,
+			"tipo_combustible": "GASOLINA",
+			"tipo_trasmision": "MECANICO",
+			"tipo_vehiculo": "MOTOCICLETA",
+			"year": 2019,
+			"codigo_ciudad": "3",
+			"codigo_dueno": "5",
+			"codigo_modelo": "3"
+		},
+		{
+			"codigo_vehiculo": "7",
+			"activo": 0,
+			"cilindraje": 1600,
+			"color": "Blanco",
+			"condicion": "USADO",
+			"descripcion": "Camioneta familiar con mantenimiento al dia",
+			"fecha_publicacion": "2020-06-05 13:20:00",
+			"kilometros": 45000,
+			"numero_busquedas": 70,
+			"numero_puertas": 5,
+			"placa": "CMN781",
+			"precio": 38000000,
+			"tipo_combustible": "DISEL",
+			"tipo_trasmision": "AUTOMATICO",
+			"tipo_vehiculo": "CAMIONETA",
+			"year": 2017,
+			"codigo_ciudad": "2",
+			"codigo_dueno": "6",
+			"codigo_modelo": "2"
 		}
 	]
 }

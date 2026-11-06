@@ -1,5 +1,5 @@
 {
-	"foto_vehiculo": [
+	"foto_Vehiculo": [
 		{
 			"codigo_vehiculo": "1",
 			"url_foto": "/imagenes/imagen1.jpg"
@@ -23,6 +23,10 @@
 		{
 			"codigo_vehiculo": "3",
 			"url_foto": "/imagenes/imagen6.jpg"
+		},
+		{
+			"codigo_vehiculo": "6",
+			"url_foto": "/imagenes/imagen7.jpg"
 		}
 	]
 }

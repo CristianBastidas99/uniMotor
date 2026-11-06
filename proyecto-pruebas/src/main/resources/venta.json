@@ -1,10 +1,22 @@
 {
-	"venta": [
+	"VENTA": [
 		{
 			"codigo_venta": "1",
 			"fecha": "2020-10-24",
 			"codigo_usuario": "5",
 			"codigo_vehiculo": "2"
+		},
+		{
+			"codigo_venta": "2",
+			"fecha": "2020-08-30",
+			"codigo_usuario": "6",
+			"codigo_vehiculo": "6"
+		},
+		{
+			"codigo_venta": "3",
+			"fecha": "2020-09-12",
+			"codigo_usuario": "4",
+			"codigo_vehiculo": "7"
 		}
 	]
 }

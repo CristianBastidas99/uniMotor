@@ -1,0 +1,27 @@
+{
+	"CALIFICACION": [
+		{
+			"codigo_calificacion": "1",
+			"comentario": "Excelente vendedor, muy puntual",
+			"estrellas": 5,
+			"fecha": "2020-10-26",
+			"codigo_calificador": "5",
+			"codigo_vendedor": "6"
+		},
+		{
+			"codigo_calificacion": "2",
+			"comentario": "Todo bien con la entrega",
+			"estrellas": 4,
+			"fecha": "2020-09-14",
+			"codigo_calificador": "4",
+			"codigo_vendedor": "6"
+		},
+		{
+			"codigo_calificacion": "3",
+			"estrellas": 3,
+			"fecha": "2020-09-01",
+			"codigo_calificador": "6",
+			"codigo_vendedor": "5"
+		}
+	]
+}
