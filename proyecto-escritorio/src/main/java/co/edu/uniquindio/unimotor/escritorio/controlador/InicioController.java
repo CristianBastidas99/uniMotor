@@ -1,6 +1,6 @@
 package co.edu.uniquindio.unimotor.escritorio.controlador;
 
-import co.edu.uniquindio.unimotor.entidades.Usuario;
+import co.edu.uniquindio.unimotor.entidades.Administrador;
 import co.edu.uniquindio.unimotor.escritorio.modelo.PruebaDelegado;
 import co.edu.uniquindio.unimotor.excepciones.AutenticacionException;
 import javafx.event.ActionEvent;
@@ -23,7 +23,7 @@ public class InicioController {
 
 		if (!cajonPassword.getText().isEmpty() && !cajonEmail.getText().isEmpty()) {
 			try {
-				Usuario u = delegado.autenticarUsuario(cajonEmail.getText(), cajonPassword.getText());
+				Administrador u = delegado.autenticarAdministrador(cajonEmail.getText(), cajonPassword.getText());
 			} catch (AutenticacionException e1) {
 				// TODO Auto-generated catch block
 				Alert a = new Alert(AlertType.ERROR);

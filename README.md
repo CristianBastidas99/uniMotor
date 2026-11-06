@@ -143,8 +143,12 @@ cd proyecto-pruebas
 mvn test
 ```
 
-- La suite tiene 85 pruebas: CRUD de las 10 entidades y una prueba por cada `NamedQuery`
-  (`NegocioTest`, de la capa de negocio, está marcada `@Ignore` hasta la entrega 2).
+- La suite tiene 238 pruebas (~7 min):
+  - persistencia: CRUD de las 10 entidades y una prueba por cada `NamedQuery` (`EntidadTest`, `UsuarioCatalogoTest`,
+    `VehiculoTest`, `ConsultasTest`);
+  - negocio: `ClienteNegocioTest` (cliente: usuarios, vehículos, búsqueda, favoritos, preguntas, catálogos),
+    `ExtrasNegocioTest` (venta y calificación del vendedor) y `AdministradorNegocioTest` (login, recuperar contraseña y estadísticas).
+- En las pruebas de negocio el correo funciona en **modo simulado** (el GlassFish embebido no tiene `mail/unimotor`).
 - Cada prueba carga los datasets JSON de `src/test/resources` en la base **`prueba`** y hace rollback.
 - Requieren el contenedor `unimotor-mysql` en ejecución. **No** hay que apagar Payara: el GlassFish
   embebido de Arquillian usa puertos propios (18080, 18181, 14848, etc., definidos en `domain-test.xml`
