@@ -2,12 +2,16 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>co.edu.uniquindio.grid</groupId>
+	<groupId>co.edu.uniquindio.unimotor</groupId>
 	<artifactId>proyecto-padre</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Proyecto Padre</name>
 	<description>Proyecto que agrupa todos los modulos correspondientes al aplicativo </description>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	</properties>
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -68,7 +72,7 @@
 		<module>proyecto-persistencia</module>
 		<module>proyecto-pruebas</module>
 		<module>proyecto-ear</module>
-		<module>protecto-negocio</module>
+		<module>proyecto-negocio</module>
 		<module>proyecto-escritorio</module>
 		<module>proyecto-web</module>
 	</modules>

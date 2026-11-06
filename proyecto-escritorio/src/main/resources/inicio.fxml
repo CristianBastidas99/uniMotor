@@ -5,7 +5,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.edu.uniquindio.proyecto.controlador.InicioController">
+<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.edu.uniquindio.unimotor.escritorio.controlador.InicioController">
 	<children>
 		<TextField fx:id="cajonEmail" layoutX="234.0" layoutY="77.0" />
 		<TextField fx:id="cajonPassword" layoutX="234.0" layoutY="141.0" />
