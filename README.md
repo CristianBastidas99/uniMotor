@@ -14,7 +14,7 @@ Proyecto Maven multimódulo (Java 8, Java EE 8). `groupId`: `co.edu.uniquindio.u
 | Módulo | Contenido | Paquete base |
 |---|---|---|
 | `proyecto-persistencia` | Entidades JPA, enumeraciones, `NamedQuery` de negocio y de estadísticas, DTO (`EstadisticaDTO`, `PuntoDTO`) | `co.edu.uniquindio.unimotor.entidades`, `...dto` |
-| `proyecto-negocio` | EJB de negocio (`UnimotorEJB` y su interfaz remota), `SetupEJB` (datos iniciales) y excepciones | `co.edu.uniquindio.unimotor.ejb`, `...excepciones` |
+| `proyecto-negocio` | EJB de negocio (`AdministradorEJB` con su interfaz remota, `ClienteEJB`, `VehiculoEJB`), `SetupEJB` (datos iniciales) y excepciones | `co.edu.uniquindio.unimotor.ejb`, `...excepciones` |
 | `proyecto-pruebas` | Pruebas de persistencia con JUnit 4, Arquillian (GlassFish embebido) y DBUnit con datasets JSON | `co.edu.uniquindio.unimotor.pruebas` |
 | `proyecto-ear` | Empaqueta `proyecto-negocio` y `proyecto-web` en `proyecto-ear-*.ear` | n/a |
 | `proyecto-web` | Aplicación web JSF + PrimeFaces (cliente) | n/a |

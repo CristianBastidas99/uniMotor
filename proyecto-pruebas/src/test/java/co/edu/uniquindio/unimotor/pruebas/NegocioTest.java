@@ -23,11 +23,16 @@ import co.edu.uniquindio.unimotor.entidades.Ciudad;
 import co.edu.uniquindio.unimotor.entidades.Cliente;
 import co.edu.uniquindio.unimotor.entidades.Usuario;
 import co.edu.uniquindio.unimotor.entidades.Vehiculo;
-import co.edu.uniquindio.unimotor.ejb.UnimotorEJB;
-import co.edu.uniquindio.unimotor.excepciones.AutentificacionEcxeption;
+import co.edu.uniquindio.unimotor.ejb.AdministradorEJB;
+import co.edu.uniquindio.unimotor.ejb.AdministradorEJBRemote;
+import co.edu.uniquindio.unimotor.ejb.ClienteEJB;
+import co.edu.uniquindio.unimotor.ejb.VehiculoEJB;
+import co.edu.uniquindio.unimotor.excepciones.ElementoRepetidoException;
+import co.edu.uniquindio.unimotor.excepciones.InformacionInvalidaException;
+import co.edu.uniquindio.unimotor.excepciones.AutenticacionException;
 
 /**
- * Pruebas del EJB de negocio {@link UnimotorEJB} (autenticacion y registro de usuarios).
+ * Pruebas del EJB de negocio {@link AdministradorEJB} y {@link ClienteEJB} (autenticacion y registro de usuarios).
  * <p>
  * Toda la clase esta marcada con {@code @Ignore} (por eso aparece como 1 prueba omitida):
  * queda pendiente para la Fase 2.7 y por ahora los metodos son esqueletos sin asserts.
@@ -39,11 +44,16 @@ import co.edu.uniquindio.unimotor.excepciones.AutentificacionEcxeption;
 public class NegocioTest {
 
 	@EJB
-	private UnimotorEJB unimotorEJB;
+	private ClienteEJB clienteEJB;
+
+	@EJB
+	private AdministradorEJBRemote administradorEJB;
 
 	@Deployment
 	public static Archive<?> createTestArchive() {
-		return ShrinkWrap.create(JavaArchive.class).addClass(UnimotorEJB.class).addPackage(Vehiculo.class.getPackage())
+		return ShrinkWrap.create(JavaArchive.class).addClass(AdministradorEJB.class)
+				.addClass(AdministradorEJBRemote.class).addClass(ClienteEJB.class).addClass(VehiculoEJB.class)
+				.addPackage(AutenticacionException.class.getPackage()).addPackage(Vehiculo.class.getPackage())
 				.addAsResource("persistenceForTest.xml", "META-INF/persistence.xml")
 				.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
@@ -62,26 +72,26 @@ public class NegocioTest {
 	}
 
 	/**
-	 * Esqueleto: intenta autenticar a un usuario del JSON con {@code UnimotorEJB.autentificarUsuario}; pendiente de completar (tiene parametros que JUnit no puede inyectar) en la Fase 2.7.
+	 * Esqueleto: intenta autenticar a un usuario del JSON con {@code AdministradorEJB.autenticarUsuario}; pendiente de completar (tiene parametros que JUnit no puede inyectar) en la Fase 2.7.
 	 */
 	@Test
 	@Transactional(value = TransactionMode.ROLLBACK)
 	@UsingDataSet({ "modelo.json", "administrador.json", "caracteristica.json", "caracteristica_vehiculo.json",
 			"ciudad.json", "cliente.json", "favorito.json", "foto_vehiculo.json", "pregunta.json",
 			"telefono_usuario.json", "usuario.json", "vehiculo.json", "venta.json" })
-	public void autentificarUsuarioTest(String email, String password) throws Exception {
+	public void autenticarUsuarioTest(String email, String password) throws Exception {
 		// TODO Auto-generated method stub
 
 		try {
-			System.out.print(unimotorEJB.autentificarUsuario("cristia@proyecto.coom", "123"));
-		} catch (AutentificacionEcxeption e) {
+			System.out.print(administradorEJB.autenticarUsuario("cristia@proyecto.coom", "123"));
+		} catch (AutenticacionException e) {
 			// TODO: handle exception
 			e.printStackTrace();
 		}
 	}
 	
 	/**
-	 * Esqueleto: registra un cliente nuevo con {@code UnimotorEJB.registrarUsuario}; pendiente de agregar asserts en la Fase 2.7.
+	 * Esqueleto: registra un cliente nuevo con {@code ClienteEJB.registrarUsuario}; pendiente de agregar asserts en la Fase 2.7.
 	 */
 	@Test
 	@Transactional(value = TransactionMode.ROLLBACK)
@@ -107,8 +117,8 @@ public class NegocioTest {
 		
 		
 		try {
-			unimotorEJB.registrarUsuario(cliente);
-		} catch (AutentificacionEcxeption e) {
+			clienteEJB.registrarUsuario(cliente);
+		} catch (ElementoRepetidoException | InformacionInvalidaException e) {
 			// TODO: handle exception
 			e.printStackTrace();
 		}
