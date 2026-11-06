@@ -18,7 +18,7 @@ public class Ciudad implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long codigo_ciudad;
 
-	@Column(name = "nombre", nullable = false)
+	@Column(name = "nombre", nullable = false, length = 100)
 	private String nombre;
 
 	@OneToMany(mappedBy = "codigo_ciudad")

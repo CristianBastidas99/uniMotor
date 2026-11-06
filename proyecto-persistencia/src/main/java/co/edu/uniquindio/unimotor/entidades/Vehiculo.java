@@ -2,6 +2,7 @@ package co.edu.uniquindio.unimotor.entidades;
 
 import java.io.Serializable;
 import java.lang.String;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.*;
@@ -31,17 +32,17 @@ public class Vehiculo implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long codigo_vehiculo;
 
-	@Column(name = "descripcion", nullable = false)
+	@Column(name = "descripcion", nullable = false, length = 1000)
 	private String descripcion;
 
-	@Column(name = "color", nullable = false)
+	@Column(name = "color", nullable = false, length = 30)
 	private String color;
 
-	@Column(name = "placa", nullable = false)
+	@Column(name = "placa", nullable = false, unique = true, length = 10)
 	private String placa;
 
 	@Column(name = "precio", nullable = false)
-	private int precio;
+	private Double precio;
 
 	@Column(name = "year", nullable = false)
 	private int year;
@@ -63,7 +64,6 @@ public class Vehiculo implements Serializable {
 	@ManyToOne
 	private Cliente codigo_dueno;
 
-	@JoinColumn(name = "codigo_venta")
 	@OneToOne(mappedBy = "codigo_vehiculo")
 	private Venta codigo_venta;
 
@@ -90,16 +90,27 @@ public class Vehiculo implements Serializable {
 	@OneToMany(mappedBy = "vehiculo")
 	private List<Pregunta> preguntas;
 
+	@Column(name = "numero_busquedas", nullable = false)
+	private int numero_busquedas = 0;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fecha_publicacion", nullable = false)
+	private Date fecha_publicacion;
+
+	@Column(name = "activo", nullable = false)
+	private boolean activo = true;
+
 	@ElementCollection
 	@CollectionTable(name = "foto_Vehiculo", joinColumns = @JoinColumn(name = "codigo_vehiculo"))
 	@Column(name = "url_foto")
 	private List<String> url_foto;
 
 	@JoinTable(name = "favorito", joinColumns = @JoinColumn(name = "codigo_vehiculo"), inverseJoinColumns = @JoinColumn(name = "codigo_persona"))
-	@ManyToMany(cascade = CascadeType.ALL)
+	@ManyToMany
 	private List<Cliente> clientes;
 
-	@ManyToMany(mappedBy = "vehiculos")
+	@JoinTable(name = "caracteristica_vehiculo", joinColumns = @JoinColumn(name = "codigo_vehiculo"), inverseJoinColumns = @JoinColumn(name = "codigo_caracteristica"))
+	@ManyToMany
 	private List<Caracteristica> caracteristicas;
 
 	private static final long serialVersionUID = 1L;
@@ -137,7 +148,7 @@ public class Vehiculo implements Serializable {
 	 * @param tipo_trasmision
 	 * @param condicion
 	 */
-	public Vehiculo(String descripcion, String color, String placa, int precio, int year, int cilindraje,
+	public Vehiculo(String descripcion, String color, String placa, Double precio, int year, int cilindraje,
 			int numero_puertas, int kilometros, Ciudad codigo_ciudad, Cliente codigo_dueno,
 			Modelo codigo_modelo, TipoCombustible tipo_combustible, TipoVehiculo tipo_vehiculo,
 			TipoTrasmision tipo_trasmision, Condicion condicion) {
@@ -192,11 +203,11 @@ public class Vehiculo implements Serializable {
 		this.codigo_vehiculo = codigo_vehiculo;
 	}
 
-	public int getPrecio() {
+	public Double getPrecio() {
 		return this.precio;
 	}
 
-	public void setPrecio(int precio) {
+	public void setPrecio(Double precio) {
 		this.precio = precio;
 	}
 
@@ -236,20 +247,6 @@ public class Vehiculo implements Serializable {
 	 */
 	public void setCodigo_ciudad(Ciudad codigo_ciudad) {
 		this.codigo_ciudad = codigo_ciudad;
-	}
-
-	/**
-	 * @return the codigo_dueño
-	 */
-	public Cliente getCodigo_dueño() {
-		return codigo_dueno;
-	}
-
-	/**
-	 * @param codigo_dueño the codigo_dueño to set
-	 */
-	public void setCodigo_dueño(Cliente codigo_dueño) {
-		this.codigo_dueno = codigo_dueño;
 	}
 
 	/**
@@ -460,6 +457,37 @@ public class Vehiculo implements Serializable {
 	 */
 	public void setCondicion(Condicion condicion) {
 		this.condicion = condicion;
+	}
+
+	public int getNumero_busquedas() {
+		return numero_busquedas;
+	}
+
+	public void setNumero_busquedas(int numero_busquedas) {
+		this.numero_busquedas = numero_busquedas;
+	}
+
+	public Date getFecha_publicacion() {
+		return fecha_publicacion;
+	}
+
+	public void setFecha_publicacion(Date fecha_publicacion) {
+		this.fecha_publicacion = fecha_publicacion;
+	}
+
+	public boolean isActivo() {
+		return activo;
+	}
+
+	public void setActivo(boolean activo) {
+		this.activo = activo;
+	}
+
+	@PrePersist
+	void prePersist() {
+		if (fecha_publicacion == null) {
+			fecha_publicacion = new Date();
+		}
 	}
 
 	@Override

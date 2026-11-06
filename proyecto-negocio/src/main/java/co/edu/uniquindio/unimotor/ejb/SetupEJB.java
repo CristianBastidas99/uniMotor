@@ -87,7 +87,7 @@ public class SetupEJB {
 
 			Vehiculo vehiculo = new Vehiculo(
 					"Bolido perfectamente cuidado, con menos de mil kilometros, practicamente nuevo", "Negro", "VEV592",
-					26000000, 2018, 2000, 2, 10000, ciudad, cliente, modelo, TipoCombustible.GASOLINA,
+					26000000d, 2018, 2000, 2, 10000, ciudad, cliente, modelo, TipoCombustible.GASOLINA,
 					TipoVehiculo.CARRO, TipoTrasmision.MECANICO, Condicion.NUEVO);
 
 		}

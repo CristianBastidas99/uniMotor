@@ -14,7 +14,7 @@ import javax.persistence.*;
 		@NamedQuery(name = Administrador.GETALL, query = "select admi from Administrador admi") })
 public class Administrador extends Usuario implements Serializable {
 
-	@Column(name = "nombre_administrador", nullable = false)
+	@Column(name = "nombre_administrador", nullable = false, length = 100)
 	private String nombre_administrador;
 
 	private static final long serialVersionUID = 1L;
@@ -41,6 +41,12 @@ public class Administrador extends Usuario implements Serializable {
 
 	public void setNombre_administrador(String nombre_administrador) {
 		this.nombre_administrador = nombre_administrador;
+	}
+
+	@Override
+	public String toString() {
+		return "Administrador [codigo_usuario=" + getCodigo_usuario() + ", email=" + getEmail()
+				+ ", nombre_administrador=" + nombre_administrador + "]";
 	}
 
 }

@@ -1,38 +1,41 @@
 package co.edu.uniquindio.unimotor.entidades;
 
 import java.io.Serializable;
-import java.lang.String;
 import java.util.Date;
 import javax.persistence.*;
 
 /**
- * Entity implementation class for Entity: Pregunta
- *
+ * Pregunta que un cliente hace sobre un vehiculo, con su respuesta opcional.
  */
 @Entity
-
 public class Pregunta implements Serializable {
 
-	@EmbeddedId
+	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private VehiculoPersonaPK llave;
+	@Column(name = "codigo_pregunta")
+	private Long codigo_pregunta;
 
 	@ManyToOne
-	@MapsId("mi_vehiculo")
-	@JoinColumn(name = "codigo_vehiculo")
+	@JoinColumn(name = "codigo_vehiculo", nullable = false)
 	private Vehiculo vehiculo;
 
 	@ManyToOne
-	@MapsId("mi_usuario")
-	@JoinColumn(name = "codigo_usuario")
+	@JoinColumn(name = "codigo_usuario", nullable = false)
 	private Cliente cliente;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "fecha", nullable = false)
 	private Date fecha;
 
-	@Column(name = "descripcion")
+	@Column(name = "descripcion", nullable = false, length = 500)
 	private String descripcion;
+
+	@Column(name = "respuesta", length = 1000)
+	private String respuesta;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fecha_respuesta")
+	private Date fecha_respuesta;
 
 	private static final long serialVersionUID = 1L;
 
@@ -48,12 +51,12 @@ public class Pregunta implements Serializable {
 		this.descripcion = descripcion;
 	}
 
-	public VehiculoPersonaPK getLlave() {
-		return this.llave;
+	public Long getCodigo_pregunta() {
+		return codigo_pregunta;
 	}
 
-	public void setLlave(VehiculoPersonaPK llave) {
-		this.llave = llave;
+	public void setCodigo_pregunta(Long codigo_pregunta) {
+		this.codigo_pregunta = codigo_pregunta;
 	}
 
 	public Vehiculo getVehiculo() {
@@ -64,11 +67,11 @@ public class Pregunta implements Serializable {
 		this.vehiculo = vehiculo;
 	}
 
-	public Cliente getPersona() {
-		return this.cliente;
+	public Cliente getCliente() {
+		return cliente;
 	}
 
-	public void setPersona(Cliente cliente) {
+	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
 	}
 
@@ -88,18 +91,41 @@ public class Pregunta implements Serializable {
 		this.descripcion = descripcion;
 	}
 
-	/**
-	 * @return the cliente
-	 */
-	public Cliente getCliente() {
-		return cliente;
+	public String getRespuesta() {
+		return respuesta;
 	}
 
-	/**
-	 * @param cliente the cliente to set
-	 */
-	public void setCliente(Cliente cliente) {
-		this.cliente = cliente;
+	public void setRespuesta(String respuesta) {
+		this.respuesta = respuesta;
+	}
+
+	public Date getFecha_respuesta() {
+		return fecha_respuesta;
+	}
+
+	public void setFecha_respuesta(Date fecha_respuesta) {
+		this.fecha_respuesta = fecha_respuesta;
+	}
+
+	@Override
+	public int hashCode() {
+		return 31 + ((codigo_pregunta == null) ? 0 : codigo_pregunta.hashCode());
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null || getClass() != obj.getClass())
+			return false;
+		Pregunta other = (Pregunta) obj;
+		return codigo_pregunta == null ? other.codigo_pregunta == null : codigo_pregunta.equals(other.codigo_pregunta);
+	}
+
+	@Override
+	public String toString() {
+		return "Pregunta [codigo_pregunta=" + codigo_pregunta + ", fecha=" + fecha + ", descripcion=" + descripcion
+				+ ", respuesta=" + respuesta + ", fecha_respuesta=" + fecha_respuesta + "]";
 	}
 
 }

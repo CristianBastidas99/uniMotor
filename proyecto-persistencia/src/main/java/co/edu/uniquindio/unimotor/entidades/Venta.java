@@ -72,6 +72,11 @@ public class Venta implements Serializable {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "Venta [codigo_venta=" + codigo_venta + ", fecha=" + fecha + "]";
+	}
+
 	public Long getCodigo_venta() {
 		return this.codigo_venta;
 	}

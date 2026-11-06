@@ -23,10 +23,10 @@ public class Usuario implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long codigo_usuario;
 
-	@Column(name = "email", nullable = false, unique = true)
+	@Column(name = "email", nullable = false, unique = true, length = 100)
 	private String email;
 
-	@Column(name = "password", nullable = false)
+	@Column(name = "password", nullable = false, length = 100)
 	private String password;
 
 	private static final long serialVersionUID = 1L;
@@ -95,7 +95,7 @@ public class Usuario implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Usuario [codigo_usuario=" + codigo_usuario + ", email=" + email + ", password=" + password + "]";
+		return "Usuario [codigo_usuario=" + codigo_usuario + ", email=" + email + "]";
 	}
 
 }

@@ -18,10 +18,10 @@ public class Modelo implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long codigo_modelo;
 
-	@Column(name = "nombre", nullable = false)
+	@Column(name = "nombre", nullable = false, length = 50)
 	private String nombre;
 
-	@Column(name = "marca", nullable = false)
+	@Column(name = "marca", nullable = false, length = 50)
 	private String marca;
 
 	@OneToMany(mappedBy = "codigo_modelo")
@@ -70,6 +70,11 @@ public class Modelo implements Serializable {
 
 	public void setCodigo_modelo(Long codigo_modelo) {
 		this.codigo_modelo = codigo_modelo;
+	}
+
+	@Override
+	public String toString() {
+		return "Modelo [codigo_modelo=" + codigo_modelo + ", nombre=" + nombre + ", marca=" + marca + "]";
 	}
 
 	public String getNombre() {

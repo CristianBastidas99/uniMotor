@@ -25,10 +25,10 @@ import javax.persistence.*;
 })
 public class Cliente extends Usuario implements Serializable {
 
-	@Column(name = "nombre_completo", nullable = false)
+	@Column(name = "nombre_completo", nullable = false, length = 100)
 	private String nombre_completo;
 
-	@Column(name = "direccion", nullable = false)
+	@Column(name = "direccion", nullable = false, length = 200)
 	private String direccion;
 
 	@ElementCollection
@@ -51,6 +51,12 @@ public class Cliente extends Usuario implements Serializable {
 
 	@OneToMany(mappedBy = "codigo_comprador")
 	private List<Venta> mis_compras;
+
+	@OneToMany(mappedBy = "vendedor")
+	private List<Calificacion> calificaciones_recibidas;
+
+	@OneToMany(mappedBy = "calificador")
+	private List<Calificacion> calificaciones_hechas;
 
 	private static final long serialVersionUID = 1L;
 	public static final String LISTA_FAVORITO_CLIENTE = "Cliente_ListaFavorito";
@@ -211,10 +217,26 @@ public class Cliente extends Usuario implements Serializable {
 		this.mis_compras = mis_compras;
 	}
 
+	public List<Calificacion> getCalificaciones_recibidas() {
+		return calificaciones_recibidas;
+	}
+
+	public void setCalificaciones_recibidas(List<Calificacion> calificaciones_recibidas) {
+		this.calificaciones_recibidas = calificaciones_recibidas;
+	}
+
+	public List<Calificacion> getCalificaciones_hechas() {
+		return calificaciones_hechas;
+	}
+
+	public void setCalificaciones_hechas(List<Calificacion> calificaciones_hechas) {
+		this.calificaciones_hechas = calificaciones_hechas;
+	}
+
 	@Override
 	public String toString() {
-		return "Cliente [nombre_completo=" + nombre_completo + ", direccion=" + direccion + ", telefono="
-				+ telefono.toString() + ", codigo_ciudad=" + codigo_ciudad.getNombre() + "]";
+		return "Cliente [codigo_usuario=" + getCodigo_usuario() + ", email=" + getEmail() + ", nombre_completo="
+				+ nombre_completo + ", direccion=" + direccion + "]";
 	}
 
 }

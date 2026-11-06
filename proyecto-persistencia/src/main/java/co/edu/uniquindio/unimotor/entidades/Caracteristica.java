@@ -22,11 +22,10 @@ public class Caracteristica implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long codigo_caracteristica;
 
-	@Column(name = "nombre", nullable = false)
+	@Column(name = "nombre", nullable = false, unique = true, length = 50)
 	private String nombre;
 
-	@JoinTable(name = "caracteristica_vehiculo", joinColumns = @JoinColumn(name = "codigo_caracteristica"), inverseJoinColumns = @JoinColumn(name = "codigo_vehiculo"))
-	@ManyToMany(cascade = CascadeType.ALL)
+	@ManyToMany(mappedBy = "caracteristicas")
 	private List<Vehiculo> vehiculos;
 
 	private static final long serialVersionUID = 1L;
@@ -95,6 +94,11 @@ public class Caracteristica implements Serializable {
 	 */
 	public void setVehiculos(List<Vehiculo> vehiculos) {
 		this.vehiculos = vehiculos;
+	}
+
+	@Override
+	public String toString() {
+		return "Caracteristica [codigo_caracteristica=" + codigo_caracteristica + ", nombre=" + nombre + "]";
 	}
 
 }
