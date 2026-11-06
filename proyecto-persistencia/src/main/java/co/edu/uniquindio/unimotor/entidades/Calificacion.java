@@ -16,6 +16,9 @@ import javax.persistence.*;
 @Table(name = "CALIFICACION", uniqueConstraints = @UniqueConstraint(columnNames = { "codigo_calificador",
 		"codigo_vendedor" }))
 @NamedQueries({
+		@NamedQuery(name = Calificacion.CALIFICACION_POR_CALIFICADOR_Y_VENDEDOR, query = "select c from Calificacion c where c.calificador.email = :emailCalificador and c.vendedor.email = :emailVendedor"),
+		@NamedQuery(name = Calificacion.CALIFICACIONES_POR_EMAIL_VENDEDOR, query = "select c from Calificacion c where c.vendedor.email = :email order by c.fecha desc"),
+		@NamedQuery(name = Calificacion.PROMEDIO_POR_EMAIL_VENDEDOR, query = "select avg(c.estrellas) from Calificacion c where c.vendedor.email = :email"),
 		@NamedQuery(name = Calificacion.CALIFICACIONES_VENDEDOR, query = "select c from Calificacion c where c.vendedor.codigo_usuario = :codigo"),
 		@NamedQuery(name = Calificacion.PROMEDIO_VENDEDOR, query = "select avg(c.estrellas) from Calificacion c where c.vendedor.codigo_usuario = :codigo"),
 		@NamedQuery(name = Calificacion.ESTADISTICA_PROMEDIO_POR_VENDEDOR, query = "select new co.edu.uniquindio.unimotor.dto.EstadisticaDTO(ve.nombre_completo, avg(c.estrellas)) from Calificacion c join c.vendedor ve group by ve.codigo_usuario, ve.nombre_completo order by avg(c.estrellas) desc") })
@@ -81,6 +84,21 @@ public class Calificacion implements Serializable {
 	 * Parámetro: {@code :codigo} (Long, {@code codigo_usuario} del vendedor). Devuelve un {@link Double} (nulo si no tiene calificaciones).
 	 */
 	public static final String PROMEDIO_VENDEDOR = "Calificacion_PROMEDIO_VENDEDOR";
+	/**
+	 * NamedQuery que busca la calificación de un calificador a un vendedor (par único).
+	 * Parámetros: {@code :emailCalificador} y {@code :emailVendedor} (String). Devuelve entidades {@link Calificacion}.
+	 */
+	public static final String CALIFICACION_POR_CALIFICADOR_Y_VENDEDOR = "Calificacion_CALIFICACION_POR_CALIFICADOR_Y_VENDEDOR";
+	/**
+	 * NamedQuery que lista las calificaciones recibidas por un vendedor, de la más reciente a la más antigua.
+	 * Parámetro: {@code :email} (String, correo del vendedor). Devuelve entidades {@link Calificacion}.
+	 */
+	public static final String CALIFICACIONES_POR_EMAIL_VENDEDOR = "Calificacion_CALIFICACIONES_POR_EMAIL_VENDEDOR";
+	/**
+	 * NamedQuery que calcula el promedio de estrellas de un vendedor según su correo.
+	 * Parámetro: {@code :email} (String). Devuelve un {@link Double} (nulo si no tiene calificaciones).
+	 */
+	public static final String PROMEDIO_POR_EMAIL_VENDEDOR = "Calificacion_PROMEDIO_POR_EMAIL_VENDEDOR";
 
 	/**
 	 * Constructor vacío requerido por JPA.

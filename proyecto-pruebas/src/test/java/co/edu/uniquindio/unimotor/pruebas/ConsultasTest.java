@@ -653,4 +653,147 @@ public class ConsultasTest {
 		assertEstadistica("Ruben zuluaga", 4.5, r.get(0));
 		assertEstadistica("Rodolfo el Grande", 3.0, r.get(1));
 	}
+
+	private List<Long> idsVentas(List<Venta> lista) {
+		List<Long> ids = new ArrayList<>();
+		for (Venta v : lista) {
+			ids.add(v.getCodigo_venta());
+		}
+		return ids;
+	}
+
+	private List<Long> idsCalificaciones(List<Calificacion> lista) {
+		List<Long> ids = new ArrayList<>();
+		for (Calificacion c : lista) {
+			ids.add(c.getCodigo_calificacion());
+		}
+		return ids;
+	}
+
+	/**
+	 * Compras por correo del comprador. Segun venta.json: usuario1 (4) compro la venta 3, usuario2 (5) la venta 1
+	 * y usuario3 (6) la venta 2; cristia (administrador) no compro nada.
+	 */
+	@Test
+	@Transactional(value = TransactionMode.ROLLBACK)
+	public void ventasPorCompradorTest() {
+		List<Venta> r = entityManager.createNamedQuery(Venta.VENTAS_POR_COMPRADOR, Venta.class)
+				.setParameter("email", "usuario1@servidor.com").getResultList();
+		Assert.assertEquals(Arrays.asList(3L), idsVentas(r));
+
+		r = entityManager.createNamedQuery(Venta.VENTAS_POR_COMPRADOR, Venta.class)
+				.setParameter("email", "usuario2@servidor.com").getResultList();
+		Assert.assertEquals(Arrays.asList(1L), idsVentas(r));
+
+		r = entityManager.createNamedQuery(Venta.VENTAS_POR_COMPRADOR, Venta.class)
+				.setParameter("email", "cristia@proyecto.com").getResultList();
+		Assert.assertTrue(r.isEmpty());
+	}
+
+	/**
+	 * Ventas por correo del vendedor (dueno del vehiculo), con fecha descendente. Segun venta.json y vehiculo.json:
+	 * usuario3 (6) vendio los vehiculos 2 (venta 1, 2020-10-24) y 7 (venta 3, 2020-09-12) y da [1, 3]; usuario2 (5)
+	 * vendio el vehiculo 6 (venta 2) y da [2]; usuario1 (4) no vendio ninguno.
+	 */
+	@Test
+	@Transactional(value = TransactionMode.ROLLBACK)
+	public void ventasPorVendedorTest() {
+		List<Venta> r = entityManager.createNamedQuery(Venta.VENTAS_POR_VENDEDOR, Venta.class)
+				.setParameter("email", "usuario3@servidor.com").getResultList();
+		Assert.assertEquals(Arrays.asList(1L, 3L), idsVentas(r));
+
+		r = entityManager.createNamedQuery(Venta.VENTAS_POR_VENDEDOR, Venta.class)
+				.setParameter("email", "usuario2@servidor.com").getResultList();
+		Assert.assertEquals(Arrays.asList(2L), idsVentas(r));
+
+		r = entityManager.createNamedQuery(Venta.VENTAS_POR_VENDEDOR, Venta.class)
+				.setParameter("email", "usuario1@servidor.com").getResultList();
+		Assert.assertTrue(r.isEmpty());
+	}
+
+	/**
+	 * Conteo de compras de un comprador a un vendedor. usuario2 (5) le compro a usuario3 (6) la venta 1 = 1;
+	 * usuario3 (6) le compro a usuario2 (5) la venta 2 = 1; usuario2 (5) no le ha comprado a usuario1 (4) = 0.
+	 */
+	@Test
+	@Transactional(value = TransactionMode.ROLLBACK)
+	public void comprasAVendedorTest() {
+		Long c = entityManager.createNamedQuery(Venta.COMPRAS_A_VENDEDOR, Long.class)
+				.setParameter("emailComprador", "usuario2@servidor.com")
+				.setParameter("emailVendedor", "usuario3@servidor.com").getSingleResult();
+		Assert.assertEquals(1L, c.longValue());
+
+		c = entityManager.createNamedQuery(Venta.COMPRAS_A_VENDEDOR, Long.class)
+				.setParameter("emailComprador", "usuario3@servidor.com")
+				.setParameter("emailVendedor", "usuario2@servidor.com").getSingleResult();
+		Assert.assertEquals(1L, c.longValue());
+
+		c = entityManager.createNamedQuery(Venta.COMPRAS_A_VENDEDOR, Long.class)
+				.setParameter("emailComprador", "usuario2@servidor.com")
+				.setParameter("emailVendedor", "usuario1@servidor.com").getSingleResult();
+		Assert.assertEquals(0L, c.longValue());
+	}
+
+	/**
+	 * Calificacion de un par calificador-vendedor segun calificacion.json: usuario2 (5) a usuario3 (6) es la 1
+	 * (5 estrellas); usuario1 (4) a usuario3 (6) es la 2; usuario1 (4) a usuario2 (5) no existe.
+	 */
+	@Test
+	@Transactional(value = TransactionMode.ROLLBACK)
+	public void calificacionPorCalificadorYVendedorTest() {
+		List<Calificacion> r = entityManager
+				.createNamedQuery(Calificacion.CALIFICACION_POR_CALIFICADOR_Y_VENDEDOR, Calificacion.class)
+				.setParameter("emailCalificador", "usuario2@servidor.com")
+				.setParameter("emailVendedor", "usuario3@servidor.com").getResultList();
+		Assert.assertEquals(Arrays.asList(1L), idsCalificaciones(r));
+		Assert.assertEquals(5, r.get(0).getEstrellas());
+
+		r = entityManager.createNamedQuery(Calificacion.CALIFICACION_POR_CALIFICADOR_Y_VENDEDOR, Calificacion.class)
+				.setParameter("emailCalificador", "usuario1@servidor.com")
+				.setParameter("emailVendedor", "usuario3@servidor.com").getResultList();
+		Assert.assertEquals(Arrays.asList(2L), idsCalificaciones(r));
+
+		r = entityManager.createNamedQuery(Calificacion.CALIFICACION_POR_CALIFICADOR_Y_VENDEDOR, Calificacion.class)
+				.setParameter("emailCalificador", "usuario1@servidor.com")
+				.setParameter("emailVendedor", "usuario2@servidor.com").getResultList();
+		Assert.assertTrue(r.isEmpty());
+	}
+
+	/**
+	 * Calificaciones por correo del vendedor, con fecha descendente. usuario3 (6) tiene la 1 (2020-10-26) y la 2
+	 * (2020-09-14) y da [1, 2]; usuario2 (5) tiene la 3; usuario1 (4) no tiene ninguna.
+	 */
+	@Test
+	@Transactional(value = TransactionMode.ROLLBACK)
+	public void calificacionesPorEmailVendedorTest() {
+		List<Calificacion> r = entityManager
+				.createNamedQuery(Calificacion.CALIFICACIONES_POR_EMAIL_VENDEDOR, Calificacion.class)
+				.setParameter("email", "usuario3@servidor.com").getResultList();
+		Assert.assertEquals(Arrays.asList(1L, 2L), idsCalificaciones(r));
+
+		r = entityManager.createNamedQuery(Calificacion.CALIFICACIONES_POR_EMAIL_VENDEDOR, Calificacion.class)
+				.setParameter("email", "usuario2@servidor.com").getResultList();
+		Assert.assertEquals(Arrays.asList(3L), idsCalificaciones(r));
+
+		r = entityManager.createNamedQuery(Calificacion.CALIFICACIONES_POR_EMAIL_VENDEDOR, Calificacion.class)
+				.setParameter("email", "usuario1@servidor.com").getResultList();
+		Assert.assertTrue(r.isEmpty());
+	}
+
+	/** Promedio por correo: usuario3 (6) = (5 + 4) / 2 = 4.5, usuario2 (5) = 3.0, usuario1 (4) sin calificaciones = null. */
+	@Test
+	@Transactional(value = TransactionMode.ROLLBACK)
+	public void promedioPorEmailVendedorTest() {
+		Double p = entityManager.createNamedQuery(Calificacion.PROMEDIO_POR_EMAIL_VENDEDOR, Double.class)
+				.setParameter("email", "usuario3@servidor.com").getSingleResult();
+		Assert.assertEquals(4.5, p, DELTA);
+
+		p = entityManager.createNamedQuery(Calificacion.PROMEDIO_POR_EMAIL_VENDEDOR, Double.class)
+				.setParameter("email", "usuario2@servidor.com").getSingleResult();
+		Assert.assertEquals(3.0, p, DELTA);
+
+		p = entityManager.createNamedQuery(Calificacion.PROMEDIO_POR_EMAIL_VENDEDOR, Double.class)
+				.setParameter("email", "usuario1@servidor.com").getSingleResult();
+		Assert.assertNull(p);
+	}
 }

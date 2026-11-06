@@ -13,6 +13,9 @@ import javax.persistence.*;
  */
 @Entity
 @NamedQueries({
+		@NamedQuery(name = Venta.VENTAS_POR_COMPRADOR, query = "select v from Venta v where v.codigo_comprador.email = :email order by v.fecha desc"),
+		@NamedQuery(name = Venta.VENTAS_POR_VENDEDOR, query = "select v from Venta v where v.codigo_vehiculo.codigo_dueno.email = :email order by v.fecha desc"),
+		@NamedQuery(name = Venta.COMPRAS_A_VENDEDOR, query = "select count(v) from Venta v where v.codigo_comprador.email = :emailComprador and v.codigo_vehiculo.codigo_dueno.email = :emailVendedor"),
 		@NamedQuery(name = Venta.ESTADISTICA_VENTAS_POR_MES, query = "select new co.edu.uniquindio.unimotor.dto.EstadisticaDTO(FUNCTION('DATE_FORMAT', v.fecha, '%Y-%m'), count(v)) from Venta v group by FUNCTION('DATE_FORMAT', v.fecha, '%Y-%m') order by FUNCTION('DATE_FORMAT', v.fecha, '%Y-%m')") })
 
 public class Venta implements Serializable {
@@ -56,6 +59,21 @@ public class Venta implements Serializable {
 	 * (etiqueta = mes con formato {@code yyyy-MM}, valor = conteo).
 	 */
 	public static final String ESTADISTICA_VENTAS_POR_MES = "Venta_ESTADISTICA_VENTAS_POR_MES";
+	/**
+	 * NamedQuery que lista las compras de un cliente, de la más reciente a la más antigua.
+	 * Parámetro: {@code :email} (String, correo del comprador). Devuelve entidades {@link Venta}.
+	 */
+	public static final String VENTAS_POR_COMPRADOR = "Venta_VENTAS_POR_COMPRADOR";
+	/**
+	 * NamedQuery que lista las ventas hechas por un vendedor (dueño del vehículo), de la más reciente a la más antigua.
+	 * Parámetro: {@code :email} (String, correo del vendedor). Devuelve entidades {@link Venta}.
+	 */
+	public static final String VENTAS_POR_VENDEDOR = "Venta_VENTAS_POR_VENDEDOR";
+	/**
+	 * NamedQuery que cuenta los vehículos que un comprador le ha comprado a un vendedor.
+	 * Parámetros: {@code :emailComprador} y {@code :emailVendedor} (String). Devuelve un {@link Long}.
+	 */
+	public static final String COMPRAS_A_VENDEDOR = "Venta_COMPRAS_A_VENDEDOR";
 
 	/**
 	 * Constructor vacío requerido por JPA.

@@ -12,6 +12,7 @@ import co.edu.uniquindio.unimotor.entidades.Modelo;
 import co.edu.uniquindio.unimotor.entidades.Pregunta;
 import co.edu.uniquindio.unimotor.entidades.Usuario;
 import co.edu.uniquindio.unimotor.entidades.Vehiculo;
+import co.edu.uniquindio.unimotor.entidades.Venta;
 
 /**
  * Plantillas de texto plano en español para los correos que envía la aplicación.
@@ -105,6 +106,59 @@ public final class PlantillasCorreo {
 				+ "Te recomendamos iniciar sesión y cambiarla cuanto antes. "
 				+ "Si no solicitaste este cambio, comunícate con nosotros.\n\n"
 				+ "Equipo uniMotor\n";
+	}
+
+	/**
+	 * Asunto del correo que se envía al comprador cuando se registra la venta de un vehículo.
+	 *
+	 * @param venta venta registrada
+	 * @return asunto del correo
+	 */
+	public static String asuntoVentaRegistrada(Venta venta) {
+		Vehiculo vehiculo = venta == null ? null : venta.getCodigo_vehiculo();
+		return "uniMotor: registramos la compra de tu " + descripcionVehiculo(vehiculo);
+	}
+
+	/**
+	 * Cuerpo del correo que se envía al comprador cuando se registra la venta de un vehículo.
+	 *
+	 * @param venta venta registrada
+	 * @return texto plano con los datos del vehículo, del vendedor, la fecha y la invitación a calificar
+	 */
+	public static String ventaRegistrada(Venta venta) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Hola,\n\nSe registró en uniMotor la compra de un vehículo a tu nombre.\n\n");
+		Vehiculo vehiculo = venta == null ? null : venta.getCodigo_vehiculo();
+		sb.append("Vehículo:\n");
+		if (vehiculo != null) {
+			Modelo modelo = vehiculo.getCodigo_modelo();
+			sb.append("  Marca: ").append(modelo == null ? "-" : valor(modelo.getMarca())).append('\n');
+			sb.append("  Modelo: ").append(modelo == null ? "-" : valor(modelo.getNombre())).append('\n');
+			sb.append("  Año: ").append(vehiculo.getYear()).append('\n');
+			sb.append("  Placa: ").append(valor(vehiculo.getPlaca())).append('\n');
+			sb.append("  Precio: ").append(precio(vehiculo.getPrecio())).append('\n');
+		} else {
+			sb.append("  (no disponible)\n");
+		}
+		Cliente vendedor = vehiculo == null ? null : vehiculo.getCodigo_dueno();
+		sb.append("\nVendedor:\n");
+		if (vendedor != null) {
+			sb.append("  Nombre: ").append(valor(vendedor.getNombre_completo())).append('\n');
+			sb.append("  Email: ").append(valor(vendedor.getEmail())).append('\n');
+			Map<String, String> telefonos = vendedor.getTelefono();
+			if (telefonos != null) {
+				for (Map.Entry<String, String> t : telefonos.entrySet()) {
+					sb.append("  Teléfono (").append(valor(t.getKey())).append("): ").append(valor(t.getValue()))
+							.append('\n');
+				}
+			}
+		} else {
+			sb.append("  (no disponible)\n");
+		}
+		sb.append("\nFecha: ").append(fecha(venta == null ? null : venta.getFecha())).append('\n');
+		sb.append("\nTe invitamos a ingresar a uniMotor y calificar al vendedor para ayudar a otros compradores.\n\n"
+				+ "Equipo uniMotor\n");
+		return sb.toString();
 	}
 
 	private static String descripcionVehiculo(Vehiculo vehiculo) {
