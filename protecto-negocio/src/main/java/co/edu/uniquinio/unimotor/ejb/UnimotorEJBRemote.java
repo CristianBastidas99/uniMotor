@@ -10,7 +10,7 @@ import co.edu.uniquinio.unimotor.excepciones.AutentificacionEcxeption;
 @Remote
 public interface UnimotorEJBRemote {
 	
-	public static final String JNDI = "java:global/proyecto-ear/protecto-negocio/UnimotorEJB!co.edu.uniquinio.unimotor.ejb.UnimotorEJBRemote";
+	public static final String JNDI = "java:global/proyecto-ear/proyecto-negocio/UnimotorEJB!co.edu.uniquinio.unimotor.ejb.UnimotorEJBRemote";
 
 	void registrarUsuario(Usuario usuario) throws Exception;
 

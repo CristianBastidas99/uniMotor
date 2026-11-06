@@ -10,7 +10,6 @@ import javax.persistence.*;
  */
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-@MappedSuperclass
 @NamedQueries({
 		@NamedQuery(name = Usuario.AUTENTIFICAR_USUARO, query = "select u from Usuario u where u.email = :email and u.password = :password"),
 		@NamedQuery(name = Usuario.AUTENTIFICAR_EMAIL, query = "select u from Usuario u where u.email = :email"),
