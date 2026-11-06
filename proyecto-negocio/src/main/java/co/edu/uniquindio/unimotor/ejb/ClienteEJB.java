@@ -1,7 +1,9 @@
 package co.edu.uniquindio.unimotor.ejb;
 
+import java.security.SecureRandom;
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -9,7 +11,9 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import co.edu.uniquindio.unimotor.entidades.Usuario;
+import co.edu.uniquindio.unimotor.excepciones.ElementoNoEncontradoException;
 import co.edu.uniquindio.unimotor.excepciones.ElementoRepetidoException;
+import co.edu.uniquindio.unimotor.excepciones.EnvioCorreoException;
 import co.edu.uniquindio.unimotor.excepciones.InformacionInvalidaException;
 
 /**
@@ -21,6 +25,13 @@ public class ClienteEJB {
 
 	@PersistenceContext
 	private EntityManager entityManager;
+
+	@EJB
+	private CorreoEJB correoEJB;
+
+	private static final String ALFABETO = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789";
+
+	private final SecureRandom random = new SecureRandom();
 
 	/**
 	 * Crea el EJB de clientes.
@@ -67,6 +78,40 @@ public class ClienteEJB {
 		query.setParameter("email", email);
 		List<Usuario> usuarios = query.getResultList();
 		return !usuarios.isEmpty();
+	}
+
+	/**
+	 * Genera una contraseña temporal para el usuario con el email dado y se la envía por correo.
+	 *
+	 * @param email correo electrónico del usuario
+	 * @throws InformacionInvalidaException si el email es nulo o vacío
+	 * @throws ElementoNoEncontradoException si no existe un usuario con ese email
+	 * @throws EnvioCorreoException si no se puede enviar el correo (se deshace el cambio de contraseña)
+	 */
+	public void recuperarPassword(String email)
+			throws InformacionInvalidaException, ElementoNoEncontradoException, EnvioCorreoException {
+		if (email == null || email.trim().isEmpty()) {
+			throw new InformacionInvalidaException("El email es obligatorio.");
+		}
+		TypedQuery<Usuario> query = entityManager.createNamedQuery(Usuario.AUTENTIFICAR_EMAIL, Usuario.class);
+		query.setParameter("email", email.trim());
+		List<Usuario> usuarios = query.getResultList();
+		if (usuarios.isEmpty()) {
+			throw new ElementoNoEncontradoException("No existe un usuario con el email " + email + ".");
+		}
+		Usuario usuario = usuarios.get(0);
+		String temporal = generarPasswordTemporal();
+		usuario.setPassword(temporal);
+		correoEJB.enviarEmail(PlantillasCorreo.asuntoRecuperarPassword(),
+				PlantillasCorreo.recuperarPassword(usuario, temporal), usuario.getEmail());
+	}
+
+	private String generarPasswordTemporal() {
+		StringBuilder sb = new StringBuilder(8);
+		for (int i = 0; i < 8; i++) {
+			sb.append(ALFABETO.charAt(random.nextInt(ALFABETO.length())));
+		}
+		return sb.toString();
 	}
 
 }

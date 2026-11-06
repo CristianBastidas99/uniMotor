@@ -112,6 +112,23 @@ asadmin deploy --name proyecto-ear --force=true proyecto-ear\target\proyecto-ear
   si cambia una entidad, recree la base `unimotor` y vuelva a desplegar. `SetupEJB` crea los usuarios
   iniciales (por ejemplo `cristia@proyecto.com` / `123`).
 
+### Correo (JavaMail)
+
+El envío de correos (recuperación de contraseña, avisos de preguntas) usa el recurso JNDI `mail/unimotor`.
+En desarrollo se usa [Mailpit](https://github.com/axllent/mailpit) en Docker (bandeja en <http://localhost:8025>):
+
+```bat
+docker run -d --name unimotor-mailpit --restart unless-stopped -p 1025:1025 -p 8025:8025 axllent/mailpit
+asadmin create-javamail-resource --mailhost localhost --mailuser unimotor --fromaddress no-responder@unimotor.local --property mail.smtp.port=1025 mail/unimotor
+```
+
+Para usar Gmail: `--mailhost smtp.gmail.com`, `--mailuser` con la cuenta, y las propiedades `mail.smtp.port=587`,
+`mail.smtp.auth=true`, `mail.smtp.starttls.enable=true` y `mail.smtp.password` con una contraseña de aplicación.
+En `asadmin`, los caracteres `:` y `=` dentro de los valores de `--property` se escapan con `\`.
+Si el recurso no existe, el sistema funciona en modo simulado: el correo solo se registra en el log del servidor.
+
+Las ciudades se cargan al desplegar desde api-colombia.com, con respaldo en `ciudades-colombia.json`.
+
 ### 4. Aplicación de escritorio
 
 Con Payara arriba y el EAR desplegado, ejecute la clase

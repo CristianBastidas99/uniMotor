@@ -12,6 +12,7 @@ entity CIUDAD {
   * codigo_ciudad : bigint <<PK>>
   --
   * nombre : varchar(100)
+  departamento : varchar(100)
 }
 entity MODELO {
   * codigo_modelo : bigint <<PK>>

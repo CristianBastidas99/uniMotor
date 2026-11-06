@@ -12,8 +12,9 @@ import javax.persistence.*;
  */
 @Entity
 @NamedQueries({
-		@NamedQuery(name = Ciudad.CIUDADES_ORDENADAS, query = "select c from Ciudad c order by c.nombre"),
-		@NamedQuery(name = Ciudad.CIUDAD_POR_NOMBRE, query = "select c from Ciudad c where c.nombre = :nombre") })
+		@NamedQuery(name = Ciudad.CIUDADES_ORDENADAS, query = "select c from Ciudad c order by c.nombre, c.departamento"),
+		@NamedQuery(name = Ciudad.CIUDAD_POR_NOMBRE, query = "select c from Ciudad c where c.nombre = :nombre"),
+		@NamedQuery(name = Ciudad.CIUDAD_POR_NOMBRE_Y_DEPARTAMENTO, query = "select c from Ciudad c where c.nombre = :nombre and c.departamento = :departamento") })
 
 public class Ciudad implements Serializable {
 
@@ -30,6 +31,13 @@ public class Ciudad implements Serializable {
 	 */
 	@Column(name = "nombre", nullable = false, length = 100)
 	private String nombre;
+
+	/**
+	 * Departamento al que pertenece la ciudad; opcional, máximo 100 caracteres.
+	 * Distingue municipios homónimos de distintos departamentos.
+	 */
+	@Column(name = "departamento", length = 100)
+	private String departamento;
 
 	/**
 	 * Clientes que residen en la ciudad (lado inverso de {@link Cliente#getCodigo_ciudad()}).
@@ -56,6 +64,11 @@ public class Ciudad implements Serializable {
 	 * Parámetro: {@code :nombre} (String). Devuelve la entidad {@link Ciudad}.
 	 */
 	public static final String CIUDAD_POR_NOMBRE = "Ciudad_CIUDAD_POR_NOMBRE";
+	/**
+	 * NamedQuery que busca una ciudad por nombre y departamento.
+	 * Parámetros: {@code :nombre} (String) y {@code :departamento} (String). Devuelve la entidad {@link Ciudad}.
+	 */
+	public static final String CIUDAD_POR_NOMBRE_Y_DEPARTAMENTO = "Ciudad_CIUDAD_POR_NOMBRE_Y_DEPARTAMENTO";
 
 	/**
 	 * Constructor vacío requerido por JPA.
@@ -72,6 +85,18 @@ public class Ciudad implements Serializable {
 	public Ciudad(String nombre) {
 		super();
 		this.nombre = nombre;
+	}
+
+	/**
+	 * Crea una ciudad indicando su departamento.
+	 *
+	 * @param nombre       nombre de la ciudad
+	 * @param departamento departamento al que pertenece
+	 */
+	public Ciudad(String nombre, String departamento) {
+		super();
+		this.nombre = nombre;
+		this.departamento = departamento;
 	}
 
 	/**
@@ -143,6 +168,20 @@ public class Ciudad implements Serializable {
 	}
 
 	/**
+	 * @return the departamento
+	 */
+	public String getDepartamento() {
+		return departamento;
+	}
+
+	/**
+	 * @param departamento the departamento to set
+	 */
+	public void setDepartamento(String departamento) {
+		this.departamento = departamento;
+	}
+
+	/**
 	 * @return the personas
 	 */
 	public List<Cliente> getPersonas() {
@@ -191,7 +230,7 @@ public class Ciudad implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "Ciudad [codigo_ciudad=" + codigo_ciudad + ", nombre=" + nombre + "]";
+		return "Ciudad [codigo_ciudad=" + codigo_ciudad + ", nombre=" + nombre + ", departamento=" + departamento + "]";
 	}
 
 }

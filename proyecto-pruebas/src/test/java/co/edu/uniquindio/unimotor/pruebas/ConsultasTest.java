@@ -544,6 +544,20 @@ public class ConsultasTest {
 		Assert.assertTrue(r.isEmpty());
 	}
 
+	/** Ciudad por nombre y departamento. */
+	@Test
+	@Transactional(value = TransactionMode.ROLLBACK)
+	public void ciudadPorNombreYDepartamentoTest() {
+		List<Ciudad> r = entityManager.createNamedQuery(Ciudad.CIUDAD_POR_NOMBRE_Y_DEPARTAMENTO, Ciudad.class)
+				.setParameter("nombre", "Pijao").setParameter("departamento", "Quindío").getResultList();
+		Assert.assertEquals(1, r.size());
+		Assert.assertEquals(Long.valueOf(3L), r.get(0).getCodigo_ciudad());
+
+		r = entityManager.createNamedQuery(Ciudad.CIUDAD_POR_NOMBRE_Y_DEPARTAMENTO, Ciudad.class)
+				.setParameter("nombre", "Pijao").setParameter("departamento", "Antioquia").getResultList();
+		Assert.assertTrue(r.isEmpty());
+	}
+
 	/** Caracteristica por nombre. */
 	@Test
 	@Transactional(value = TransactionMode.ROLLBACK)

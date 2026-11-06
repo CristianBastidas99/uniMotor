@@ -7,8 +7,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
@@ -30,20 +33,27 @@ import co.edu.uniquindio.unimotor.entidades.TipoVehiculo;
 import co.edu.uniquindio.unimotor.entidades.Usuario;
 import co.edu.uniquindio.unimotor.entidades.Vehiculo;
 import co.edu.uniquindio.unimotor.entidades.Venta;
+import co.edu.uniquindio.unimotor.excepciones.ElementoNoEncontradoException;
 
 /**
  * EJB de arranque que carga los datos iniciales de uniMotor cuando la base de
- * datos está vacía: administradores, ciudades, clientes, modelos,
- * características, vehículos (con fotos y características), preguntas, una
- * venta y una calificación.
+ * datos está vacía: administradores, clientes, modelos, características,
+ * vehículos (con fotos y características), preguntas, una venta y una
+ * calificación. Las ciudades no están quemadas: las carga desde la API de
+ * terceros mediante {@link CiudadEJB} y los datos de ejemplo las consultan.
  */
 @Singleton
 @LocalBean
 @Startup
 public class SetupEJB {
 
+	private static final Logger LOGGER = Logger.getLogger(SetupEJB.class.getName());
+
 	@PersistenceContext
 	private EntityManager entityManager;
+
+	@EJB
+	private CiudadEJB ciudadEJB;
 
 	/**
 	 * Constructor por defecto.
@@ -53,17 +63,22 @@ public class SetupEJB {
 	}
 
 	/**
-	 * Llena la base de datos con los datos de ejemplo si todavía no existe ningún
-	 * usuario. El orden respeta las dependencias entre entidades.
+	 * Carga siempre primero las ciudades desde la API mediante {@link CiudadEJB}
+	 * (solo si la tabla está vacía) y luego llena la base de datos con los datos
+	 * de ejemplo si todavía no existe ningún usuario. El orden respeta las
+	 * dependencias entre entidades.
 	 */
 	@PostConstruct
 	public void config() {
+		int cargadas = ciudadEJB.cargarCiudades();
+		LOGGER.log(Level.INFO, "Ciudades cargadas: {0}", cargadas);
+
 		if (isUsuario()) {
 			return;
 		}
 
 		crearAdministradores();
-		Ciudad[] ciudades = crearCiudades();
+		Ciudad[] ciudades = obtenerCiudades();
 		Cliente[] clientes = crearClientes(ciudades);
 		Modelo[] modelos = crearModelos();
 		Caracteristica[] caracteristicas = crearCaracteristicas();
@@ -82,14 +97,25 @@ public class SetupEJB {
 	}
 
 	/**
-	 * Crea y persiste las ciudades.
+	 * Obtiene, mediante {@link CiudadEJB#buscarCiudad(String, String)}, las
+	 * ciudades que usan los datos de ejemplo. Si alguna no se encuentra (por
+	 * ejemplo, porque la API cambió los nombres), la crea y la persiste como
+	 * respaldo y registra una advertencia.
 	 *
-	 * @return arreglo con Armenia, Calarcá y Pijao, en ese orden
+	 * @return arreglo con Armenia, Calarcá y Pijao (Quindío), en ese orden
 	 */
-	private Ciudad[] crearCiudades() {
-		Ciudad[] ciudades = { new Ciudad("Armenia"), new Ciudad("Calarca"), new Ciudad("Pijao") };
-		for (Ciudad ciudad : ciudades) {
-			entityManager.persist(ciudad);
+	private Ciudad[] obtenerCiudades() {
+		String[][] datos = { { "Armenia", "Quindío" }, { "Calarcá", "Quindío" }, { "Pijao", "Quindío" } };
+		Ciudad[] ciudades = new Ciudad[datos.length];
+		for (int i = 0; i < datos.length; i++) {
+			try {
+				ciudades[i] = ciudadEJB.buscarCiudad(datos[i][0], datos[i][1]);
+			} catch (ElementoNoEncontradoException e) {
+				LOGGER.log(Level.WARNING, "No se encontró la ciudad {0} ({1}); se crea como respaldo.",
+						new Object[] { datos[i][0], datos[i][1] });
+				ciudades[i] = new Ciudad(datos[i][0], datos[i][1]);
+				entityManager.persist(ciudades[i]);
+			}
 		}
 		return ciudades;
 	}

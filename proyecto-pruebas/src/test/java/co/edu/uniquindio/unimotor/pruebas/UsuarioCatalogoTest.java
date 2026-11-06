@@ -138,7 +138,7 @@ public class UsuarioCatalogoTest {
 	@Test
 	@Transactional(value = TransactionMode.ROLLBACK)
 	public void persistFindCiudadTest() {
-		Ciudad nueva = new Ciudad("Calarca");
+		Ciudad nueva = new Ciudad("Calarca", "Quindío");
 		entityManager.persist(nueva);
 		entityManager.flush();
 		Long id = nueva.getCodigo_ciudad();
@@ -147,6 +147,7 @@ public class UsuarioCatalogoTest {
 		Ciudad buscada = entityManager.find(Ciudad.class, id);
 		Assert.assertNotNull(buscada);
 		Assert.assertEquals("Calarca", buscada.getNombre());
+		Assert.assertEquals("Quindío", buscada.getDepartamento());
 	}
 
 	/** Busca la ciudad 3 del dataset (Pijao). */

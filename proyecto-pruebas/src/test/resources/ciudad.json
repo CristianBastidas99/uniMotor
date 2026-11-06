@@ -2,15 +2,18 @@
 	"CIUDAD": [
 		{
 			"codigo_ciudad": "1",
-			"nombre": "Armenia"
+			"nombre": "Armenia",
+			"departamento": "Quindío"
 		},
 		{
 			"codigo_ciudad": "2",
-			"nombre": "Buenavista"
+			"nombre": "Buenavista",
+			"departamento": "Quindío"
 		},
 		{
 			"codigo_ciudad": "3",
-			"nombre": "Pijao"
+			"nombre": "Pijao",
+			"departamento": "Quindío"
 		}
 	]
 }
