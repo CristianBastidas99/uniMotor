@@ -7,9 +7,16 @@ http://jboss.org/schema/arquillian/arquillian_1_0.xsd">
 
 	<container qualifier="glassfish" default="true">
 		<configuration>
+			<property name="configurationXml">src/test/resources/domain-test.xml</property>
+			<property name="bindHttpPort">18181</property>
+			<property name="bindHttpsPort">18182</property>
 			<property name="resourcesXml">src/test/resources/sun-resources.xml</property>
 		</configuration>
 	</container>
+	<extension qualifier="persistence-dbunit">
+		<!-- La base unimotor del mismo servidor tiene las mismas tablas: se fija el esquema -->
+		<property name="schema">prueba</property>
+	</extension>
 	<extension qualifier="persistence-script">
 		<!-- Estos son para desactivar la verificacion de llaves foraneas en mysql -->
 		<property name="scriptsToExecuteBeforeTest">SET foreign_key_checks = 0;</property>

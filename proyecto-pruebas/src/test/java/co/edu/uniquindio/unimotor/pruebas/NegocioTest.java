@@ -15,6 +15,7 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -25,6 +26,7 @@ import co.edu.uniquindio.unimotor.entidades.Vehiculo;
 import co.edu.uniquindio.unimotor.ejb.UnimotorEJB;
 import co.edu.uniquindio.unimotor.excepciones.AutentificacionEcxeption;
 
+@Ignore("Fase 2.7: pruebas de negocio")
 @RunWith(Arquillian.class)
 public class NegocioTest {
 

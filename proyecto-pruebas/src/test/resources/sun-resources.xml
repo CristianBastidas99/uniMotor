@@ -9,7 +9,7 @@ Resource Definitions //EN"
 		<property name="user" value="root" />
 		<property name="password" value="12345" />
 		<property name="url"
-			value="jdbc:mysql://localhost:3306/prueba?useSSL=false&amp;allowPublicKeyRetrieval=true&amp;serverTimezone=America/Bogota" />
+			value="jdbc:mysql://localhost:3306/prueba?databaseTerm=SCHEMA&amp;useSSL=false&amp;allowPublicKeyRetrieval=true&amp;serverTimezone=America/Bogota" />
 	</jdbc-connection-pool>
 	<jdbc-resource enabled="true" jndi-name="jdbc/prueba"
 		object-type="user" pool-name="mysql_prueba_pool" />

@@ -23,6 +23,9 @@ import org.junit.runner.RunWith;
 import co.edu.uniquindio.unimotor.entidades.*;
 
 @RunWith(Arquillian.class)
+@UsingDataSet({ Datasets.MODELO, Datasets.ADMINISTRADOR, Datasets.CARACTERISTICA, Datasets.CARACTERISTICA_VEHICULO,
+		Datasets.CIUDAD, Datasets.CLIENTE, Datasets.FAVORITO, Datasets.FOTO_VEHICULO, Datasets.PREGUNTA,
+		Datasets.TELEFONO_USUARIO, Datasets.USUARIO, Datasets.VEHICULO, Datasets.VENTA, Datasets.CALIFICACION })
 public class EntidadTest {
 
 	@PersistenceContext
@@ -30,21 +33,11 @@ public class EntidadTest {
 
 	@Deployment
 	public static Archive<?> createTestArchive() {
-		return ShrinkWrap.create(WebArchive.class,
-
-				"prueba.war").addPackage(Cliente.class.getPackage()).addAsResource("persistenceForTest.xml",
-
-						"META-INF/persistence.xml")
-
-				.addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
-
+		return Despliegue.crear();
 	}
 
 	@Test
 	@Transactional(value = TransactionMode.ROLLBACK)
-	@UsingDataSet({ "modelo.json", "administrador.json", "caracteristica.json", "caracteristica_vehiculo.json",
-			"ciudad.json", "cliente.json", "favorito.json", "foto_vehiculo.json", "pregunta.json",
-			"telefono_usuario.json", "usuario.json", "vehiculo.json", "venta.json" })
 	public void buscarTests() {
 
 	}
@@ -57,9 +50,6 @@ public class EntidadTest {
 
 	@Test
 	@Transactional(value = TransactionMode.ROLLBACK)
-	@UsingDataSet({ "modelo.json", "administrador.json", "caracteristica.json", "caracteristica_vehiculo.json",
-			"ciudad.json", "cliente.json", "favorito.json", "foto_vehiculo.json", "pregunta.json",
-			"telefono_usuario.json", "usuario.json", "vehiculo.json", "venta.json" })
 	public void persistFindAdministradorTest() {
 
 		Administrador miAdministrador = new Administrador();
@@ -79,9 +69,6 @@ public class EntidadTest {
 
 	@Test
 	@Transactional(value = TransactionMode.ROLLBACK)
-	@UsingDataSet({ "modelo.json", "administrador.json", "caracteristica.json", "caracteristica_vehiculo.json",
-			"ciudad.json", "cliente.json", "favorito.json", "foto_vehiculo.json", "pregunta.json",
-			"telefono_usuario.json", "usuario.json", "vehiculo.json", "venta.json" })
 	public void mergeAdministradorTest() {
 
 		Administrador administradorbuscado = entityManager.find(Administrador.class, 1l);
@@ -98,9 +85,6 @@ public class EntidadTest {
 
 	@Test
 	@Transactional(value = TransactionMode.ROLLBACK)
-	@UsingDataSet({ "modelo.json", "administrador.json", "caracteristica.json", "caracteristica_vehiculo.json",
-			"ciudad.json", "cliente.json", "favorito.json", "foto_vehiculo.json", "pregunta.json",
-			"telefono_usuario.json", "usuario.json", "vehiculo.json", "venta.json" })
 	public void removeAdministradorTest() {
 
 		Administrador administradorEliminar = entityManager.find(Administrador.class, 3l);
@@ -114,9 +98,6 @@ public class EntidadTest {
 
 	@Test
 	@Transactional(value = TransactionMode.ROLLBACK)
-	@UsingDataSet({ "modelo.json", "administrador.json", "caracteristica.json", "caracteristica_vehiculo.json",
-			"ciudad.json", "cliente.json", "favorito.json", "foto_vehiculo.json", "pregunta.json",
-			"telefono_usuario.json", "usuario.json", "vehiculo.json", "venta.json" })
 	public void persistFindCaracteristicaTest() {
 
 		Caracteristica miCaracteristica = new Caracteristica();
@@ -134,9 +115,6 @@ public class EntidadTest {
 
 	@Test
 	@Transactional(value = TransactionMode.ROLLBACK)
-	@UsingDataSet({ "modelo.json", "administrador.json", "caracteristica.json", "caracteristica_vehiculo.json",
-			"ciudad.json", "cliente.json", "favorito.json", "foto_vehiculo.json", "pregunta.json",
-			"telefono_usuario.json", "usuario.json", "vehiculo.json", "venta.json" })
 	public void mergeCaracteristicaTest() {
 
 		Caracteristica buscado = entityManager.find(Caracteristica.class, 1l);
@@ -153,9 +131,6 @@ public class EntidadTest {
 
 	@Test
 	@Transactional(value = TransactionMode.ROLLBACK)
-	@UsingDataSet({ "modelo.json", "administrador.json", "caracteristica.json", "caracteristica_vehiculo.json",
-			"ciudad.json", "cliente.json", "favorito.json", "foto_vehiculo.json", "pregunta.json",
-			"telefono_usuario.json", "usuario.json", "vehiculo.json", "venta.json" })
 	public void removeCaracteristicaTest() {
 
 		Caracteristica eliminar = entityManager.find(Caracteristica.class, 3l);
@@ -169,9 +144,6 @@ public class EntidadTest {
 
 	@Test
 	@Transactional(value = TransactionMode.ROLLBACK)
-	@UsingDataSet({ "modelo.json", "administrador.json", "caracteristica.json", "caracteristica_vehiculo.json",
-			"ciudad.json", "cliente.json", "favorito.json", "foto_vehiculo.json", "pregunta.json",
-			"telefono_usuario.json", "usuario.json", "vehiculo.json", "venta.json" })
 	public void listarCiudadCLiente() {
 
 		TypedQuery<Object[]> query = entityManager.createNamedQuery(Cliente.LISTA_CIUDAD_CLIENTE, Object[].class);
@@ -186,9 +158,6 @@ public class EntidadTest {
 
 	@Test
 	@Transactional(value = TransactionMode.ROLLBACK)
-	@UsingDataSet({ "modelo.json", "administrador.json", "caracteristica.json", "caracteristica_vehiculo.json",
-			"ciudad.json", "cliente.json", "favorito.json", "foto_vehiculo.json", "pregunta.json",
-			"telefono_usuario.json", "usuario.json", "vehiculo.json", "venta.json" })
 	public void listarFavoritoCLiente() {
 
 		TypedQuery<Vehiculo> query = entityManager.createNamedQuery(Cliente.LISTA_FAVORITO_CLIENTE, Vehiculo.class);
@@ -201,19 +170,6 @@ public class EntidadTest {
 	
 	@Test
 	@Transactional(value = TransactionMode.ROLLBACK)
-	@UsingDataSet({"modelo.json", 
-		"administrador.json", 
-		"caracteristica.json",
-		"caracteristica_vehiculo.json",
-		"ciudad.json",
-		"cliente.json",
-		"favorito.json",
-		"foto_vehiculo.json",
-		"pregunta.json",
-		"telefono_usuario.json",
-		"usuario.json",
-		"vehiculo.json",
-		"venta.json"})
 	public void cantidadDePersonasTest() {
 
 		TypedQuery<Long> query = entityManager.createNamedQuery(Cliente.CANTIDAD_DE_CLIENTES, Long.class);
@@ -224,9 +180,6 @@ public class EntidadTest {
 	
 	@Test
 	@Transactional(value = TransactionMode.ROLLBACK)
-	@UsingDataSet({ "modelo.json", "administrador.json", "caracteristica.json", "caracteristica_vehiculo.json",
-			"ciudad.json", "cliente.json", "favorito.json", "foto_vehiculo.json", "pregunta.json",
-			"telefono_usuario.json", "usuario.json", "vehiculo.json", "venta.json" })
 	public void listarColoresVehiculo() {
 
 		TypedQuery<String> query = entityManager.createNamedQuery(Vehiculo.GET_ALL_COLOR, String.class);
@@ -238,9 +191,6 @@ public class EntidadTest {
 	
 	@Test
 	@Transactional(value = TransactionMode.ROLLBACK)
-	@UsingDataSet({ "modelo.json", "administrador.json", "caracteristica.json", "caracteristica_vehiculo.json",
-			"ciudad.json", "cliente.json", "favorito.json", "foto_vehiculo.json", "pregunta.json",
-			"telefono_usuario.json", "usuario.json", "vehiculo.json", "venta.json" })
 	public void listarPrecioAscendente() {
 
 		TypedQuery<Vehiculo> query = entityManager.createNamedQuery(Vehiculo.FIND_BY_ASCENDENTE_PRECIO, Vehiculo.class);
@@ -252,9 +202,6 @@ public class EntidadTest {
 	
 	@Test
 	@Transactional(value = TransactionMode.ROLLBACK)
-	@UsingDataSet({ "modelo.json", "administrador.json", "caracteristica.json", "caracteristica_vehiculo.json",
-			"ciudad.json", "cliente.json", "favorito.json", "foto_vehiculo.json", "pregunta.json",
-			"telefono_usuario.json", "usuario.json", "vehiculo.json", "venta.json" })
 	public void listarPrecioDescendente() {
 
 		TypedQuery<Vehiculo> query = entityManager.createNamedQuery(Vehiculo.FIND_BY_DESCENDENTE_PRECIO, Vehiculo.class);
