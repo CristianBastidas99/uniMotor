@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE glassfish-web-app PUBLIC "-//GlassFish.org//DTD GlassFish Application Server 3.1 Servlet 3.0//EN" "http://glassfish.org/dtds/glassfish-web-app_3_0-1.dtd">
+<!--
+	Configuración específica de Payara/GlassFish para proyecto-web.
+	parameter-encoding: los parámetros de las peticiones (GET y POST) se decodifican en UTF-8;
+	por defecto Payara usa ISO-8859-1 y las tildes y la ñ llegan dañadas al negocio.
+-->
+<glassfish-web-app>
+	<parameter-encoding default-charset="UTF-8" />
+</glassfish-web-app>

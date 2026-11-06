@@ -5,6 +5,8 @@ import java.util.logging.Logger;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
@@ -21,9 +23,14 @@ import co.edu.uniquindio.unimotor.excepciones.InformacionInvalidaException;
 /**
  * EJB encargado de enviar correos electrónicos mediante el recurso JavaMail {@value #RECURSO_CORREO}.
  * Si el recurso no existe, funciona en modo simulado y solo registra el correo en el log.
+ * <p>
+ * El envío no es transaccional ({@code NOT_SUPPORTED}): así la {@link EnvioCorreoException} no marca para rollback
+ * la transacción de quien lo llama; quien quiera deshacer sus cambios, como {@code recuperarPassword}, deja que la
+ * excepción salga de su propio método.
  */
 @Stateless
 @LocalBean
+@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 public class CorreoEJB {
 
 	/** Nombre JNDI del recurso de correo configurado en el servidor. */
