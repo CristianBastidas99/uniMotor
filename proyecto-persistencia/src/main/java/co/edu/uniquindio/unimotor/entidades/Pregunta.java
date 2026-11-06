@@ -8,6 +8,12 @@ import javax.persistence.*;
  * Pregunta que un cliente hace sobre un vehiculo, con su respuesta opcional.
  */
 @Entity
+@NamedQueries({
+		@NamedQuery(name = Pregunta.PREGUNTAS_POR_VEHICULO, query = "select p from Pregunta p where p.vehiculo.codigo_vehiculo = :codigo order by p.fecha desc"),
+		@NamedQuery(name = Pregunta.PREGUNTAS_RECIBIDAS_POR_VENDEDOR, query = "select p from Pregunta p where p.vehiculo.codigo_dueno.email = :email order by p.fecha desc"),
+		@NamedQuery(name = Pregunta.PREGUNTAS_SIN_RESPONDER_POR_VENDEDOR, query = "select p from Pregunta p where p.vehiculo.codigo_dueno.email = :email and p.respuesta is null order by p.fecha desc"),
+		@NamedQuery(name = Pregunta.PREGUNTAS_HECHAS_POR_CLIENTE, query = "select p from Pregunta p where p.cliente.email = :email order by p.fecha desc"),
+		@NamedQuery(name = Pregunta.ESTADISTICA_PREGUNTAS_POR_VEHICULO, query = "select new co.edu.uniquindio.unimotor.dto.EstadisticaDTO(concat(concat(concat(concat(m.marca, ' '), m.nombre), ' - '), v.placa), count(p)) from Pregunta p join p.vehiculo v join v.codigo_modelo m group by v.codigo_vehiculo, m.marca, m.nombre, v.placa order by count(p) desc") })
 public class Pregunta implements Serializable {
 
 	@Id
@@ -38,6 +44,11 @@ public class Pregunta implements Serializable {
 	private Date fecha_respuesta;
 
 	private static final long serialVersionUID = 1L;
+	public static final String PREGUNTAS_POR_VEHICULO = "Pregunta_PREGUNTAS_POR_VEHICULO";
+	public static final String PREGUNTAS_RECIBIDAS_POR_VENDEDOR = "Pregunta_PREGUNTAS_RECIBIDAS_POR_VENDEDOR";
+	public static final String PREGUNTAS_SIN_RESPONDER_POR_VENDEDOR = "Pregunta_PREGUNTAS_SIN_RESPONDER_POR_VENDEDOR";
+	public static final String PREGUNTAS_HECHAS_POR_CLIENTE = "Pregunta_PREGUNTAS_HECHAS_POR_CLIENTE";
+	public static final String ESTADISTICA_PREGUNTAS_POR_VEHICULO = "Pregunta_ESTADISTICA_PREGUNTAS_POR_VEHICULO";
 
 	public Pregunta() {
 		super();

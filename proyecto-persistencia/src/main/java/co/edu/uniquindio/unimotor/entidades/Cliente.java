@@ -20,9 +20,9 @@ import javax.persistence.*;
 		@NamedQuery(name = Cliente.LISTA_FAVORITO_CLIENTE2, query = "select f, c.nombre_completo from Cliente c, IN (c.vehiculos_favoritos) f where c.email = :email"),
 		@NamedQuery(name = Cliente.LISTA_FAVORITO_CLIENTE_JOIN, query = "select f from Cliente c join (c.vehiculos_favoritos) f where c.email = :email"),
 		@NamedQuery(name = Cliente.LISTA_VEHICULOS_VENTA, query = "select c.email, f from Cliente c join (c.vehiculos_venta) f"),
-		@NamedQuery(name = Cliente.LISTA_CIUDAD_CLIENTE, query = "select ci, c from Cliente c join (c.codigo_ciudad) ci ")
-
-})
+		@NamedQuery(name = Cliente.LISTA_CIUDAD_CLIENTE, query = "select ci, c from Cliente c join (c.codigo_ciudad) ci "),
+		@NamedQuery(name = Cliente.FIND_BY_EMAIL, query = "select c from Cliente c where c.email = :email"),
+		@NamedQuery(name = Cliente.ESTADISTICA_CLIENTES_POR_CIUDAD, query = "select new co.edu.uniquindio.unimotor.dto.EstadisticaDTO(ci.nombre, count(c)) from Cliente c join c.codigo_ciudad ci group by ci.nombre order by count(c) desc") })
 public class Cliente extends Usuario implements Serializable {
 
 	@Column(name = "nombre_completo", nullable = false, length = 100)
@@ -59,14 +59,16 @@ public class Cliente extends Usuario implements Serializable {
 	private List<Calificacion> calificaciones_hechas;
 
 	private static final long serialVersionUID = 1L;
-	public static final String LISTA_FAVORITO_CLIENTE = "Cliente_ListaFavorito";
-	public static final String LISTA_FAVORITO_CLIENTE2 = "Cliente_ListaFavorito2";
-	public static final String LISTA_FAVORITO_CLIENTE_JOIN = "Cliente_ListaFavoritoJoin";
-	public static final String LISTA_VEHICULOS_VENTA = "Cliente_ListaVehiculosVenta";
-	public static final String LISTA_CIUDAD_CLIENTE = "Cliente_ListaCiudad";
-	public static final String FIND_BY_ID = "Cliente_findById";
-	public static final String GETALL = "Cliente_GetAll";
-	public static final String CANTIDAD_DE_CLIENTES = "Cliente_NumeroDeClientes";
+	public static final String FIND_BY_EMAIL = "Cliente_FIND_BY_EMAIL";
+	public static final String ESTADISTICA_CLIENTES_POR_CIUDAD = "Cliente_ESTADISTICA_CLIENTES_POR_CIUDAD";
+	public static final String LISTA_FAVORITO_CLIENTE = "Cliente_LISTA_FAVORITO_CLIENTE";
+	public static final String LISTA_FAVORITO_CLIENTE2 = "Cliente_LISTA_FAVORITO_CLIENTE2";
+	public static final String LISTA_FAVORITO_CLIENTE_JOIN = "Cliente_LISTA_FAVORITO_CLIENTE_JOIN";
+	public static final String LISTA_VEHICULOS_VENTA = "Cliente_LISTA_VEHICULOS_VENTA";
+	public static final String LISTA_CIUDAD_CLIENTE = "Cliente_LISTA_CIUDAD_CLIENTE";
+	public static final String FIND_BY_ID = "Cliente_FIND_BY_ID";
+	public static final String GETALL = "Cliente_GETALL";
+	public static final String CANTIDAD_DE_CLIENTES = "Cliente_CANTIDAD_DE_CLIENTES";
 
 	public Cliente() {
 		super();

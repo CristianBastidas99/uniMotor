@@ -10,6 +10,9 @@ import javax.persistence.*;
  *
  */
 @Entity
+@NamedQueries({
+		@NamedQuery(name = Ciudad.CIUDADES_ORDENADAS, query = "select c from Ciudad c order by c.nombre"),
+		@NamedQuery(name = Ciudad.CIUDAD_POR_NOMBRE, query = "select c from Ciudad c where c.nombre = :nombre") })
 
 public class Ciudad implements Serializable {
 
@@ -28,6 +31,8 @@ public class Ciudad implements Serializable {
 	private List<Vehiculo> vehiculos;
 
 	private static final long serialVersionUID = 1L;
+	public static final String CIUDADES_ORDENADAS = "Ciudad_CIUDADES_ORDENADAS";
+	public static final String CIUDAD_POR_NOMBRE = "Ciudad_CIUDAD_POR_NOMBRE";
 
 	public Ciudad() {
 		super();

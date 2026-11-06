@@ -78,7 +78,7 @@ public class UnimotorEJB implements UnimotorEJBRemote {
 	@Override
 	public Usuario autentificarUsuario(String email, String password) throws AutentificacionEcxeption {
 		// TODO Auto-generated method stub
-		TypedQuery<Usuario> query = entityManager.createNamedQuery(Usuario.AUTENTIFICAR_USUARO, Usuario.class);
+		TypedQuery<Usuario> query = entityManager.createNamedQuery(Usuario.AUTENTIFICAR_USUARIO, Usuario.class);
 		query.setParameter("email", email);
 		query.setParameter("password", password);
 

@@ -9,6 +9,8 @@ import javax.persistence.*;
  *
  */
 @Entity
+@NamedQueries({
+		@NamedQuery(name = Venta.ESTADISTICA_VENTAS_POR_MES, query = "select new co.edu.uniquindio.unimotor.dto.EstadisticaDTO(FUNCTION('DATE_FORMAT', v.fecha, '%Y-%m'), count(v)) from Venta v group by FUNCTION('DATE_FORMAT', v.fecha, '%Y-%m') order by FUNCTION('DATE_FORMAT', v.fecha, '%Y-%m')") })
 
 public class Venta implements Serializable {
 
@@ -30,6 +32,7 @@ public class Venta implements Serializable {
 	private Cliente codigo_comprador;
 
 	private static final long serialVersionUID = 1L;
+	public static final String ESTADISTICA_VENTAS_POR_MES = "Venta_ESTADISTICA_VENTAS_POR_MES";
 
 	public Venta() {
 		super();

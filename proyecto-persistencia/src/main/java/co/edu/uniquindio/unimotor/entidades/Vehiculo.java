@@ -23,7 +23,26 @@ import javax.persistence.*;
 	@NamedQuery(name = Vehiculo.FIND_BY_RANGO_PRECIO, query = "select v from Vehiculo v where v.precio between :precioMin and :precioMax"),
 	@NamedQuery(name = Vehiculo.FIND_BY_ASCENDENTE_PRECIO, query = "select v from Vehiculo v order by v.precio ASC"),
 	@NamedQuery(name = Vehiculo.FIND_BY_DESCENDENTE_PRECIO, query = "select v from Vehiculo v order by v.precio DESC"),
-	@NamedQuery(name = Vehiculo.FIND_BY_YEAR, query = "select v from Vehiculo v where v.year = :year")
+	@NamedQuery(name = Vehiculo.FIND_BY_YEAR, query = "select v from Vehiculo v where v.year = :year"),
+	@NamedQuery(name = Vehiculo.VEHICULOS_POR_DUENO, query = "select v from Vehiculo v where v.codigo_dueno.codigo_usuario = :codigo order by v.fecha_publicacion desc"),
+	@NamedQuery(name = Vehiculo.VEHICULOS_POR_EMAIL_DUENO, query = "select v from Vehiculo v where v.codigo_dueno.email = :email order by v.fecha_publicacion desc"),
+	@NamedQuery(name = Vehiculo.BUSQUEDA_COMBINADA, query = "select v from Vehiculo v where v.activo = true and (:tipo IS NULL OR v.tipo_vehiculo = :tipo) and (:marca IS NULL OR v.codigo_modelo.marca = :marca) and (:precioMin IS NULL OR v.precio >= :precioMin) and (:precioMax IS NULL OR v.precio <= :precioMax) and (:anioMin IS NULL OR v.year >= :anioMin) and (:anioMax IS NULL OR v.year <= :anioMax) order by v.fecha_publicacion desc"),
+	@NamedQuery(name = Vehiculo.VEHICULOS_POR_CARACTERISTICA, query = "select v from Vehiculo v join v.caracteristicas c where v.activo = true and c.codigo_caracteristica = :codigoCaracteristica"),
+	@NamedQuery(name = Vehiculo.VEHICULOS_CON_CARACTERISTICAS, query = "select distinct v from Vehiculo v join v.caracteristicas c where v.activo = true and c.codigo_caracteristica in :caracteristicas"),
+	@NamedQuery(name = Vehiculo.TOP_BUSCADOS, query = "select v from Vehiculo v where v.activo = true and v.condicion = :condicion order by v.numero_busquedas desc"),
+	@NamedQuery(name = Vehiculo.VEHICULOS_ACTIVOS, query = "select v from Vehiculo v where v.activo = true order by v.fecha_publicacion desc"),
+	@NamedQuery(name = Vehiculo.ESTADISTICA_POR_TIPO, query = "select new co.edu.uniquindio.unimotor.dto.EstadisticaDTO(v.tipo_vehiculo, count(v)) from Vehiculo v group by v.tipo_vehiculo order by count(v) desc"),
+	@NamedQuery(name = Vehiculo.ESTADISTICA_POR_CONDICION, query = "select new co.edu.uniquindio.unimotor.dto.EstadisticaDTO(v.condicion, count(v)) from Vehiculo v group by v.condicion order by count(v) desc"),
+	@NamedQuery(name = Vehiculo.ESTADISTICA_POR_TRANSMISION, query = "select new co.edu.uniquindio.unimotor.dto.EstadisticaDTO(v.tipo_trasmision, count(v)) from Vehiculo v group by v.tipo_trasmision order by count(v) desc"),
+	@NamedQuery(name = Vehiculo.ESTADISTICA_POR_COMBUSTIBLE, query = "select new co.edu.uniquindio.unimotor.dto.EstadisticaDTO(v.tipo_combustible, count(v)) from Vehiculo v group by v.tipo_combustible order by count(v) desc"),
+	@NamedQuery(name = Vehiculo.ESTADISTICA_COMBUSTIBLE_POR_TIPO, query = "select new co.edu.uniquindio.unimotor.dto.EstadisticaDTO(v.tipo_vehiculo, v.tipo_combustible, count(v)) from Vehiculo v group by v.tipo_vehiculo, v.tipo_combustible order by v.tipo_vehiculo, v.tipo_combustible"),
+	@NamedQuery(name = Vehiculo.ESTADISTICA_POR_MARCA, query = "select new co.edu.uniquindio.unimotor.dto.EstadisticaDTO(m.marca, count(v)) from Vehiculo v join v.codigo_modelo m group by m.marca order by count(v) desc"),
+	@NamedQuery(name = Vehiculo.ESTADISTICA_PRECIO_PROMEDIO_POR_MARCA, query = "select new co.edu.uniquindio.unimotor.dto.EstadisticaDTO(m.marca, avg(v.precio)) from Vehiculo v join v.codigo_modelo m group by m.marca order by avg(v.precio) desc"),
+	@NamedQuery(name = Vehiculo.ESTADISTICA_POR_CIUDAD, query = "select new co.edu.uniquindio.unimotor.dto.EstadisticaDTO(ci.nombre, count(v)) from Vehiculo v join v.codigo_ciudad ci group by ci.nombre order by count(v) desc"),
+	@NamedQuery(name = Vehiculo.ESTADISTICA_POR_ANIO, query = "select new co.edu.uniquindio.unimotor.dto.EstadisticaDTO(v.year, count(v)) from Vehiculo v group by v.year order by v.year"),
+	@NamedQuery(name = Vehiculo.ESTADISTICA_TOP_BUSCADOS, query = "select new co.edu.uniquindio.unimotor.dto.EstadisticaDTO(concat(m.marca, ' ', m.nombre, ' ', v.placa), v.numero_busquedas) from Vehiculo v join v.codigo_modelo m order by v.numero_busquedas desc"),
+	@NamedQuery(name = Vehiculo.PUNTOS_PRECIO_KILOMETRAJE, query = "select new co.edu.uniquindio.unimotor.dto.PuntoDTO(v.kilometros, v.precio) from Vehiculo v"),
+	@NamedQuery(name = Vehiculo.PUNTOS_PRECIO_ANIO_BUSQUEDAS, query = "select new co.edu.uniquindio.unimotor.dto.PuntoDTO(v.year, v.precio, v.numero_busquedas) from Vehiculo v")
 })
 public class Vehiculo implements Serializable {
 
@@ -114,17 +133,37 @@ public class Vehiculo implements Serializable {
 	private List<Caracteristica> caracteristicas;
 
 	private static final long serialVersionUID = 1L;
-	public static final String FIND_BY_ID = "Vehiculo_findById";
-	public static final String GETALL = "Vehiculo_GetAll";
-	public static final String FIND_BY_PLACA = "Vehiculo_findByPlaca";
-	public static final String GET_ALL_COLOR = "Vehiculo_GetAllColor";
-	public static final String FIND_BY_COLOR = "Vehiculo_findByColor";
-	public static final String FIND_BY_MIN_PRECIO = "Vehiculo_findByMinPrecio";
-	public static final String FIND_BY_MAX_PRECIO = "Vehiculo_findByMaxPrecio";
-	public static final String FIND_BY_RANGO_PRECIO = "Vehiculo_findByRangoPrecio";
-	public static final String FIND_BY_ASCENDENTE_PRECIO = "Vehiculo_findByAscendentePrecio";
-	public static final String FIND_BY_DESCENDENTE_PRECIO = "Vehiculo_findByDescendentePrecio";
-	public static final String FIND_BY_YEAR = "Vehiculo_findByYear";
+	public static final String FIND_BY_ID = "Vehiculo_FIND_BY_ID";
+	public static final String GETALL = "Vehiculo_GETALL";
+	public static final String FIND_BY_PLACA = "Vehiculo_FIND_BY_PLACA";
+	public static final String GET_ALL_COLOR = "Vehiculo_GET_ALL_COLOR";
+	public static final String FIND_BY_COLOR = "Vehiculo_FIND_BY_COLOR";
+	public static final String FIND_BY_MIN_PRECIO = "Vehiculo_FIND_BY_MIN_PRECIO";
+	public static final String FIND_BY_MAX_PRECIO = "Vehiculo_FIND_BY_MAX_PRECIO";
+	public static final String FIND_BY_RANGO_PRECIO = "Vehiculo_FIND_BY_RANGO_PRECIO";
+	public static final String FIND_BY_ASCENDENTE_PRECIO = "Vehiculo_FIND_BY_ASCENDENTE_PRECIO";
+	public static final String FIND_BY_DESCENDENTE_PRECIO = "Vehiculo_FIND_BY_DESCENDENTE_PRECIO";
+	public static final String FIND_BY_YEAR = "Vehiculo_FIND_BY_YEAR";
+	public static final String VEHICULOS_POR_DUENO = "Vehiculo_VEHICULOS_POR_DUENO";
+	public static final String VEHICULOS_POR_EMAIL_DUENO = "Vehiculo_VEHICULOS_POR_EMAIL_DUENO";
+	public static final String BUSQUEDA_COMBINADA = "Vehiculo_BUSQUEDA_COMBINADA";
+	public static final String VEHICULOS_POR_CARACTERISTICA = "Vehiculo_VEHICULOS_POR_CARACTERISTICA";
+	public static final String VEHICULOS_CON_CARACTERISTICAS = "Vehiculo_VEHICULOS_CON_CARACTERISTICAS";
+	/** Top de mas buscados por condicion. El limite de 10 lo aplica el negocio con setMaxResults(10). */
+	public static final String TOP_BUSCADOS = "Vehiculo_TOP_BUSCADOS";
+	public static final String VEHICULOS_ACTIVOS = "Vehiculo_VEHICULOS_ACTIVOS";
+	public static final String ESTADISTICA_POR_TIPO = "Vehiculo_ESTADISTICA_POR_TIPO";
+	public static final String ESTADISTICA_POR_CONDICION = "Vehiculo_ESTADISTICA_POR_CONDICION";
+	public static final String ESTADISTICA_POR_TRANSMISION = "Vehiculo_ESTADISTICA_POR_TRANSMISION";
+	public static final String ESTADISTICA_POR_COMBUSTIBLE = "Vehiculo_ESTADISTICA_POR_COMBUSTIBLE";
+	public static final String ESTADISTICA_COMBUSTIBLE_POR_TIPO = "Vehiculo_ESTADISTICA_COMBUSTIBLE_POR_TIPO";
+	public static final String ESTADISTICA_POR_MARCA = "Vehiculo_ESTADISTICA_POR_MARCA";
+	public static final String ESTADISTICA_PRECIO_PROMEDIO_POR_MARCA = "Vehiculo_ESTADISTICA_PRECIO_PROMEDIO_POR_MARCA";
+	public static final String ESTADISTICA_POR_CIUDAD = "Vehiculo_ESTADISTICA_POR_CIUDAD";
+	public static final String ESTADISTICA_POR_ANIO = "Vehiculo_ESTADISTICA_POR_ANIO";
+	public static final String ESTADISTICA_TOP_BUSCADOS = "Vehiculo_ESTADISTICA_TOP_BUSCADOS";
+	public static final String PUNTOS_PRECIO_KILOMETRAJE = "Vehiculo_PUNTOS_PRECIO_KILOMETRAJE";
+	public static final String PUNTOS_PRECIO_ANIO_BUSQUEDAS = "Vehiculo_PUNTOS_PRECIO_ANIO_BUSQUEDAS";
 
 	public Vehiculo() {
 		super();

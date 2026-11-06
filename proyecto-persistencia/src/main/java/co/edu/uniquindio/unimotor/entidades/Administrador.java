@@ -10,7 +10,7 @@ import javax.persistence.*;
  */
 @Entity
 @NamedQueries({
-		@NamedQuery(name = Administrador.FIND_BY_ID, query = "select admi from Administrador admi where admi.nombre_administrador = :nombre"),
+		@NamedQuery(name = Administrador.FIND_BY_NOMBRE, query = "select admi from Administrador admi where admi.nombre_administrador = :nombre"),
 		@NamedQuery(name = Administrador.GETALL, query = "select admi from Administrador admi") })
 public class Administrador extends Usuario implements Serializable {
 
@@ -18,8 +18,8 @@ public class Administrador extends Usuario implements Serializable {
 	private String nombre_administrador;
 
 	private static final long serialVersionUID = 1L;
-	public static final String GETALL = "Administrador_GetAll";
-	public static final String FIND_BY_ID = "Administrador_findById";
+	public static final String GETALL = "Administrador_GETALL";
+	public static final String FIND_BY_NOMBRE = "Administrador_FIND_BY_NOMBRE";
 
 	public Administrador() {
 		super();

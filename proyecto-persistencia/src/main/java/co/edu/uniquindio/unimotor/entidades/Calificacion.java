@@ -13,7 +13,8 @@ import javax.persistence.*;
 		"codigo_vendedor" }))
 @NamedQueries({
 		@NamedQuery(name = Calificacion.CALIFICACIONES_VENDEDOR, query = "select c from Calificacion c where c.vendedor.codigo_usuario = :codigo"),
-		@NamedQuery(name = Calificacion.PROMEDIO_VENDEDOR, query = "select avg(c.estrellas) from Calificacion c where c.vendedor.codigo_usuario = :codigo") })
+		@NamedQuery(name = Calificacion.PROMEDIO_VENDEDOR, query = "select avg(c.estrellas) from Calificacion c where c.vendedor.codigo_usuario = :codigo"),
+		@NamedQuery(name = Calificacion.ESTADISTICA_PROMEDIO_POR_VENDEDOR, query = "select new co.edu.uniquindio.unimotor.dto.EstadisticaDTO(ve.nombre_completo, avg(c.estrellas)) from Calificacion c join c.vendedor ve group by ve.codigo_usuario, ve.nombre_completo order by avg(c.estrellas) desc") })
 public class Calificacion implements Serializable {
 
 	@Id
@@ -40,8 +41,9 @@ public class Calificacion implements Serializable {
 	private Date fecha;
 
 	private static final long serialVersionUID = 1L;
-	public static final String CALIFICACIONES_VENDEDOR = "Calificacion_PorVendedor";
-	public static final String PROMEDIO_VENDEDOR = "Calificacion_PromedioVendedor";
+	public static final String ESTADISTICA_PROMEDIO_POR_VENDEDOR = "Calificacion_ESTADISTICA_PROMEDIO_POR_VENDEDOR";
+	public static final String CALIFICACIONES_VENDEDOR = "Calificacion_CALIFICACIONES_VENDEDOR";
+	public static final String PROMEDIO_VENDEDOR = "Calificacion_PROMEDIO_VENDEDOR";
 
 	public Calificacion() {
 		super();

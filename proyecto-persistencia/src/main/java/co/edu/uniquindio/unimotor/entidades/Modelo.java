@@ -11,6 +11,10 @@ import javax.persistence.*;
  *
  */
 @Entity
+@NamedQueries({
+		@NamedQuery(name = Modelo.GETALL, query = "select m from Modelo m order by m.marca, m.nombre"),
+		@NamedQuery(name = Modelo.MARCAS, query = "select distinct m.marca from Modelo m order by m.marca"),
+		@NamedQuery(name = Modelo.MODELOS_POR_MARCA, query = "select m from Modelo m where m.marca = :marca order by m.nombre") })
 public class Modelo implements Serializable {
 
 	@Id
@@ -28,6 +32,9 @@ public class Modelo implements Serializable {
 	private List<Vehiculo> vehiculos;
 
 	private static final long serialVersionUID = 1L;
+	public static final String GETALL = "Modelo_GETALL";
+	public static final String MARCAS = "Modelo_MARCAS";
+	public static final String MODELOS_POR_MARCA = "Modelo_MODELOS_POR_MARCA";
 
 	public Modelo() {
 		super();

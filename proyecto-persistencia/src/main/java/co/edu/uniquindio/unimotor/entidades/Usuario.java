@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @NamedQueries({
-		@NamedQuery(name = Usuario.AUTENTIFICAR_USUARO, query = "select u from Usuario u where u.email = :email and u.password = :password"),
+		@NamedQuery(name = Usuario.AUTENTIFICAR_USUARIO, query = "select u from Usuario u where u.email = :email and u.password = :password"),
 		@NamedQuery(name = Usuario.AUTENTIFICAR_EMAIL, query = "select u from Usuario u where u.email = :email"),
 		@NamedQuery(name = Usuario.GETALL, query = "select u from Usuario u")
 		
@@ -30,9 +30,9 @@ public class Usuario implements Serializable {
 	private String password;
 
 	private static final long serialVersionUID = 1L;
-	public static final String AUTENTIFICAR_USUARO = "Usuario_Auntentificar";
-	public static final String AUTENTIFICAR_EMAIL = "Usuario_AutentificarEmail";
-	public static final String GETALL = "Usuario_GetAll";
+	public static final String AUTENTIFICAR_USUARIO = "Usuario_AUTENTIFICAR_USUARIO";
+	public static final String AUTENTIFICAR_EMAIL = "Usuario_AUTENTIFICAR_EMAIL";
+	public static final String GETALL = "Usuario_GETALL";
 
 	public Usuario() {
 		super();
