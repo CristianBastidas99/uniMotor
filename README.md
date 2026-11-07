@@ -111,6 +111,14 @@ asadmin deploy --name proyecto-ear --force=true proyecto-ear\target\proyecto-ear
 - El servidor crea las tablas si no existen (`schema-generation = create`) pero no las actualiza:
   si cambia una entidad, recree la base `unimotor` y vuelva a desplegar. `SetupEJB` crea los usuarios
   iniciales (por ejemplo `cristia@proyecto.com` / `123`).
+- **Datos de demostración:** si la base no tiene usuarios, `SetupEJB` llama además a `GeneradorDatosDemo`
+  (paquete `co.edu.uniquindio.unimotor.ejb.demo`), que crea unos 60 clientes, 400 vehículos, 800 preguntas,
+  100 ventas, 60 calificaciones y 150 favoritos. Los datos salen de listas reales (`CatalogoDemo`: nombres y
+  apellidos colombianos, 24 ciudades, unos 60 modelos vendidos en Colombia), respetan las reglas del negocio y,
+  como usan una semilla fija, son los mismos en cada despliegue. Todos los clientes tienen la contraseña `12345`.
+- **Fotos de demostración:** `fotos-demo/` tiene 50 fotos con licencia libre de Wikimedia Commons (30 carros,
+  12 motos y 8 camionetas). Cada vehículo recibe 5 fotos distintas de su tipo, repartidas de forma pareja
+  (`RepartidorFotos`). Los autores y las licencias están en `fotos-demo/CREDITOS.md`.
 
 ### Correo (JavaMail)
 

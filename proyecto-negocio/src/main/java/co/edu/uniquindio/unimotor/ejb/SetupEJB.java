@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,6 +20,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
+import co.edu.uniquindio.unimotor.ejb.demo.GeneradorDatosDemo;
+import co.edu.uniquindio.unimotor.ejb.demo.RepartidorFotos;
 import co.edu.uniquindio.unimotor.entidades.Administrador;
 import co.edu.uniquindio.unimotor.entidades.Calificacion;
 import co.edu.uniquindio.unimotor.entidades.Caracteristica;
@@ -39,7 +42,10 @@ import co.edu.uniquindio.unimotor.excepciones.ElementoNoEncontradoException;
  * EJB de arranque que carga los datos iniciales de uniMotor cuando la base de
  * datos está vacía: administradores, clientes, modelos, características,
  * vehículos (con fotos y características), preguntas, una venta y una
- * calificación. Las ciudades no están quemadas: las carga desde la API de
+ * calificación. A continuación invoca a {@link GeneradorDatosDemo}, que añade
+ * datos de demostración masivos y reproducibles (semilla fija): unos 60
+ * clientes, 400 vehículos con 5 fotos cada uno, 800 preguntas, 150 favoritos,
+ * 100 ventas y 60 calificaciones, repartidos en los últimos 24 meses. Las ciudades no están quemadas: las carga desde la API de
  * terceros mediante {@link CiudadEJB} y los datos de ejemplo las consultan.
  */
 @Singleton
@@ -85,7 +91,17 @@ public class SetupEJB {
 		Vehiculo[] vehiculos = crearVehiculos(ciudades, clientes, modelos, caracteristicas);
 		crearPreguntas(vehiculos, clientes);
 		crearVenta(vehiculos[2], clientes[2]);
-		crearCalificacion(clientes[2], clientes[1]);
+		Calificacion[] calificaciones = crearCalificacion(clientes[2], clientes[1]);
+
+		Random random = new Random(GeneradorDatosDemo.SEMILLA);
+		RepartidorFotos repartidor = new RepartidorFotos(random);
+		for (Vehiculo vehiculo : vehiculos) {
+			vehiculo.setUrl_foto(new ArrayList<String>(
+					repartidor.siguientes(vehiculo.getTipo_vehiculo(), GeneradorDatosDemo.FOTOS_POR_VEHICULO)));
+		}
+		new GeneradorDatosDemo(entityManager, ciudadEJB, repartidor, random).generar(Arrays.asList(clientes),
+				Arrays.asList(vehiculos), Arrays.asList(modelos), Arrays.asList(caracteristicas),
+				Arrays.asList(calificaciones), Arrays.asList(ciudades));
 	}
 
 	/**
@@ -173,7 +189,7 @@ public class SetupEJB {
 	 */
 	private Caracteristica[] crearCaracteristicas() {
 		Caracteristica[] caracteristicas = { new Caracteristica("Aire acondicionado"), new Caracteristica("Sunroof"),
-				new Caracteristica("Bluetooth"), new Caracteristica("Camara de reversa") };
+				new Caracteristica("Bluetooth"), new Caracteristica("Cámara de reversa") };
 		for (Caracteristica caracteristica : caracteristicas) {
 			caracteristica.setVehiculos(new ArrayList<Vehiculo>());
 			entityManager.persist(caracteristica);
@@ -195,7 +211,7 @@ public class SetupEJB {
 	private Vehiculo[] crearVehiculos(Ciudad[] ciudades, Cliente[] clientes, Modelo[] modelos,
 			Caracteristica[] caracteristicas) {
 		Vehiculo v1 = new Vehiculo("Bolido perfectamente cuidado, con menos de mil kilometros, practicamente nuevo",
-				"Negro", "VEV592", 26000000d, 2018, 2000, 2, 10000, ciudades[0], clientes[0], modelos[0],
+				"Negro", "VEV592", 26000000d, 2018, 2000, 2, 0, ciudades[0], clientes[0], modelos[0],
 				TipoCombustible.GASOLINA, TipoVehiculo.CARRO, TipoTrasmision.MECANICO, Condicion.NUEVO);
 		v1.setNumero_busquedas(120);
 		v1.setFecha_publicacion(hace(30));
@@ -295,10 +311,13 @@ public class SetupEJB {
 	 *
 	 * @param calificador cliente que califica
 	 * @param vendedor    cliente calificado, distinto del calificador
+	 * @return arreglo con la calificación creada
 	 */
-	private void crearCalificacion(Cliente calificador, Cliente vendedor) {
-		entityManager.persist(new Calificacion(calificador, vendedor, 5,
-				"Excelente vendedor, el vehiculo estaba tal cual lo describio.", hace(1)));
+	private Calificacion[] crearCalificacion(Cliente calificador, Cliente vendedor) {
+		Calificacion calificacion = new Calificacion(calificador, vendedor, 5,
+				"Excelente vendedor, el vehiculo estaba tal cual lo describio.", hace(1));
+		entityManager.persist(calificacion);
+		return new Calificacion[] { calificacion };
 	}
 
 	/**

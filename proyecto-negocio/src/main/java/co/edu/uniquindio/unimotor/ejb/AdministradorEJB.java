@@ -31,6 +31,12 @@ import co.edu.uniquindio.unimotor.excepciones.InformacionInvalidaException;
 @Stateless
 public class AdministradorEJB implements AdministradorEJBRemote {
 
+	/**
+	 * Máximo de barras de los gráficos que pueden crecer sin límite con los datos
+	 * (preguntas por vehículo y calificación por vendedor): se muestran los primeros.
+	 */
+	private static final int MAXIMO_BARRAS = 15;
+
 	private static final String MENSAJE_CREDENCIALES = "El email o la contraseña son incorrectos.";
 
 	@PersistenceContext
@@ -167,7 +173,7 @@ public class AdministradorEJB implements AdministradorEJBRemote {
 	 */
 	@Override
 	public List<EstadisticaDTO> preguntasPorVehiculo() {
-		return consultar(Pregunta.ESTADISTICA_PREGUNTAS_POR_VEHICULO, EstadisticaDTO.class, 0);
+		return consultar(Pregunta.ESTADISTICA_PREGUNTAS_POR_VEHICULO, EstadisticaDTO.class, MAXIMO_BARRAS);
 	}
 
 	/**
@@ -191,7 +197,7 @@ public class AdministradorEJB implements AdministradorEJBRemote {
 	 */
 	@Override
 	public List<EstadisticaDTO> promedioCalificacionPorVendedor() {
-		return consultar(Calificacion.ESTADISTICA_PROMEDIO_POR_VENDEDOR, EstadisticaDTO.class, 0);
+		return consultar(Calificacion.ESTADISTICA_PROMEDIO_POR_VENDEDOR, EstadisticaDTO.class, MAXIMO_BARRAS);
 	}
 
 	/**

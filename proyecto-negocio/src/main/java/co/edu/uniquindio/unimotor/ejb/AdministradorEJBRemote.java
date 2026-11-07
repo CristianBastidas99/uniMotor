@@ -126,10 +126,12 @@ public interface AdministradorEJBRemote {
 	List<EstadisticaDTO> clientesPorCiudad();
 
 	/**
-	 * Cantidad de preguntas recibidas por vehículo (gráfico de barras).
-	 * Consulta nombrada Pregunta.ESTADISTICA_PREGUNTAS_POR_VEHICULO.
+	 * Cantidad de preguntas recibidas por vehículo (gráfico de barras): los 15
+	 * vehículos más preguntados. Consulta nombrada
+	 * Pregunta.ESTADISTICA_PREGUNTAS_POR_VEHICULO.
 	 *
-	 * @return lista de datos con etiqueta: marca, modelo y placa del vehículo; valor: cantidad de preguntas
+	 * @return lista de máximo 15 datos con etiqueta: marca, modelo y placa del vehículo; valor: cantidad de
+	 *         preguntas, de mayor a menor
 	 */
 	List<EstadisticaDTO> preguntasPorVehiculo();
 
@@ -150,10 +152,12 @@ public interface AdministradorEJBRemote {
 	List<EstadisticaDTO> ventasPorMes();
 
 	/**
-	 * Promedio de estrellas recibidas por cada vendedor (gráfico de barras).
-	 * Consulta nombrada Calificacion.ESTADISTICA_PROMEDIO_POR_VENDEDOR.
+	 * Promedio de estrellas recibidas por cada vendedor (gráfico de barras): los
+	 * 15 mejor calificados. Consulta nombrada
+	 * Calificacion.ESTADISTICA_PROMEDIO_POR_VENDEDOR.
 	 *
-	 * @return lista de datos con etiqueta: nombre completo del vendedor; valor: promedio de estrellas
+	 * @return lista de máximo 15 datos con etiqueta: nombre completo del vendedor; valor: promedio de
+	 *         estrellas, de mayor a menor
 	 */
 	List<EstadisticaDTO> promedioCalificacionPorVendedor();
 
