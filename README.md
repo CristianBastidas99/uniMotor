@@ -192,4 +192,6 @@ mvn test
 - **Entrega 2 (negocio y escritorio)**: completa: EJB con todos los requisitos (incluidas las funcionalidades
   extra), correo, API de ciudades, aplicación de escritorio con 17 gráficos y 367 pruebas en verde.
 - **Entrega 3 (presentación web)**: en curso. Hecha la configuración del módulo web (JSF 2.3 con CDI,
-  PrimeFaces 8 con el tema `nova-light`, estilos propios y carpeta de fotos servida en `/fotos/*`).
+  PrimeFaces 8 con el tema `nova-light`, estilos propios y carpeta de fotos servida en `/fotos/*`) y la plantilla
+  común con el menú que cambia según haya sesión, la estructura de páginas (públicas y `usuario/`) y las páginas
+  de error (404, 500 y sesión expirada).

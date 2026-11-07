@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template.xhtml">
+
+	<ui:define name="titulo">Sesión expirada</ui:define>
+
+	<ui:define name="contenido">
+		<div class="pagina-error">
+			<div class="codigo"><i class="fa fa-clock-o"></i></div>
+			<h1 class="pagina-titulo">Su sesión ha caducado</h1>
+			<p>La página caducó por inactividad. Vuelva al inicio o inicie sesión de nuevo para continuar.</p>
+			<p:button value="Ir al inicio" outcome="/index" icon="fa fa-home" />
+			<p:button value="Iniciar sesión" outcome="/login" icon="fa fa-sign-in" />
+		</div>
+	</ui:define>
+</ui:composition>

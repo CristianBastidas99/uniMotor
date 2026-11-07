@@ -46,8 +46,84 @@ a:hover { color: var(--um-naranja); }
   gap: 16px;
 }
 .encabezado img { height: 44px; display: block; }
-.encabezado a { color: #fff; text-decoration: none; margin-left: 16px; }
-.encabezado a:hover { color: var(--um-naranja); }
+.encabezado .logo-enlace { margin: 0; display: block; flex: 0 0 auto; }
+.encabezado .menu-principal { flex: 1 1 auto; min-width: 0; margin: 0; }
+
+/* Menú de PrimeFaces integrado en el encabezado azul */
+body .encabezado .ui-menubar {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+body .encabezado .ui-menubar .ui-menu-list { display: flex; flex-wrap: wrap; justify-content: flex-end; }
+/* El submenú también tiene la clase ui-menu-list: en columna y sin envolver */
+body .encabezado .ui-menubar .ui-menu-list.ui-menu-child { flex-direction: column; flex-wrap: nowrap; min-width: 180px; }
+body .encabezado .ui-menubar > .ui-menu-list > .ui-menuitem > .ui-menuitem-link,
+body .encabezado .ui-menubar > .ui-menu-list > .ui-submenu > .ui-menuitem-link {
+  color: #fff;
+  text-decoration: none;
+  margin: 0;
+  border-radius: var(--um-radio);
+}
+/* Especificidad mayor que la del tema: body .ui-menu .ui-menu-list .ui-menuitem .ui-menuitem-link .ui-menuitem-text */
+body .encabezado .ui-menubar .ui-menu-list .ui-menuitem-link .ui-menuitem-text,
+body .encabezado .ui-menubar .ui-menu-list .ui-menuitem-link .ui-menuitem-icon,
+body .encabezado .ui-menubar .ui-menu-list .ui-menuitem-link .ui-submenu-icon { color: #fff; }
+body .encabezado .ui-menubar > .ui-menu-list > .ui-menuitem > .ui-menuitem-link:hover,
+body .encabezado .ui-menubar > .ui-menu-list > .ui-submenu > .ui-menuitem-link:hover,
+body .encabezado .ui-menubar .ui-menuitem.ui-menuitem-active > .ui-menuitem-link,
+body .encabezado .ui-menubar .ui-menuitem-link.opcion-activa {
+  background: var(--um-naranja);
+  color: #fff;
+}
+/* Submenús desplegables: fondo blanco y texto legible */
+body .encabezado .ui-menubar .ui-menu-child {
+  background: #fff;
+  border: 1px solid var(--um-borde);
+  box-shadow: var(--um-sombra);
+  right: 0;
+  left: auto;
+}
+body .encabezado .ui-menubar .ui-menu-list .ui-menu-child .ui-menuitem-link,
+body .encabezado .ui-menubar .ui-menu-list .ui-menu-child .ui-menuitem-link .ui-menuitem-text,
+body .encabezado .ui-menubar .ui-menu-list .ui-menu-child .ui-menuitem-link .ui-menuitem-icon { color: var(--um-texto); }
+body .encabezado .ui-menubar .ui-menu-list .ui-menu-child .ui-menuitem-link:hover,
+body .encabezado .ui-menubar .ui-menu-list .ui-menu-child .ui-menuitem-link:hover .ui-menuitem-text,
+body .encabezado .ui-menubar .ui-menu-list .ui-menu-child .ui-menuitem-link:hover .ui-menuitem-icon {
+  background: var(--um-fondo);
+  color: var(--um-naranja);
+}
+
+/* Cuerpo de página: pie pegado abajo */
+body.pagina { min-height: 100vh; display: flex; flex-direction: column; }
+body.pagina > main { flex: 1 0 auto; width: 100%; }
+body.pagina > .pie { flex: 0 0 auto; margin-top: 0; }
+.contenido-principal { padding-top: 24px; padding-bottom: 24px; }
+
+/* Títulos y avisos de página */
+.pagina-titulo {
+  color: var(--um-azul);
+  font-size: 1.75rem;
+  margin: 0 0 16px;
+  padding-bottom: 8px;
+  border-bottom: 3px solid var(--um-naranja);
+}
+.aviso-construccion {
+  border: 2px dashed var(--um-borde);
+  border-radius: var(--um-radio);
+  background: var(--um-superficie);
+  color: var(--um-texto-suave);
+  text-align: center;
+  padding: 40px 16px;
+}
+.aviso-construccion .fa { font-size: 3rem; color: var(--um-naranja); display: block; margin-bottom: 12px; }
+.pagina-error { text-align: center; padding: 48px 16px; }
+.pagina-error .codigo { font-size: 6rem; font-weight: 700; line-height: 1; color: var(--um-naranja); }
+.pagina-error h1 { margin-top: 8px; }
+.pagina-error p { color: var(--um-texto-suave); }
 
 /* Pie */
 .pie {
@@ -90,12 +166,20 @@ a:hover { color: var(--um-naranja); }
 .texto-centro { text-align: center; }
 .acento { color: var(--um-naranja); }
 
+/* Tablet y móvil: el menú pasa debajo del logo */
+@media (max-width: 768px) {
+  .encabezado .contenedor { flex-direction: column; align-items: flex-start; }
+  .encabezado .menu-principal { width: 100%; }
+  body .encabezado .ui-menubar,
+  body .encabezado .ui-menubar .ui-menu-list { justify-content: flex-start; }
+  body .encabezado .ui-menubar .ui-menu-child { left: 0; right: auto; }
+}
+
 /* Móvil */
 @media (max-width: 600px) {
   body { font-size: 15px; }
   .contenedor { padding: 12px; }
-  .encabezado .contenedor { flex-direction: column; align-items: flex-start; }
-  .encabezado a { margin-left: 0; margin-right: 12px; }
+  .pagina-error .codigo { font-size: 4rem; }
   .rejilla-vehiculos { grid-template-columns: 1fr; }
   .tarjeta-vehiculo { max-width: none; }
 }

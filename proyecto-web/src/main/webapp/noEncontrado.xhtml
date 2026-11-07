@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template.xhtml">
+
+	<ui:define name="titulo">Página no encontrada</ui:define>
+
+	<ui:define name="contenido">
+		<div class="pagina-error">
+			<div class="codigo">404</div>
+			<h1 class="pagina-titulo">La página que busca no existe</h1>
+			<p>Es posible que el enlace sea incorrecto o que la página haya sido movida.</p>
+			<p:button value="Ir al inicio" outcome="/index" icon="fa fa-home" />
+		</div>
+	</ui:define>
+</ui:composition>

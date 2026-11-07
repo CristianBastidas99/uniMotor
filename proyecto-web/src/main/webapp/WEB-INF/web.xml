@@ -46,4 +46,26 @@ http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
 		<param-name>primefaces.FONT_AWESOME</param-name>
 		<param-value>true</param-value>
 	</context-param>
+
+	<!-- Paginas de error (el FacesServlet atiende *.xhtml, por eso las rutas terminan en .xhtml) -->
+	<error-page>
+		<error-code>404</error-code>
+		<location>/noEncontrado.xhtml</location>
+	</error-page>
+	<error-page>
+		<error-code>500</error-code>
+		<location>/error.xhtml</location>
+	</error-page>
+	<!-- Sin mapeo para java.lang.Throwable a proposito: el FacesServlet envuelve las excepciones en una
+	     ServletException y Payara la compararia con Throwable antes de desenvolverla, de modo que
+	     ViewExpiredException nunca llegaria a su pagina. Las demas excepciones salen como 500 -> error.xhtml -->
+	<error-page>
+		<exception-type>javax.faces.application.ViewExpiredException</exception-type>
+		<location>/sesionExpirada.xhtml</location>
+	</error-page>
+
+	<!-- Caducidad de la sesion: 30 minutos de inactividad -->
+	<session-config>
+		<session-timeout>30</session-timeout>
+	</session-config>
 </web-app>

@@ -1,28 +1,19 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
-<h:head>
-	<title>uniMotor</title>
-	<meta charset="UTF-8"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1"/>
-	<h:outputStylesheet library="css" name="estilos.css"/>
-</h:head>
-<h:body>
-	<!-- Página provisional de verificación; la plantilla real llega en la fase 3.2 -->
-	<header class="encabezado">
-		<div class="contenedor">
-			<h:graphicImage library="img" name="logo.svg" alt="uniMotor"/>
-		</div>
-	</header>
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template.xhtml">
 
-	<main class="contenedor">
-		<h1>uniMotor — compra y venta de vehículos</h1>
+	<ui:define name="titulo">Inicio</ui:define>
+
+	<ui:define name="contenido">
+		<h1 class="pagina-titulo">uniMotor — compra y venta de vehículos</h1>
 
 		<p:panel header="Bienvenido" styleClass="texto-centro">
 			<p>La aplicación web está funcionando con JSF 2.3 y PrimeFaces 8.</p>
-			<p:button value="Ver vehículos" icon="fa fa-car" outcome="index"/>
+			<p:button value="Ver vehículos" icon="fa fa-car" outcome="/resultados"/>
 		</p:panel>
 
 		<h2 style="margin-top: 24px;">Vehículo de ejemplo</h2>
@@ -34,10 +25,5 @@
 				<div class="precio">$ 0</div>
 			</div>
 		</div>
-	</main>
-
-	<footer class="pie">
-		<div class="contenedor">uniMotor — Universidad del Quindío</div>
-	</footer>
-</h:body>
-</html>
+	</ui:define>
+</ui:composition>

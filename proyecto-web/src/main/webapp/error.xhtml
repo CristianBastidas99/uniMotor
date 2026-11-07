@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template.xhtml">
+
+	<ui:define name="titulo">Error</ui:define>
+
+	<ui:define name="contenido">
+		<div class="pagina-error">
+			<div class="codigo">#{empty requestScope['javax.servlet.error.status_code'] ? 'Error' : requestScope['javax.servlet.error.status_code']}</div>
+			<h1 class="pagina-titulo">Algo salió mal</h1>
+			<p>Ocurrió un problema inesperado. Por favor, inténtelo de nuevo más tarde.</p>
+			<h:panelGroup layout="block" rendered="#{facesContext.application.projectStage eq 'Development'}">
+				<p><strong>Excepción:</strong> #{requestScope['javax.servlet.error.exception']}</p>
+				<p><strong>URI:</strong> #{requestScope['javax.servlet.error.request_uri']}</p>
+			</h:panelGroup>
+			<p:button value="Ir al inicio" outcome="/index" icon="fa fa-home" />
+		</div>
+	</ui:define>
+</ui:composition>
