@@ -183,3 +183,41 @@ body.pagina > .pie { flex: 0 0 auto; margin-top: 0; }
   .rejilla-vehiculos { grid-template-columns: 1fr; }
   .tarjeta-vehiculo { max-width: none; }
 }
+
+/* ===== Formularios (login, recuperar, registro) ===== */
+.formulario-centrado { max-width: 440px; margin: 32px auto 0; }
+.campo { display: flex; flex-direction: column; gap: 4px; margin-bottom: 14px; }
+.campo label { font-weight: 600; }
+.campo .ui-inputfield,
+.campo .ui-password,
+.campo .ui-password input { width: 100%; box-sizing: border-box; }
+.acciones-formulario { margin-top: 8px; }
+.acciones-formulario .ui-button { width: 100%; }
+.enlaces-formulario { margin-top: 16px; text-align: center; font-size: 0.875rem; line-height: 1.8; }
+
+/* ===== Registro ===== */
+.formulario-registro { max-width: 640px; margin: 0 auto; }
+.formulario-registro .rejilla-formulario {
+  display: grid;
+  /* minmax(0, 1fr): sin el 0 las columnas no encogen por debajo del ancho mínimo de los inputs (desborde en móvil) */
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 14px 20px;
+}
+.formulario-registro .campo-completo { grid-column: 1 / -1; }
+.formulario-registro .campo { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.formulario-registro .campo .ui-inputfield,
+.formulario-registro .campo .ui-autocomplete,
+.formulario-registro .campo .ui-autocomplete-input,
+.formulario-registro .campo .ui-password { width: 100%; box-sizing: border-box; }
+/* Autocompletado con botón desplegable: input y botón en la misma línea */
+.formulario-registro .campo .ui-autocomplete { display: flex; }
+.formulario-registro .campo .ui-autocomplete .ui-autocomplete-input { flex: 1 1 auto; width: auto; min-width: 0; }
+.formulario-registro .campo .ui-autocomplete .ui-autocomplete-dropdown { flex: 0 0 auto; position: static; }
+.formulario-registro .telefonos { display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px; }
+.formulario-registro .fila-telefono { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.formulario-registro .fila-telefono .ui-inputfield { flex: 1 1 160px; min-width: 0; }
+.formulario-registro .acciones-formulario { margin-top: 20px; }
+
+@media (max-width: 768px) {
+  .formulario-registro .rejilla-formulario { grid-template-columns: minmax(0, 1fr); }
+}

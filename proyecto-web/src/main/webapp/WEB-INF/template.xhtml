@@ -61,7 +61,8 @@
 		<ui:insert name="contenido"/>
 	</main>
 
-	<p:growl id="growl" showDetail="true" life="6000">
+	<!-- globalOnly: los errores de campo ya los muestra cada p:message; el growl solo muestra los mensajes globales -->
+	<p:growl id="growl" showDetail="true" life="6000" globalOnly="true">
 		<p:autoUpdate/>
 	</p:growl>
 

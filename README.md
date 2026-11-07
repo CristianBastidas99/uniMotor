@@ -194,4 +194,6 @@ mvn test
 - **Entrega 3 (presentación web)**: en curso. Hecha la configuración del módulo web (JSF 2.3 con CDI,
   PrimeFaces 8 con el tema `nova-light`, estilos propios y carpeta de fotos servida en `/fotos/*`) y la plantilla
   común con el menú que cambia según haya sesión, la estructura de páginas (públicas y `usuario/`) y las páginas
-  de error (404, 500 y sesión expirada).
+  de error (404, 500 y sesión expirada). Los clientes ya pueden registrarse (con las ciudades de la API y varios
+  teléfonos), iniciar y cerrar sesión y recuperar la contraseña por correo; las páginas de `usuario/` exigen sesión.
+  Para probar: `usuario1@servidor.com` / `12345` (los administradores entran solo por la aplicación de escritorio).

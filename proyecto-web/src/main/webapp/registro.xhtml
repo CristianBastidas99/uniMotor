@@ -9,10 +9,104 @@
 	<ui:define name="titulo">Registro</ui:define>
 
 	<ui:define name="contenido">
-		<h1 class="pagina-titulo">Registro</h1>
-		<div class="aviso-construccion">
-			<i class="fa fa-wrench"></i>
-			Aquí estará el formulario para crear una cuenta de cliente. Se implementa en la Fase 3.3.
-		</div>
+		<h1 class="pagina-titulo">Crear cuenta</h1>
+
+		<h:panelGroup rendered="#{seguridadBean.autenticado}" layout="block" styleClass="aviso-construccion">
+			<i class="fa fa-info-circle"></i>
+			Ya tiene una sesión iniciada.
+			<h:link outcome="/index" value="Ir al inicio" />
+		</h:panelGroup>
+
+		<h:form id="formRegistro" rendered="#{not seguridadBean.autenticado}" styleClass="formulario-centrado formulario-registro">
+			<div class="rejilla-formulario">
+
+				<div class="campo campo-completo">
+					<p:outputLabel for="nombre" value="Nombre completo" />
+					<p:inputText id="nombre" value="#{registroBean.nombreCompleto}" required="true"
+						requiredMessage="El nombre completo es obligatorio." maxlength="100" />
+					<p:message for="nombre" />
+				</div>
+
+				<div class="campo campo-completo">
+					<p:outputLabel for="email" value="Correo electrónico" />
+					<p:inputText id="email" value="#{registroBean.email}" required="true"
+						requiredMessage="El correo electrónico es obligatorio." maxlength="100"
+						placeholder="usuario@correo.com">
+						<f:validateRegex pattern="^[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}$"
+							/>
+					</p:inputText>
+					<p:message for="email" />
+				</div>
+
+				<div class="campo">
+					<p:outputLabel for="password" value="Contraseña" />
+					<p:password id="password" value="#{registroBean.password}" feedback="true" match="confirmacion"
+						promptLabel="Escriba una contraseña" weakLabel="Débil" goodLabel="Aceptable"
+						strongLabel="Fuerte" required="true" requiredMessage="La contraseña es obligatoria."
+						validatorMessage="Las contraseñas no coinciden." maxlength="100">
+						<f:validateLength minimum="4" />
+					</p:password>
+					<p:message for="password" />
+				</div>
+
+				<div class="campo">
+					<p:outputLabel for="confirmacion" value="Confirmar contraseña" />
+					<p:password id="confirmacion" value="#{registroBean.confirmacion}" feedback="false"
+						required="true" requiredMessage="Confirme su contraseña." maxlength="100" />
+					<p:message for="confirmacion" />
+				</div>
+
+				<div class="campo">
+					<p:outputLabel for="direccion" value="Dirección" />
+					<p:inputText id="direccion" value="#{registroBean.direccion}" required="true"
+						requiredMessage="La dirección es obligatoria." maxlength="200"
+						placeholder="Calle 21 # 14-35" />
+					<p:message for="direccion" />
+				</div>
+
+				<div class="campo">
+					<p:outputLabel for="ciudad" value="Ciudad" />
+					<p:autoComplete id="ciudad" value="#{registroBean.ciudad}"
+						completeMethod="#{ciudadesBean.completar}" var="c"
+						itemLabel="#{ciudadesBean.etiqueta(c)}" itemValue="#{c}"
+						forceSelection="true" dropdown="true" minQueryLength="2" queryDelay="250"
+						maxResults="20" scrollHeight="250" required="true"
+						requiredMessage="Seleccione su ciudad." placeholder="Escriba su ciudad" />
+					<p:message for="ciudad" />
+				</div>
+
+				<div class="campo campo-completo">
+					<label>Teléfonos</label>
+					<h:panelGroup id="telefonos" layout="block" styleClass="telefonos">
+						<ui:repeat value="#{registroBean.telefonos}" var="t">
+							<div class="fila-telefono">
+								<p:selectOneMenu value="#{t.tipo}">
+									<f:selectItems value="#{registroBean.tiposTelefono}" />
+								</p:selectOneMenu>
+								<p:inputText value="#{t.numero}" maxlength="10" placeholder="Número (7 a 10 dígitos)">
+									<p:keyFilter mask="num" />
+								</p:inputText>
+								<p:commandButton icon="fa fa-trash" title="Quitar teléfono"
+									styleClass="ui-button-secondary"
+									actionListener="#{registroBean.quitarTelefono(t)}"
+									process="@this :formRegistro:telefonos" update=":formRegistro:telefonos"
+									rendered="#{registroBean.telefonos.size() gt 1}" />
+							</div>
+						</ui:repeat>
+					</h:panelGroup>
+					<p:commandButton value="Agregar teléfono" icon="fa fa-plus"
+						actionListener="#{registroBean.agregarTelefono}" process="@this :formRegistro:telefonos"
+						update=":formRegistro:telefonos" styleClass="ui-button-secondary" />
+				</div>
+			</div>
+
+			<div class="acciones-formulario">
+				<p:commandButton value="Crear cuenta" icon="fa fa-user-plus" action="#{registroBean.registrar}"
+					ajax="false" />
+			</div>
+			<div class="enlaces-formulario">
+				<h:link outcome="/login" value="¿Ya tiene cuenta? Inicie sesión" />
+			</div>
+		</h:form>
 	</ui:define>
 </ui:composition>
