@@ -119,6 +119,12 @@ asadmin deploy --name proyecto-ear --force=true proyecto-ear\target\proyecto-ear
 - **Fotos de demostración:** `fotos-demo/` tiene 50 fotos con licencia libre de Wikimedia Commons (30 carros,
   12 motos y 8 camionetas). Cada vehículo recibe 5 fotos distintas de su tipo, repartidas de forma pareja
   (`RepartidorFotos`). Los autores y las licencias están en `fotos-demo/CREDITOS.md`.
+- **Carpeta de fotos del servidor:** la web guarda y sirve las fotos de los vehículos desde una carpeta del
+  servidor, por defecto `%USERPROFILE%\unimotor\fotos` (`${user.home}/unimotor/fotos`). Se cambia con la
+  propiedad JVM `unimotor.fotos.carpeta` (`asadmin create-jvm-options "-Dunimotor.fotos.carpeta=C\:/ruta"` y
+  reiniciar Payara) o con la variable de entorno `UNIMOTOR_FOTOS`. El WAR lleva las fotos de `fotos-demo/` en
+  `WEB-INF/fotos-demo` y, al arrancar, las copia a esa carpeta sin sobrescribir las que ya existan. Se sirven en
+  `http://localhost:8080/proyecto-web/fotos/<nombre>` (por ejemplo `carro-01.jpg`).
 
 ### Correo (JavaMail)
 
@@ -185,4 +191,5 @@ mvn test
 - **Entrega 1 (persistencia)**: completa: entidades, `NamedQuery`, datasets JSON y pruebas en verde.
 - **Entrega 2 (negocio y escritorio)**: completa: EJB con todos los requisitos (incluidas las funcionalidades
   extra), correo, API de ciudades, aplicación de escritorio con 17 gráficos y 367 pruebas en verde.
-- **Entrega 3 (presentación web)**: en curso.
+- **Entrega 3 (presentación web)**: en curso. Hecha la configuración del módulo web (JSF 2.3 con CDI,
+  PrimeFaces 8 con el tema `nova-light`, estilos propios y carpeta de fotos servida en `/fotos/*`).

@@ -1,20 +1,43 @@
-<?xml version="1.0" encoding="ISO-8859-1" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
 <h:head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
-<title>Primera Pagina</title>
+	<title>uniMotor</title>
+	<meta charset="UTF-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+	<h:outputStylesheet library="css" name="estilos.css"/>
 </h:head>
 <h:body>
-	<h1>#{holaMundoBean.mensaje}</h1>
-	<h:form>
-    <h3>Remaining Chars</h3>
-    <p:inputTextarea rows="5" cols="30" counter="display" maxlength="10" counterTemplate="{0} characters remaining." autoResize="false" />
-    <br />
-    <h:outputText id="display" />
-</h:form>
+	<!-- Página provisional de verificación; la plantilla real llega en la fase 3.2 -->
+	<header class="encabezado">
+		<div class="contenedor">
+			<h:graphicImage library="img" name="logo.svg" alt="uniMotor"/>
+		</div>
+	</header>
+
+	<main class="contenedor">
+		<h1>uniMotor — compra y venta de vehículos</h1>
+
+		<p:panel header="Bienvenido" styleClass="texto-centro">
+			<p>La aplicación web está funcionando con JSF 2.3 y PrimeFaces 8.</p>
+			<p:button value="Ver vehículos" icon="fa fa-car" outcome="index"/>
+		</p:panel>
+
+		<h2 style="margin-top: 24px;">Vehículo de ejemplo</h2>
+		<div class="tarjeta-vehiculo">
+			<img src="#{request.contextPath}/fotos/carro-01.jpg" alt="Foto del vehículo"
+				onerror="this.onerror=null;this.src='#{resource['img:sin-foto.svg']}';"/>
+			<div class="cuerpo">
+				<div class="titulo">Vehículo de prueba</div>
+				<div class="precio">$ 0</div>
+			</div>
+		</div>
+	</main>
+
+	<footer class="pie">
+		<div class="contenedor">uniMotor — Universidad del Quindío</div>
+	</footer>
 </h:body>
 </html>

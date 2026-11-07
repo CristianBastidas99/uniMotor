@@ -1,0 +1,101 @@
+/* Hoja de estilos base de uniMotor. Sin dependencias externas. */
+:root {
+  --um-azul: #1f3a5f;
+  --um-azul-claro: #2d5287;
+  --um-naranja: #f28c28;
+  --um-fondo: #f5f7fa;
+  --um-superficie: #ffffff;
+  --um-texto: #22303f;
+  --um-texto-suave: #6b7a8c;
+  --um-borde: #dde3ea;
+  --um-radio: 8px;
+  --um-sombra: 0 2px 8px rgba(31, 58, 95, 0.12);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--um-fondo);
+  color: var(--um-texto);
+  font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+h1, h2, h3 { color: var(--um-azul); line-height: 1.25; margin: 0 0 12px; }
+a { color: var(--um-azul-claro); }
+a:hover { color: var(--um-naranja); }
+
+.contenedor {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+/* Encabezado */
+.encabezado {
+  background: var(--um-azul);
+  color: #fff;
+  border-bottom: 4px solid var(--um-naranja);
+}
+.encabezado .contenedor {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.encabezado img { height: 44px; display: block; }
+.encabezado a { color: #fff; text-decoration: none; margin-left: 16px; }
+.encabezado a:hover { color: var(--um-naranja); }
+
+/* Pie */
+.pie {
+  background: var(--um-azul);
+  color: #cfd8e3;
+  text-align: center;
+  font-size: 0.875rem;
+  margin-top: 32px;
+}
+
+/* Rejilla de tarjetas */
+.rejilla-vehiculos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+/* Tarjeta de vehículo */
+.tarjeta-vehiculo {
+  background: var(--um-superficie);
+  border: 1px solid var(--um-borde);
+  border-radius: var(--um-radio);
+  box-shadow: var(--um-sombra);
+  overflow: hidden;
+  max-width: 360px;
+}
+.tarjeta-vehiculo img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: #e9edf2;
+}
+.tarjeta-vehiculo .cuerpo { padding: 12px 16px; }
+.tarjeta-vehiculo .titulo { font-weight: 600; color: var(--um-azul); }
+.tarjeta-vehiculo .precio { font-size: 1.25rem; font-weight: 700; color: var(--um-naranja); }
+
+/* Utilidades */
+.texto-suave { color: var(--um-texto-suave); }
+.texto-centro { text-align: center; }
+.acento { color: var(--um-naranja); }
+
+/* Móvil */
+@media (max-width: 600px) {
+  body { font-size: 15px; }
+  .contenedor { padding: 12px; }
+  .encabezado .contenedor { flex-direction: column; align-items: flex-start; }
+  .encabezado a { margin-left: 0; margin-right: 12px; }
+  .rejilla-vehiculos { grid-template-columns: 1fr; }
+  .tarjeta-vehiculo { max-width: none; }
+}

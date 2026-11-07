@@ -46,4 +46,29 @@
 		</dependency>
 	</dependencies>
 
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>3.3.2</version>
+				<configuration>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+					<webResources>
+						<!-- Fotos de demostración: dentro de WEB-INF para que no se sirvan directamente;
+						     el listener InstaladorFotosDemo las copia a la carpeta configurada -->
+						<resource>
+							<directory>${project.basedir}/../fotos-demo</directory>
+							<targetPath>WEB-INF/fotos-demo</targetPath>
+							<includes>
+								<include>*.jpg</include>
+								<include>CREDITOS.md</include>
+							</includes>
+						</resource>
+					</webResources>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
 </project>

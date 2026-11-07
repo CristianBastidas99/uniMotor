@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 64" width="260" height="64" role="img" aria-label="uniMotor">
+  <g transform="translate(4,12)">
+    <path d="M4 30 L10 14 Q12 8 20 8 H38 Q44 8 48 14 L54 22 Q58 23 58 28 V34 H54 A6 6 0 0 1 42 34 H20 A6 6 0 0 1 8 34 H4 Z" fill="#f28c28"/>
+    <path d="M15 14 H26 V22 H12 Z M30 14 H38 L44 22 H30 Z" fill="#ffffff"/>
+    <circle cx="14" cy="34" r="5" fill="#1f3a5f" stroke="#ffffff" stroke-width="2"/>
+    <circle cx="48" cy="34" r="5" fill="#1f3a5f" stroke="#ffffff" stroke-width="2"/>
+  </g>
+  <text x="76" y="42" font-family="Segoe UI, Arial, sans-serif" font-size="32" font-weight="700" fill="#ffffff">uni<tspan fill="#f28c28">Motor</tspan></text>
+</svg>
