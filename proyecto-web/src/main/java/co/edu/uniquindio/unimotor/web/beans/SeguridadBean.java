@@ -113,6 +113,18 @@ public class SeguridadBean implements Serializable {
 	}
 
 	/**
+	 * Reemplaza el cliente de la sesión por una versión ya persistida (por ejemplo,
+	 * tras modificar sus datos o su email).
+	 *
+	 * @param actualizado el cliente devuelto por el EJB
+	 */
+	public void actualizarCliente(Cliente actualizado) {
+		if (actualizado != null) {
+			this.cliente = actualizado;
+		}
+	}
+
+	/**
 	 * Obtiene el cliente autenticado.
 	 *
 	 * @return el cliente en sesión o {@code null}

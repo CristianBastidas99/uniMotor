@@ -1,0 +1,104 @@
+/* Estilos del perfil del cliente y de Mis compras */
+.perfil-rejilla {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+.perfil-ancha { grid-column: 1 / -1; }
+
+.perfil-tarjeta {
+  background: var(--um-superficie);
+  border: 1px solid var(--um-borde);
+  border-radius: var(--um-radio);
+  box-shadow: var(--um-sombra);
+  padding: 16px 20px;
+  min-width: 0;
+  box-sizing: border-box;
+}
+.perfil-tarjeta h2 { font-size: 1.15rem; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.perfil-tarjeta h2 .fa { color: var(--um-naranja); }
+.perfil-tarjeta .formulario-registro { max-width: none; margin: 0; padding: 0; box-shadow: none; border: 0; background: transparent; }
+.perfil-tarjeta .rejilla-formulario { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+
+.perfil-contador {
+  margin-left: auto;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: var(--um-fondo);
+  border: 1px solid var(--um-borde);
+  color: var(--um-azul);
+  border-radius: 999px;
+  padding: 2px 10px;
+}
+.perfil-vacio { color: var(--um-texto-suave); padding: 12px 0; text-align: center; }
+
+.perfil-lista { list-style: none; margin: 0 0 12px; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.perfil-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--um-borde);
+  min-width: 0;
+}
+.perfil-item:last-child { border-bottom: 0; }
+.perfil-miniatura {
+  flex: 0 0 72px;
+  width: 72px;
+  height: 54px;
+  object-fit: cover;
+  border-radius: 6px;
+  background: #e9edf2;
+}
+.perfil-item-cuerpo { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.perfil-item-titulo { font-weight: 600; overflow-wrap: anywhere; }
+.perfil-item-precio { color: var(--um-naranja); font-weight: 700; }
+.perfil-texto { overflow-wrap: anywhere; }
+
+.perfil-estado {
+  flex: 0 0 auto;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+.perfil-estado.estado-vendido { background: #e3eefc; color: #1f4e8c; }
+.perfil-estado.estado-inactivo { background: #fff3e0; color: #b45f06; }
+
+.perfil-acciones { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; margin-top: 8px; }
+
+.perfil-peligro { border-color: #f1c0c0; }
+.perfil-peligro h2 .fa { color: #c62828; }
+body .ui-button.boton-peligro,
+body .ui-button.boton-peligro:enabled:hover {
+  background: #c62828;
+  border-color: #c62828;
+  color: #fff;
+}
+body .ui-button.boton-peligro:enabled:hover { background: #a61e1e; }
+
+/* Mis compras */
+.compra-item { align-items: flex-start; flex-wrap: wrap; }
+.compra-foto { flex-basis: 120px; width: 120px; height: 90px; }
+.compra-accion { flex: 0 0 auto; }
+.compra-calificado { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+.dialogo-perfil .campo { display: flex; flex-direction: column; gap: 4px; margin-bottom: 12px; }
+.dialogo-perfil .ui-inputfield,
+.dialogo-perfil .ui-password,
+.dialogo-perfil textarea { width: 100%; box-sizing: border-box; }
+
+@media (max-width: 768px) {
+  .perfil-rejilla { grid-template-columns: minmax(0, 1fr); }
+  .perfil-tarjeta { padding: 12px 14px; }
+  .perfil-tarjeta .rejilla-formulario { grid-template-columns: minmax(0, 1fr); }
+  .perfil-acciones { justify-content: stretch; }
+  .perfil-acciones .ui-button { flex: 1 1 auto; }
+  .compra-foto { flex-basis: 96px; width: 96px; height: 72px; }
+  .compra-accion { flex: 1 1 100%; }
+  .compra-accion .ui-button { width: 100%; }
+}
+body .ui-dialog.dialogo-perfil { max-width: 92vw; }

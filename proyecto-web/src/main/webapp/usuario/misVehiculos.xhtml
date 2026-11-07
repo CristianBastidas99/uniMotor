@@ -8,11 +8,127 @@
 	<!-- Protegida por FiltroSeguridad. -->
 	<ui:define name="titulo">Mis vehículos</ui:define>
 
+	<ui:define name="head">
+		<link rel="stylesheet" href="#{resource['css:area-cliente.css']}"/>
+	</ui:define>
+
 	<ui:define name="contenido">
 		<h1 class="pagina-titulo">Mis vehículos</h1>
-		<div class="aviso-construccion">
-			<i class="fa fa-wrench"></i>
-			Aquí se listarán los vehículos publicados por el usuario para editarlos, pausarlos o eliminarlos. Se implementa en la Fase 3.6.4.
-		</div>
+
+		<h:form id="formLista">
+			<div class="barra-superior">
+				<div class="resumen">
+					<div class="resumen-item"><span class="valor">#{misVehiculosBean.total}</span><span class="etiqueta">Publicados</span></div>
+					<div class="resumen-item"><span class="valor">#{misVehiculosBean.activos}</span><span class="etiqueta">Activos</span></div>
+					<div class="resumen-item"><span class="valor">#{misVehiculosBean.vendidos}</span><span class="etiqueta">Vendidos</span></div>
+					<h:panelGroup layout="block" styleClass="resumen-item" rendered="#{misVehiculosBean.vendidos gt 0}">
+						<span class="valor">#{formatoBean.precio(misVehiculosBean.ingresos)}</span><span class="etiqueta">Ingresos por ventas</span>
+					</h:panelGroup>
+				</div>
+				<p:button value="Publicar vehículo" icon="fa fa-plus" outcome="/usuario/publicarVehiculo"/>
+			</div>
+
+			<h:panelGroup layout="block" styleClass="vacio-area" rendered="#{misVehiculosBean.total eq 0}">
+				<i class="fa fa-car"></i>
+				<p>Aún no has publicado vehículos.</p>
+				<p:button value="Publicar vehículo" icon="fa fa-plus" outcome="/usuario/publicarVehiculo"/>
+			</h:panelGroup>
+
+			<h:panelGroup layout="block" rendered="#{misVehiculosBean.total gt 0}">
+				<div class="filtro-area">
+					<p:selectOneButton value="#{misVehiculosBean.filtro}">
+						<f:selectItem itemLabel="Todos" itemValue="TODOS"/>
+						<f:selectItem itemLabel="Activos" itemValue="ACTIVOS"/>
+						<f:selectItem itemLabel="Vendidos" itemValue="VENDIDOS"/>
+						<f:selectItem itemLabel="Inactivos" itemValue="INACTIVOS"/>
+						<p:ajax update="tabla"/>
+					</p:selectOneButton>
+				</div>
+
+				<p:dataTable id="tabla" var="fila" value="#{misVehiculosBean.visibles}" reflow="true"
+					paginator="true" rows="10" paginatorPosition="bottom" styleClass="tabla-area"
+					emptyMessage="No hay vehículos con este estado.">
+					<p:column headerText="Foto" styleClass="col-foto">
+						<img class="miniatura" alt=""
+							src="#{empty formatoBean.fotoPrincipal(fila.vehiculo) ? resource['img:sin-foto.svg'] : request.contextPath.concat(formatoBean.fotoPrincipal(fila.vehiculo))}"
+							loading="lazy" onerror="this.onerror=null;this.src='#{resource['img:sin-foto.svg']}';"/>
+					</p:column>
+					<p:column headerText="Vehículo" sortBy="#{formatoBean.titulo(fila.vehiculo)}">
+						<h:link outcome="/detalleVehiculo" value="#{formatoBean.titulo(fila.vehiculo)}">
+							<f:param name="id" value="#{fila.vehiculo.codigo_vehiculo}"/>
+						</h:link>
+					</p:column>
+					<p:column headerText="Precio" sortBy="#{fila.precio}">
+						#{formatoBean.precio(fila.precio)}
+					</p:column>
+					<p:column headerText="Publicado" sortBy="#{fila.publicado}">
+						<h:outputText value="#{fila.publicado}"><f:convertDateTime pattern="dd/MM/yyyy"/></h:outputText>
+					</p:column>
+					<p:column headerText="Visitas" sortBy="#{fila.visitas}">
+						#{fila.visitas}
+					</p:column>
+					<p:column headerText="Preguntas" sortBy="#{fila.preguntas}">
+						<h:panelGroup rendered="#{fila.sinResponder gt 0}">
+							<span class="pendientes"><h:link outcome="/usuario/preguntas"><i class="fa fa-comment"></i> #{fila.sinResponder} sin responder</h:link></span>
+						</h:panelGroup>
+						<h:panelGroup rendered="#{fila.sinResponder eq 0}">#{fila.preguntas}</h:panelGroup>
+					</p:column>
+					<p:column headerText="Estado" sortBy="#{fila.estado}">
+						<span class="insignia-estado #{fila.claseEstado}">#{fila.estado}</span>
+					</p:column>
+					<p:column headerText="Acciones" styleClass="col-acciones">
+						<div class="acciones-fila">
+							<p:button value="Editar" icon="fa fa-pencil" outcome="/usuario/publicarVehiculo"
+								rendered="#{!fila.vendido}" styleClass="ui-button-secondary">
+								<f:param name="id" value="#{fila.vehiculo.codigo_vehiculo}"/>
+							</p:button>
+							<p:commandButton value="Marcar como vendido" icon="fa fa-handshake-o" rendered="#{fila.activo}"
+								action="#{misVehiculosBean.prepararVenta(fila)}" process="@this" update=":formVenta"
+								oncomplete="PF('dlgVenta').show()"/>
+							<p:commandButton value="Desactivar" icon="fa fa-pause" rendered="#{fila.activo}"
+								action="#{misVehiculosBean.desactivar(fila)}" process="@this" update="@form">
+								<p:confirm header="Desactivar vehículo" message="Dejará de aparecer en las búsquedas. ¿Deseas continuar?" icon="fa fa-exclamation-triangle"/>
+							</p:commandButton>
+							<p:commandButton value="Eliminar" icon="fa fa-trash" rendered="#{!fila.vendido}"
+								action="#{misVehiculosBean.eliminar(fila)}" process="@this" update="@form">
+								<p:confirm header="Eliminar vehículo" message="Se borrarán también sus preguntas y favoritos. Esta acción no se puede deshacer." icon="fa fa-exclamation-triangle"/>
+							</p:commandButton>
+						</div>
+					</p:column>
+				</p:dataTable>
+			</h:panelGroup>
+		</h:form>
+
+		<p:confirmDialog global="true" showEffect="fade" hideEffect="fade" styleClass="dlg-area">
+			<p:commandButton value="Sí, continuar" type="button" styleClass="ui-confirmdialog-yes" icon="fa fa-check"/>
+			<p:commandButton value="Cancelar" type="button" styleClass="ui-confirmdialog-no ui-button-secondary" icon="fa fa-times"/>
+		</p:confirmDialog>
+
+		<p:dialog widgetVar="dlgVenta" header="Marcar como vendido" modal="true" responsive="true" resizable="false"
+			draggable="false" width="440" styleClass="dlg-area">
+			<h:form id="formVenta">
+				<h:panelGroup layout="block" rendered="#{misVehiculosBean.seleccionada ne null}">
+					<p class="dialogo-texto">
+						Vas a registrar la venta de <strong>#{formatoBean.titulo(misVehiculosBean.seleccionada.vehiculo)}</strong>.
+						El comprador debe ser un usuario registrado y recibirá un correo.
+					</p>
+				</h:panelGroup>
+				<div class="campo-dialogo">
+					<p:outputLabel for="emailComprador" value="Email del comprador"/>
+					<p:inputText id="emailComprador" value="#{misVehiculosBean.emailComprador}" maxlength="100"
+						label="Email del comprador" required="true" requiredMessage="Escribe el email del comprador."
+						validatorMessage="El email del comprador no tiene un formato válido.">
+						<f:validateRegex pattern="^[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}$"/>
+					</p:inputText>
+					<p:message for="emailComprador"/>
+				</div>
+				<div class="acciones-dialogo">
+					<p:commandButton value="Registrar venta" icon="fa fa-check" action="#{misVehiculosBean.registrarVenta}"
+						process="@form" update="@form :formLista"
+						oncomplete="if (args &amp;&amp; !args.validationFailed &amp;&amp; args.exito) PF('dlgVenta').hide()"/>
+					<p:commandButton value="Cancelar" type="button" styleClass="ui-button-secondary" onclick="PF('dlgVenta').hide()"/>
+				</div>
+			</h:form>
+		</p:dialog>
 	</ui:define>
 </ui:composition>

@@ -8,11 +8,200 @@
 	<!-- Protegida por FiltroSeguridad. -->
 	<ui:define name="titulo">Mi perfil</ui:define>
 
+	<ui:define name="head">
+		<link rel="stylesheet" href="#{resource['css:perfil.css']}"/>
+	</ui:define>
+
 	<ui:define name="contenido">
 		<h1 class="pagina-titulo">Mi perfil</h1>
-		<div class="aviso-construccion">
-			<i class="fa fa-wrench"></i>
-			Aquí se podrán consultar y editar los datos personales y cambiar la contraseña. Se implementa en las Fases 3.6.1 y 3.6.2.
+
+		<div class="perfil-rejilla">
+
+			<!-- 3.6.1 Mis datos -->
+			<section class="perfil-tarjeta">
+				<h2><i class="fa fa-id-card"></i> Mis datos</h2>
+				<h:form id="formDatos" styleClass="formulario-registro">
+					<div class="rejilla-formulario">
+						<div class="campo campo-completo">
+							<p:outputLabel for="nombre" value="Nombre completo"/>
+							<p:inputText id="nombre" value="#{perfilBean.nombreCompleto}" required="true"
+								requiredMessage="El nombre completo es obligatorio." maxlength="100"/>
+							<p:message for="nombre"/>
+						</div>
+						<div class="campo campo-completo">
+							<p:outputLabel for="email" value="Correo electrónico"/>
+							<p:inputText id="email" value="#{perfilBean.email}" required="true"
+								requiredMessage="El correo electrónico es obligatorio." maxlength="100">
+								<f:validateRegex pattern="^[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}$"/>
+							</p:inputText>
+							<p:message for="email"/>
+						</div>
+						<div class="campo">
+							<p:outputLabel for="direccion" value="Dirección"/>
+							<p:inputText id="direccion" value="#{perfilBean.direccion}" required="true"
+								requiredMessage="La dirección es obligatoria." maxlength="200"/>
+							<p:message for="direccion"/>
+						</div>
+						<div class="campo">
+							<p:outputLabel for="ciudad" value="Ciudad"/>
+							<p:autoComplete id="ciudad" value="#{perfilBean.ciudad}"
+								completeMethod="#{ciudadesBean.completar}" var="c"
+								itemLabel="#{ciudadesBean.etiqueta(c)}" itemValue="#{c}"
+								forceSelection="true" dropdown="true" minQueryLength="2" queryDelay="250"
+								maxResults="20" scrollHeight="250" required="true"
+								requiredMessage="Seleccione su ciudad." placeholder="Escriba su ciudad"/>
+							<p:message for="ciudad"/>
+						</div>
+						<div class="campo campo-completo">
+							<label>Teléfonos</label>
+							<h:panelGroup id="telefonos" layout="block" styleClass="telefonos">
+								<ui:repeat value="#{perfilBean.telefonos}" var="t">
+									<div class="fila-telefono">
+										<p:selectOneMenu value="#{t.tipo}">
+											<f:selectItems value="#{perfilBean.tiposTelefono}"/>
+										</p:selectOneMenu>
+										<p:inputText value="#{t.numero}" maxlength="10" placeholder="Número (7 a 10 dígitos)">
+											<p:keyFilter mask="num"/>
+										</p:inputText>
+										<p:commandButton icon="fa fa-trash" title="Quitar teléfono"
+											styleClass="ui-button-secondary"
+											actionListener="#{perfilBean.quitarTelefono(t)}"
+											process="@this :formDatos:telefonos" update=":formDatos:telefonos"
+											rendered="#{perfilBean.telefonos.size() gt 1}"/>
+									</div>
+								</ui:repeat>
+							</h:panelGroup>
+							<p:commandButton value="Agregar teléfono" icon="fa fa-plus"
+								actionListener="#{perfilBean.agregarTelefono}" process="@this :formDatos:telefonos"
+								update=":formDatos:telefonos" styleClass="ui-button-secondary"/>
+						</div>
+					</div>
+					<div class="acciones-formulario">
+						<p:commandButton value="Guardar cambios" icon="fa fa-save"
+							action="#{perfilBean.guardarDatos}" process="@form" update="@form"/>
+					</div>
+				</h:form>
+			</section>
+
+			<!-- Cambiar contraseña -->
+			<section class="perfil-tarjeta">
+				<h2><i class="fa fa-lock"></i> Cambiar contraseña</h2>
+				<h:form id="formPassword" styleClass="formulario-registro">
+					<div class="rejilla-formulario">
+						<div class="campo campo-completo">
+							<p:outputLabel for="actual" value="Contraseña actual"/>
+							<p:password id="actual" value="#{perfilBean.passwordActual}" feedback="false"
+								required="true" requiredMessage="Escriba su contraseña actual." maxlength="100"/>
+							<p:message for="actual"/>
+						</div>
+						<div class="campo">
+							<p:outputLabel for="nueva" value="Contraseña nueva"/>
+							<p:password id="nueva" value="#{perfilBean.passwordNueva}" feedback="true" match="confirmacion"
+								promptLabel="Escriba una contraseña" weakLabel="Débil" goodLabel="Aceptable"
+								strongLabel="Fuerte" required="true" requiredMessage="La contraseña nueva es obligatoria."
+								validatorMessage="Las contraseñas no coinciden." maxlength="100">
+								<f:validateLength minimum="4"/>
+							</p:password>
+							<p:message for="nueva"/>
+						</div>
+						<div class="campo">
+							<p:outputLabel for="confirmacion" value="Confirmar contraseña nueva"/>
+							<p:password id="confirmacion" value="#{perfilBean.passwordConfirmacion}" feedback="false"
+								required="true" requiredMessage="Confirme su contraseña nueva." maxlength="100"/>
+							<p:message for="confirmacion"/>
+						</div>
+					</div>
+					<div class="acciones-formulario">
+						<p:commandButton value="Cambiar contraseña" icon="fa fa-key"
+							action="#{perfilBean.cambiarPassword}" process="@form" update="@form"/>
+					</div>
+				</h:form>
+			</section>
+
+			<!-- 3.6.2 Mis vehículos publicados -->
+			<section class="perfil-tarjeta perfil-ancha">
+				<h2><i class="fa fa-car"></i> Mis vehículos publicados
+					<span class="perfil-contador">#{perfilBean.totalVehiculos}</span></h2>
+				<h:panelGroup rendered="#{empty perfilBean.vehiculosRecientes}" layout="block" styleClass="perfil-vacio">
+					Aún no has publicado vehículos.
+				</h:panelGroup>
+				<ul class="perfil-lista">
+					<ui:repeat value="#{perfilBean.vehiculosRecientes}" var="v">
+						<li class="perfil-item">
+							<img class="perfil-miniatura"
+								src="#{empty formatoBean.fotoPrincipal(v) ? resource['img:sin-foto.svg'] : request.contextPath.concat(formatoBean.fotoPrincipal(v))}"
+								alt="#{formatoBean.titulo(v)}" loading="lazy"
+								onerror="this.onerror=null;this.src='#{resource['img:sin-foto.svg']}';"/>
+							<div class="perfil-item-cuerpo">
+								<h:link outcome="/detalleVehiculo" value="#{formatoBean.titulo(v)}" styleClass="perfil-item-titulo">
+									<f:param name="id" value="#{v.codigo_vehiculo}"/>
+								</h:link>
+								<span class="perfil-item-precio">#{formatoBean.precio(v.precio)}</span>
+							</div>
+							<span class="perfil-estado estado-#{perfilBean.estado(v).toLowerCase()}">#{perfilBean.estado(v)}</span>
+						</li>
+					</ui:repeat>
+				</ul>
+				<div class="perfil-acciones">
+					<p:button value="Ver todos" outcome="/usuario/misVehiculos" icon="fa fa-list"
+						styleClass="ui-button-secondary"/>
+					<p:button value="Publicar vehículo" outcome="/usuario/publicarVehiculo" icon="fa fa-plus-circle"/>
+				</div>
+			</section>
+
+			<!-- 3.6.2 Preguntas recibidas -->
+			<section class="perfil-tarjeta perfil-ancha">
+				<h2><i class="fa fa-comments"></i> Preguntas recibidas
+					<span class="perfil-contador">#{perfilBean.preguntasSinResponder} sin responder</span></h2>
+				<h:panelGroup rendered="#{empty perfilBean.preguntasRecientes}" layout="block" styleClass="perfil-vacio">
+					Aún no has recibido preguntas.
+				</h:panelGroup>
+				<ul class="perfil-lista">
+					<ui:repeat value="#{perfilBean.preguntasRecientes}" var="q">
+						<li class="perfil-item perfil-pregunta">
+							<div class="perfil-item-cuerpo">
+								<h:link outcome="/detalleVehiculo" value="#{formatoBean.titulo(q.vehiculo)}" styleClass="perfil-item-titulo">
+									<f:param name="id" value="#{q.vehiculo.codigo_vehiculo}"/>
+								</h:link>
+								<span class="texto-suave">#{q.cliente.nombre_completo}</span>
+								<span class="perfil-texto">#{q.descripcion}</span>
+							</div>
+							<span class="perfil-estado #{empty q.respuesta ? 'estado-inactivo' : 'estado-activo'}">#{empty q.respuesta ? 'Sin responder' : 'Respondida'}</span>
+						</li>
+					</ui:repeat>
+				</ul>
+				<div class="perfil-acciones">
+					<p:button value="Ver todas y responder" outcome="/usuario/preguntas" icon="fa fa-reply"/>
+				</div>
+			</section>
+
+			<!-- Eliminar cuenta -->
+			<section class="perfil-tarjeta perfil-ancha perfil-peligro">
+				<h2><i class="fa fa-exclamation-triangle"></i> Eliminar cuenta</h2>
+				<p class="texto-suave">Se borrarán tu cuenta, tus vehículos, favoritos y preguntas. Esta acción no se puede deshacer.
+					Si tienes ventas o compras registradas no es posible eliminarla.</p>
+				<p:commandButton type="button" value="Eliminar mi cuenta" icon="fa fa-trash"
+					styleClass="boton-peligro" onclick="PF('dlgEliminar').show()"/>
+			</section>
 		</div>
+
+		<p:dialog widgetVar="dlgEliminar" header="Eliminar cuenta" modal="true" resizable="false"
+			draggable="false" responsive="true" styleClass="dialogo-perfil" width="420">
+			<h:form id="formEliminar">
+				<p>Para confirmar, escribe tu contraseña actual.</p>
+				<div class="campo">
+					<p:outputLabel for="passEliminar" value="Contraseña"/>
+					<p:password id="passEliminar" value="#{perfilBean.passwordEliminar}" feedback="false"
+						required="true" requiredMessage="Escriba su contraseña." maxlength="100"/>
+					<p:message for="passEliminar"/>
+				</div>
+				<div class="perfil-acciones">
+					<p:commandButton value="Cancelar" type="button" styleClass="ui-button-secondary"
+						onclick="PF('dlgEliminar').hide()"/>
+					<p:commandButton value="Sí, eliminar" icon="fa fa-trash" styleClass="boton-peligro"
+						action="#{perfilBean.eliminarCuenta}" process="@form" update="@form"/>
+				</div>
+			</h:form>
+		</p:dialog>
 	</ui:define>
 </ui:composition>

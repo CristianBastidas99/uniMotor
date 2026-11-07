@@ -8,11 +8,94 @@
 	<!-- Protegida por FiltroSeguridad. -->
 	<ui:define name="titulo">Preguntas recibidas</ui:define>
 
+	<ui:define name="head">
+		<link rel="stylesheet" href="#{resource['css:area-cliente.css']}"/>
+	</ui:define>
+
 	<ui:define name="contenido">
 		<h1 class="pagina-titulo">Preguntas recibidas</h1>
-		<div class="aviso-construccion">
-			<i class="fa fa-wrench"></i>
-			Aquí se mostrarán las preguntas recibidas sobre los vehículos publicados, con opción de responderlas. Se implementa en la Fase 3.6.6.
-		</div>
+
+		<h:form id="formPreguntas">
+			<h:panelGroup layout="block" styleClass="vacio-area" rendered="#{preguntasRecibidasBean.total eq 0}">
+				<i class="fa fa-comments-o"></i>
+				<p>Aún no has recibido preguntas sobre tus vehículos.</p>
+			</h:panelGroup>
+
+			<h:panelGroup layout="block" rendered="#{preguntasRecibidasBean.total gt 0}">
+				<h:panelGroup id="filtro" layout="block" styleClass="filtro-area">
+					<p:selectOneButton value="#{preguntasRecibidasBean.filtro}">
+						<f:selectItem itemLabel="Sin responder (#{preguntasRecibidasBean.sinResponder})" itemValue="SIN"/>
+						<f:selectItem itemLabel="Respondidas (#{preguntasRecibidasBean.respondidas})" itemValue="RESP"/>
+						<f:selectItem itemLabel="Todas (#{preguntasRecibidasBean.total})" itemValue="TODAS"/>
+						<p:ajax update="lista"/>
+					</p:selectOneButton>
+				</h:panelGroup>
+
+				<h:panelGroup id="lista" layout="block" styleClass="lista-recibidas">
+					<h:panelGroup layout="block" styleClass="vacio-area" rendered="#{empty preguntasRecibidasBean.visibles}">
+						<i class="fa fa-check-circle"></i>
+						<p>#{preguntasRecibidasBean.filtro eq 'SIN' ? 'No tienes preguntas sin responder.' : (preguntasRecibidasBean.filtro eq 'RESP' ? 'Aún no has respondido preguntas.' : 'No hay preguntas.')}</p>
+					</h:panelGroup>
+					<ui:repeat value="#{preguntasRecibidasBean.visibles}" var="pregunta">
+						<div class="pregunta-recibida">
+							<div class="pregunta-vehiculo">
+								<i class="fa fa-car"></i>
+								<h:link outcome="/detalleVehiculo" value="#{formatoBean.titulo(pregunta.vehiculo)}">
+									<f:param name="id" value="#{pregunta.vehiculo.codigo_vehiculo}"/>
+								</h:link>
+							</div>
+							<div class="pregunta-cabecera">
+								<i class="fa fa-user-circle"></i>
+								<strong>#{preguntasRecibidasBean.nombrePublico(pregunta.cliente)}</strong>
+								<span class="fecha"><h:outputText value="#{pregunta.fecha}"><f:convertDateTime pattern="dd/MM/yyyy HH:mm"/></h:outputText></span>
+							</div>
+							<p class="pregunta-texto"><h:outputText value="#{pregunta.descripcion}"/></p>
+							<h:panelGroup layout="block" styleClass="respuesta" rendered="#{preguntasRecibidasBean.respondida(pregunta)}">
+								<div class="pregunta-cabecera">
+									<i class="fa fa-reply"></i>
+									<strong>Tu respuesta</strong>
+									<span class="fecha"><h:outputText value="#{pregunta.fecha_respuesta}"><f:convertDateTime pattern="dd/MM/yyyy HH:mm"/></h:outputText></span>
+								</div>
+								<p class="pregunta-texto"><h:outputText value="#{pregunta.respuesta}"/></p>
+							</h:panelGroup>
+							<h:panelGroup layout="block" styleClass="acciones-pregunta" rendered="#{!preguntasRecibidasBean.respondida(pregunta)}">
+								<p:commandButton value="Responder" icon="fa fa-reply"
+									action="#{preguntasRecibidasBean.prepararRespuesta(pregunta)}" process="@this" update=":formResponder"
+									oncomplete="PF('dlgResponder').show()"/>
+							</h:panelGroup>
+						</div>
+					</ui:repeat>
+				</h:panelGroup>
+			</h:panelGroup>
+		</h:form>
+
+		<p:dialog widgetVar="dlgResponder" header="Responder pregunta" modal="true" responsive="true" resizable="false"
+			draggable="false" width="520" styleClass="dlg-area">
+			<h:form id="formResponder">
+				<h:panelGroup layout="block" rendered="#{preguntasRecibidasBean.seleccionada ne null}">
+					<div class="pregunta-resumen">
+						<strong>#{formatoBean.titulo(preguntasRecibidasBean.seleccionada.vehiculo)}</strong>
+						<p><h:outputText value="#{preguntasRecibidasBean.seleccionada.descripcion}"/></p>
+					</div>
+				</h:panelGroup>
+				<div class="campo-dialogo">
+					<p:outputLabel for="textoRespuesta" value="Tu respuesta"/>
+					<p:inputTextarea id="textoRespuesta" value="#{preguntasRecibidasBean.respuesta}" rows="4" autoResize="true"
+						maxlength="1000" counter="contadorRespuesta" counterTemplate="{0} caracteres restantes"
+						label="Respuesta" required="true" requiredMessage="Escribe tu respuesta antes de enviarla."
+						validatorMessage="La respuesta no puede superar los 1000 caracteres.">
+						<f:validateLength maximum="1000"/>
+					</p:inputTextarea>
+					<h:outputText id="contadorRespuesta" styleClass="contador-respuesta"/>
+					<p:message for="textoRespuesta"/>
+				</div>
+				<div class="acciones-dialogo">
+					<p:commandButton value="Publicar respuesta" icon="fa fa-paper-plane" action="#{preguntasRecibidasBean.responder}"
+						process="@form" update="@form :formPreguntas"
+						oncomplete="if (args &amp;&amp; !args.validationFailed &amp;&amp; args.exito) PF('dlgResponder').hide()"/>
+					<p:commandButton value="Cancelar" type="button" styleClass="ui-button-secondary" onclick="PF('dlgResponder').hide()"/>
+				</div>
+			</h:form>
+		</p:dialog>
 	</ui:define>
 </ui:composition>

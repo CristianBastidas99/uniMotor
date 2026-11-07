@@ -166,7 +166,14 @@ public final class PlantillasCorreo {
 			return "vehículo";
 		}
 		Modelo modelo = vehiculo.getCodigo_modelo();
-		return valor(modelo.getMarca()) + " " + valor(modelo.getNombre()) + " " + vehiculo.getYear();
+		String marca = valor(modelo.getMarca());
+		String nombre = valor(modelo.getNombre());
+		// Evita "Mazda Mazda 3" cuando el nombre del modelo ya incluye la marca.
+		String marcaOriginal = modelo.getMarca() == null ? "" : modelo.getMarca().trim();
+		String nombreOriginal = modelo.getNombre() == null ? "" : modelo.getNombre().trim();
+		boolean incluyeMarca = !marcaOriginal.isEmpty() && nombreOriginal.toLowerCase(java.util.Locale.ROOT)
+				.startsWith(marcaOriginal.toLowerCase(java.util.Locale.ROOT));
+		return (incluyeMarca ? nombre : marca + " " + nombre) + " " + vehiculo.getYear();
 	}
 
 	private static String valor(String texto) {

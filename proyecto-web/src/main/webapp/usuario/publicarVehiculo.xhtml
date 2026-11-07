@@ -5,14 +5,264 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	template="/WEB-INF/template.xhtml">
-	<!-- Protegida por FiltroSeguridad. -->
-	<ui:define name="titulo">Publicar vehículo</ui:define>
+	<!-- Protegida por FiltroSeguridad. Sin parámetro id publica; con ?id=N edita un vehículo propio. -->
+
+	<f:metadata>
+		<!-- El id llega como texto: el bean lo convierte para que un valor inválido no salte el viewAction -->
+		<f:viewParam name="id" value="#{publicarVehiculoBean.idTexto}" />
+		<f:viewAction action="#{publicarVehiculoBean.inicializar}" onPostback="false" />
+	</f:metadata>
+
+	<ui:define name="titulo">#{publicarVehiculoBean.edicion ? 'Editar vehículo' : 'Publicar vehículo'}</ui:define>
+
+	<ui:define name="head">
+		<link rel="stylesheet" href="#{resource['css:publicar.css']}"/>
+	</ui:define>
 
 	<ui:define name="contenido">
-		<h1 class="pagina-titulo">Publicar vehículo</h1>
-		<div class="aviso-construccion">
-			<i class="fa fa-wrench"></i>
-			Aquí estará el formulario para publicar un vehículo con sus datos y fotos. Se implementa en la Fase 3.6.3.
-		</div>
+		<h1 class="pagina-titulo">#{publicarVehiculoBean.edicion ? 'Editar vehículo' : 'Publicar vehículo'}</h1>
+
+		<h:form id="formVehiculo" enctype="multipart/form-data" styleClass="formulario-vehiculo">
+			<p:focus context="formVehiculo" />
+
+			<!-- ===== Datos básicos ===== -->
+			<section class="seccion-formulario">
+				<h2>Datos básicos</h2>
+				<div class="rejilla-formulario">
+					<div class="campo">
+						<p:outputLabel for="marca" value="Marca" />
+						<p:selectOneMenu id="marca" value="#{publicarVehiculoBean.marca}" required="true"
+							requiredMessage="Seleccione la marca." filter="true" filterMatchMode="contains">
+							<p:ajax event="change" listener="#{publicarVehiculoBean.cambiarMarca}" process="@this"
+								update="modelo msgModelo" />
+							<f:selectItem itemLabel="Seleccione" itemValue="" noSelectionOption="true" />
+							<f:selectItems value="#{publicarVehiculoBean.marcas}" />
+						</p:selectOneMenu>
+						<p:message for="marca" />
+					</div>
+
+					<div class="campo">
+						<p:outputLabel for="modelo" value="Modelo" />
+						<p:selectOneMenu id="modelo" value="#{publicarVehiculoBean.codigoModelo}" required="true"
+							requiredMessage="Seleccione el modelo.">
+							<f:selectItem itemLabel="Seleccione" itemValue="" noSelectionOption="true" />
+							<f:selectItems value="#{publicarVehiculoBean.modelos}" var="m" itemLabel="#{m.nombre}"
+								itemValue="#{m.codigo_modelo}" />
+						</p:selectOneMenu>
+						<h:panelGroup id="msgModelo"><p:message for="modelo" /></h:panelGroup>
+					</div>
+
+					<div class="campo">
+						<p:outputLabel for="tipo" value="Tipo de vehículo" />
+						<p:selectOneMenu id="tipo" value="#{publicarVehiculoBean.tipo}" required="true"
+							requiredMessage="Seleccione el tipo de vehículo.">
+							<f:selectItem itemLabel="Seleccione" itemValue="" noSelectionOption="true" />
+							<f:selectItems value="#{publicarVehiculoBean.tipos}" var="t" itemValue="#{t}"
+								itemLabel="#{formatoBean.etiqueta(t)}" />
+						</p:selectOneMenu>
+						<p:message for="tipo" />
+					</div>
+
+					<div class="campo">
+						<p:outputLabel for="condicion" value="Condición" />
+						<p:selectOneMenu id="condicion" value="#{publicarVehiculoBean.condicion}" required="true"
+							requiredMessage="Seleccione la condición.">
+							<p:ajax event="change" listener="#{publicarVehiculoBean.cambiarCondicion}" process="@this"
+								update="kilometros" />
+							<f:selectItem itemLabel="Seleccione" itemValue="" noSelectionOption="true" />
+							<f:selectItems value="#{publicarVehiculoBean.condiciones}" var="c" itemValue="#{c}"
+								itemLabel="#{formatoBean.etiqueta(c)}" />
+						</p:selectOneMenu>
+						<p:message for="condicion" />
+					</div>
+
+					<div class="campo">
+						<p:outputLabel for="year" value="Año" />
+						<p:inputText id="year" value="#{publicarVehiculoBean.year}" required="true"
+							requiredMessage="El año es obligatorio." maxlength="4"
+							converterMessage="El año debe ser un número."
+							validatorMessage="El año debe estar entre 1900 y #{publicarVehiculoBean.anioMaximo}.">
+							<p:keyFilter mask="pint" />
+							<f:validateLongRange minimum="1900" maximum="#{publicarVehiculoBean.anioMaximo}" />
+						</p:inputText>
+						<p:message for="year" />
+					</div>
+
+					<div class="campo">
+						<p:outputLabel for="precio" value="Precio (COP)" />
+						<p:inputNumber id="precio" value="#{publicarVehiculoBean.precio}" required="true"
+							requiredMessage="El precio es obligatorio." symbol="$ " symbolPosition="p"
+							decimalPlaces="0" decimalSeparator="," thousandSeparator="." minValue="1"
+							maxValue="99999999999" validatorMessage="El precio debe ser mayor que cero." />
+						<p:message for="precio" />
+					</div>
+				</div>
+			</section>
+
+			<!-- ===== Detalles técnicos ===== -->
+			<section class="seccion-formulario">
+				<h2>Detalles técnicos</h2>
+				<div class="rejilla-formulario">
+					<div class="campo">
+						<p:outputLabel for="kilometros" value="Kilómetros" />
+						<p:inputText id="kilometros" value="#{publicarVehiculoBean.kilometros}" required="true"
+							requiredMessage="Los kilómetros son obligatorios (0 si es nuevo)." maxlength="7"
+							converterMessage="Los kilómetros deben ser un número entero."
+							validatorMessage="Los kilómetros deben estar entre 0 y 2.000.000.">
+							<p:keyFilter mask="pint" />
+							<f:validateLongRange minimum="0" maximum="2000000" />
+						</p:inputText>
+						<p:message for="kilometros" />
+					</div>
+
+					<div class="campo">
+						<p:outputLabel for="combustible" value="Combustible" />
+						<p:selectOneMenu id="combustible" value="#{publicarVehiculoBean.combustible}" required="true"
+							requiredMessage="Seleccione el combustible.">
+							<f:selectItem itemLabel="Seleccione" itemValue="" noSelectionOption="true" />
+							<f:selectItems value="#{publicarVehiculoBean.combustibles}" var="x" itemValue="#{x}"
+								itemLabel="#{formatoBean.etiqueta(x)}" />
+						</p:selectOneMenu>
+						<p:message for="combustible" />
+					</div>
+
+					<div class="campo">
+						<p:outputLabel for="transmision" value="Transmisión" />
+						<p:selectOneMenu id="transmision" value="#{publicarVehiculoBean.transmision}" required="true"
+							requiredMessage="Seleccione la transmisión.">
+							<f:selectItem itemLabel="Seleccione" itemValue="" noSelectionOption="true" />
+							<f:selectItems value="#{publicarVehiculoBean.transmisiones}" var="x" itemValue="#{x}"
+								itemLabel="#{formatoBean.etiqueta(x)}" />
+						</p:selectOneMenu>
+						<p:message for="transmision" />
+					</div>
+
+					<div class="campo">
+						<p:outputLabel for="cilindraje" value="Cilindraje (cc)" />
+						<p:inputText id="cilindraje" value="#{publicarVehiculoBean.cilindraje}" required="true"
+							requiredMessage="El cilindraje es obligatorio (0 si es eléctrico)." maxlength="5"
+							converterMessage="El cilindraje debe ser un número entero."
+							validatorMessage="El cilindraje debe estar entre 0 y 20000.">
+							<p:keyFilter mask="pint" />
+							<f:validateLongRange minimum="0" maximum="20000" />
+						</p:inputText>
+						<p:message for="cilindraje" />
+					</div>
+
+					<div class="campo">
+						<p:outputLabel for="puertas" value="Número de puertas" />
+						<p:inputText id="puertas" value="#{publicarVehiculoBean.numeroPuertas}" required="true"
+							requiredMessage="El número de puertas es obligatorio (0 para motos)." maxlength="2"
+							converterMessage="El número de puertas debe ser un número entero."
+							validatorMessage="El número de puertas debe estar entre 0 y 10.">
+							<p:keyFilter mask="pint" />
+							<f:validateLongRange minimum="0" maximum="10" />
+						</p:inputText>
+						<p:message for="puertas" />
+					</div>
+
+					<div class="campo">
+						<p:outputLabel for="color" value="Color" />
+						<p:inputText id="color" value="#{publicarVehiculoBean.color}" required="true"
+							requiredMessage="El color es obligatorio." maxlength="30" placeholder="Rojo" />
+						<p:message for="color" />
+					</div>
+				</div>
+			</section>
+
+			<!-- ===== Ubicación y descripción ===== -->
+			<section class="seccion-formulario">
+				<h2>Ubicación y descripción</h2>
+				<div class="rejilla-formulario">
+					<div class="campo">
+						<p:outputLabel for="placa" value="Placa" />
+						<p:inputText id="placa" value="#{publicarVehiculoBean.placa}" required="true"
+							requiredMessage="La placa es obligatoria." maxlength="10" styleClass="campo-placa"
+							placeholder="ABC123"
+							validator="#{publicarVehiculoBean.validarPlaca}" />
+						<p:message for="placa" />
+					</div>
+
+					<div class="campo">
+						<p:outputLabel for="ciudad" value="Ciudad" />
+						<p:autoComplete id="ciudad" value="#{publicarVehiculoBean.ciudad}"
+							completeMethod="#{ciudadesBean.completar}" var="c"
+							itemLabel="#{ciudadesBean.etiqueta(c)}" itemValue="#{c}"
+							forceSelection="true" dropdown="true" minQueryLength="2" queryDelay="250"
+							maxResults="20" scrollHeight="250" required="true"
+							requiredMessage="Seleccione la ciudad del vehículo." placeholder="Escriba la ciudad" />
+						<p:message for="ciudad" />
+					</div>
+
+					<div class="campo campo-completo">
+						<p:outputLabel for="descripcion" value="Descripción" />
+						<p:inputTextarea id="descripcion" value="#{publicarVehiculoBean.descripcion}" required="true"
+							requiredMessage="La descripción es obligatoria." rows="5" maxlength="1000"
+							counter="contadorDescripcion" counterTemplate="{0} caracteres restantes"
+							placeholder="Describa el estado, mantenimiento y detalles del vehículo" />
+						<h:outputText id="contadorDescripcion" styleClass="texto-suave contador-texto"/>
+						<p:message for="descripcion" />
+					</div>
+				</div>
+			</section>
+
+			<!-- ===== Características ===== -->
+			<section class="seccion-formulario">
+				<h2>Características</h2>
+				<p:selectManyCheckbox id="caracteristicas" value="#{publicarVehiculoBean.caracteristicasSeleccionadas}"
+					layout="grid" columns="2" styleClass="lista-caracteristicas">
+					<f:converter converterId="javax.faces.Long" />
+					<f:selectItems value="#{publicarVehiculoBean.caracteristicas}" var="c"
+						itemLabel="#{c.nombre}" itemValue="#{c.codigo_caracteristica}" />
+				</p:selectManyCheckbox>
+			</section>
+
+			<!-- ===== Fotos ===== -->
+			<section class="seccion-formulario">
+				<h2>Fotos</h2>
+				<p class="texto-suave">
+					Suba entre 1 y #{publicarVehiculoBean.maximoFotos} fotos (JPG, PNG o WEBP, máximo 5 MB cada una).
+					La primera foto es la principal.
+				</p>
+				<p:fileUpload id="subidor" mode="advanced" multiple="true" auto="true" sequential="true"
+					dragDropSupport="true" listener="#{publicarVehiculoBean.subirFoto}"
+					allowTypes="/(\.|\/)(jpe?g|png|webp)$/" accept="image/jpeg,image/png,image/webp"
+					sizeLimit="5242880" label="Seleccionar fotos"
+					invalidFileMessage="Tipo de archivo no válido: solo JPG, PNG o WEBP."
+					invalidSizeMessage="La foto supera el tamaño máximo de 5 MB."
+					update=":formVehiculo:panelFotos" />
+
+				<h:panelGroup id="panelFotos" layout="block" styleClass="panel-fotos">
+					<h:panelGroup layout="block" styleClass="texto-suave sin-fotos"
+						rendered="#{empty publicarVehiculoBean.fotos}">
+						Aún no ha agregado fotos.
+					</h:panelGroup>
+					<div class="rejilla-fotos">
+						<ui:repeat value="#{publicarVehiculoBean.fotos}" var="foto" varStatus="estado">
+							<div class="miniatura-foto">
+								<img src="#{request.contextPath}/fotos/#{foto}" alt="Foto #{estado.index + 1}" loading="lazy" />
+								<span class="insignia-principal" style="#{estado.first ? '' : 'display:none'}">Principal</span>
+								<div class="acciones-miniatura">
+									<p:commandButton icon="fa fa-star" title="Hacer principal"
+										styleClass="ui-button-secondary" process="@this" update=":formVehiculo:panelFotos"
+										actionListener="#{publicarVehiculoBean.hacerPrincipal(foto)}"
+										disabled="#{estado.first}" />
+									<p:commandButton icon="fa fa-trash" title="Quitar foto"
+										styleClass="ui-button-secondary" process="@this" update=":formVehiculo:panelFotos"
+										actionListener="#{publicarVehiculoBean.quitarFoto(foto)}" />
+								</div>
+							</div>
+						</ui:repeat>
+					</div>
+				</h:panelGroup>
+			</section>
+
+			<div class="acciones-vehiculo">
+				<p:commandButton value="#{publicarVehiculoBean.edicion ? 'Guardar cambios' : 'Publicar vehículo'}"
+					icon="fa fa-save" action="#{publicarVehiculoBean.guardar}" ajax="false" />
+				<p:button value="Cancelar" icon="fa fa-times" outcome="/usuario/misVehiculos"
+					styleClass="ui-button-secondary" />
+			</div>
+		</h:form>
 	</ui:define>
 </ui:composition>

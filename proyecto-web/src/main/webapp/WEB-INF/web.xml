@@ -17,6 +17,13 @@ http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
 		<servlet-name>Faces Servlet</servlet-name>
 		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
+		<!-- Subida de archivos (fotos de vehiculos) con el subidor nativo de Servlet 3.
+		     El esquema exige este orden: max-file-size, max-request-size, file-size-threshold. -->
+		<multipart-config>
+			<max-file-size>5242880</max-file-size>
+			<max-request-size>62914560</max-request-size>
+			<file-size-threshold>0</file-size-threshold>
+		</multipart-config>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>Faces Servlet</servlet-name>
@@ -41,6 +48,10 @@ http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
 	<context-param>
 		<param-name>primefaces.THEME</param-name>
 		<param-value>nova-light</param-value>
+	</context-param>
+	<context-param>
+		<param-name>primefaces.UPLOADER</param-name>
+		<param-value>native</param-value>
 	</context-param>
 	<context-param>
 		<param-name>primefaces.FONT_AWESOME</param-name>

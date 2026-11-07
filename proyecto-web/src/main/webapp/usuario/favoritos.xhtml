@@ -8,11 +8,34 @@
 	<!-- Protegida por FiltroSeguridad. -->
 	<ui:define name="titulo">Mis favoritos</ui:define>
 
+	<ui:define name="head">
+		<link rel="stylesheet" href="#{resource['css:area-cliente.css']}"/>
+	</ui:define>
+
 	<ui:define name="contenido">
 		<h1 class="pagina-titulo">Mis favoritos</h1>
-		<div class="aviso-construccion">
-			<i class="fa fa-wrench"></i>
-			Aquí se listarán los vehículos que el usuario marcó como favoritos. Se implementa en la Fase 3.6.5.
-		</div>
+
+		<h:form id="formFavoritos">
+			<h:panelGroup layout="block" styleClass="vacio-area" rendered="#{empty favoritosBean.favoritos}">
+				<i class="fa fa-heart-o"></i>
+				<p>No tienes favoritos todavía.</p>
+				<p:button value="Buscar vehículos" icon="fa fa-search" outcome="/resultados"/>
+			</h:panelGroup>
+
+			<h:panelGroup layout="block" styleClass="rejilla-vehiculos" rendered="#{not empty favoritosBean.favoritos}">
+				<ui:repeat value="#{favoritosBean.favoritos}" var="fav">
+					<div class="favorito-item">
+						<ui:include src="/WEB-INF/includes/tarjetaVehiculo.xhtml">
+							<ui:param name="vehiculo" value="#{fav}"/>
+						</ui:include>
+						<h:panelGroup layout="block" styleClass="no-disponible" rendered="#{!favoritosBean.disponible(fav)}">
+							<i class="fa fa-ban"></i> Ya no disponible
+						</h:panelGroup>
+						<p:commandButton value="Quitar de favoritos" icon="fa fa-heart-o" styleClass="ui-button-secondary boton-quitar"
+							action="#{favoritosBean.quitar(fav)}" process="@this" update="@form"/>
+					</div>
+				</ui:repeat>
+			</h:panelGroup>
+		</h:form>
 	</ui:define>
 </ui:composition>

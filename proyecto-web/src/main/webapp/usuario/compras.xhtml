@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template.xhtml">
+	<!-- Protegida por FiltroSeguridad. -->
+	<ui:define name="titulo">Mis compras</ui:define>
+
+	<ui:define name="head">
+		<link rel="stylesheet" href="#{resource['css:perfil.css']}"/>
+	</ui:define>
+
+	<ui:define name="contenido">
+		<h1 class="pagina-titulo">Mis compras</h1>
+
+		<h:form id="formCompras">
+			<h:panelGroup rendered="#{empty comprasBean.compras}" layout="block" styleClass="perfil-vacio perfil-tarjeta">
+				Aún no has comprado vehículos en uniMotor.
+			</h:panelGroup>
+
+			<ul class="perfil-lista compras-lista">
+				<ui:repeat value="#{comprasBean.compras}" var="fila">
+					<li class="perfil-item compra-item">
+						<img class="perfil-miniatura compra-foto"
+							src="#{empty formatoBean.fotoPrincipal(fila.venta.codigo_vehiculo) ? resource['img:sin-foto.svg'] : request.contextPath.concat(formatoBean.fotoPrincipal(fila.venta.codigo_vehiculo))}"
+							alt="#{formatoBean.titulo(fila.venta.codigo_vehiculo)}" loading="lazy"
+							onerror="this.onerror=null;this.src='#{resource['img:sin-foto.svg']}';"/>
+						<div class="perfil-item-cuerpo">
+							<h:link outcome="/detalleVehiculo" value="#{formatoBean.titulo(fila.venta.codigo_vehiculo)}"
+								styleClass="perfil-item-titulo">
+								<f:param name="id" value="#{fila.venta.codigo_vehiculo.codigo_vehiculo}"/>
+							</h:link>
+							<span class="perfil-item-precio">#{formatoBean.precio(fila.venta.codigo_vehiculo.precio)}</span>
+							<span class="texto-suave">Vendedor: #{fila.vendedor.nombre_completo}</span>
+							<span class="texto-suave">Fecha:
+								<h:outputText value="#{fila.venta.fecha}">
+									<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Bogota"/>
+								</h:outputText>
+							</span>
+							<h:panelGroup rendered="#{not fila.puedeCalificar and not empty fila.calificacion}" layout="block"
+								styleClass="compra-calificado">
+								<span class="texto-suave">Ya calificaste a este vendedor</span>
+								<p:rating value="#{fila.calificacion.estrellas}" readonly="true" cancel="false"/>
+							</h:panelGroup>
+							<h:panelGroup rendered="#{not fila.puedeCalificar and empty fila.calificacion}" layout="block"
+								styleClass="texto-suave">
+								Ya calificaste a este vendedor
+							</h:panelGroup>
+						</div>
+						<div class="compra-accion">
+							<p:commandButton value="Calificar vendedor" icon="fa fa-star"
+								rendered="#{fila.puedeCalificar}"
+								actionListener="#{comprasBean.seleccionar(fila)}"
+								process="@this" update=":formCalificar"
+								oncomplete="PF('dlgCalificar').show()"/>
+						</div>
+					</li>
+				</ui:repeat>
+			</ul>
+		</h:form>
+
+		<p:dialog widgetVar="dlgCalificar" header="Calificar vendedor" modal="true" resizable="false"
+			draggable="false" responsive="true" styleClass="dialogo-perfil" width="420">
+			<h:form id="formCalificar">
+				<p>Vendedor: <strong>#{comprasBean.seleccionada.vendedor.nombre_completo}</strong></p>
+				<div class="campo">
+					<p:outputLabel for="estrellas" value="Tu calificación"/>
+					<p:rating id="estrellas" value="#{comprasBean.estrellas}" stars="5" cancel="false"/>
+				</div>
+				<div class="campo">
+					<p:outputLabel for="comentario" value="Comentario (opcional)"/>
+					<p:inputTextarea id="comentario" value="#{comprasBean.comentario}" rows="4" maxlength="500"
+						counter="contador" counterTemplate="{0} caracteres restantes" autoResize="false"/>
+					<h:outputText id="contador" styleClass="texto-suave"/>
+					<p:message for="comentario"/>
+				</div>
+				<div class="perfil-acciones">
+					<p:commandButton value="Cancelar" type="button" styleClass="ui-button-secondary"
+						onclick="PF('dlgCalificar').hide()"/>
+					<p:commandButton value="Enviar calificación" icon="fa fa-paper-plane"
+						action="#{comprasBean.calificar}" process="@form" update="@form :formCompras"
+						oncomplete="if (args &amp;&amp; args.ok) PF('dlgCalificar').hide()"/>
+				</div>
+			</h:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

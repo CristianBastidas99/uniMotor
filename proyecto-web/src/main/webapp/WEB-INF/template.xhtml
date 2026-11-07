@@ -49,6 +49,7 @@
 					<p:submenu label="#{seguridadBean.cliente.nombre_completo}" icon="fa fa-user"
 						rendered="#{seguridadBean.autenticado}">
 						<p:menuitem value="Mi perfil" outcome="/usuario/perfil" icon="fa fa-id-card"/>
+						<p:menuitem value="Mis compras" outcome="/usuario/compras" icon="fa fa-shopping-bag"/>
 						<p:menuitem value="Cerrar sesión" action="#{seguridadBean.cerrarSesion}"
 							icon="fa fa-sign-out" ajax="false"/>
 					</p:submenu>

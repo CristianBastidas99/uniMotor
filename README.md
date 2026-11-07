@@ -201,4 +201,7 @@ mvn test
   kilometraje, ordenar y ver en cuadrícula o en lista. El detalle de cada vehículo muestra la galería de fotos, la
   ficha técnica, los datos del vendedor y las preguntas con sus respuestas; con sesión se puede preguntar (el
   vendedor recibe un correo) y guardar en favoritos, y cualquiera puede compartirlo en Facebook o Twitter.
+  El área del cliente permite editar el perfil, cambiar la contraseña y eliminar la cuenta; publicar y editar
+  vehículos con sus fotos; gestionar las publicaciones (desactivar, eliminar y marcar como vendido, con correo al
+  comprador); ver y quitar favoritos; responder las preguntas recibidas, y calificar al vendedor desde "Mis compras".
   Para probar: `usuario1@servidor.com` / `12345` (los administradores entran solo por la aplicación de escritorio).
