@@ -9,21 +9,44 @@
 	<ui:define name="titulo">Inicio</ui:define>
 
 	<ui:define name="contenido">
-		<h1 class="pagina-titulo">uniMotor — compra y venta de vehículos</h1>
+		<section class="hero">
+			<h1>Encuentre su próximo vehículo</h1>
+			<p>Compre y venda carros, motos y camionetas nuevos y usados en toda Colombia.</p>
+			<ui:include src="/WEB-INF/includes/buscador.xhtml"/>
+		</section>
 
-		<p:panel header="Bienvenido" styleClass="texto-centro">
-			<p>La aplicación web está funcionando con JSF 2.3 y PrimeFaces 8.</p>
-			<p:button value="Ver vehículos" icon="fa fa-car" outcome="/resultados"/>
-		</p:panel>
-
-		<h2 style="margin-top: 24px;">Vehículo de ejemplo</h2>
-		<div class="tarjeta-vehiculo">
-			<img src="#{request.contextPath}/fotos/carro-01.jpg" alt="Foto del vehículo"
-				onerror="this.onerror=null;this.src='#{resource['img:sin-foto.svg']}';"/>
-			<div class="cuerpo">
-				<div class="titulo">Vehículo de prueba</div>
-				<div class="precio">$ 0</div>
+		<section class="seccion-top">
+			<h2>Los 10 más buscados — Nuevos</h2>
+			<h:panelGroup rendered="#{empty inicioBean.topNuevos}">
+				<p class="texto-suave">Aún no hay vehículos nuevos publicados.</p>
+			</h:panelGroup>
+			<div class="rejilla-top">
+				<ui:repeat value="#{inicioBean.topNuevos}" var="v" varStatus="estado">
+					<div class="elemento-top">
+						<span class="posicion-top">#{estado.index + 1}</span>
+						<ui:include src="/WEB-INF/includes/tarjetaVehiculo.xhtml">
+							<ui:param name="vehiculo" value="#{v}"/>
+						</ui:include>
+					</div>
+				</ui:repeat>
 			</div>
-		</div>
+		</section>
+
+		<section class="seccion-top">
+			<h2>Los 10 más buscados — Usados</h2>
+			<h:panelGroup rendered="#{empty inicioBean.topUsados}">
+				<p class="texto-suave">Aún no hay vehículos usados publicados.</p>
+			</h:panelGroup>
+			<div class="rejilla-top">
+				<ui:repeat value="#{inicioBean.topUsados}" var="v" varStatus="estado">
+					<div class="elemento-top">
+						<span class="posicion-top">#{estado.index + 1}</span>
+						<ui:include src="/WEB-INF/includes/tarjetaVehiculo.xhtml">
+							<ui:param name="vehiculo" value="#{v}"/>
+						</ui:include>
+					</div>
+				</ui:repeat>
+			</div>
+		</section>
 	</ui:define>
 </ui:composition>

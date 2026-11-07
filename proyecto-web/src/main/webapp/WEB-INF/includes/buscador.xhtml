@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<div class="buscador">
+		<h:form id="formBuscador">
+			<div class="rejilla-buscador">
+				<div class="campo">
+					<p:outputLabel for="tipo" value="Tipo"/>
+					<p:selectOneMenu id="tipo" value="#{buscadorBean.tipo}">
+						<f:selectItem itemLabel="Todos" itemValue="#{null}" noSelectionOption="true"/>
+						<f:selectItems value="#{buscadorBean.tipos}" var="t" itemLabel="#{formatoBean.etiqueta(t)}" itemValue="#{t}"/>
+					</p:selectOneMenu>
+				</div>
+				<div class="campo">
+					<p:outputLabel for="marca" value="Marca"/>
+					<p:selectOneMenu id="marca" value="#{buscadorBean.marca}" filter="true" filterMatchMode="contains">
+						<f:selectItem itemLabel="Todas" itemValue="#{null}" noSelectionOption="true"/>
+						<f:selectItems value="#{buscadorBean.marcas}" var="m" itemLabel="#{m}" itemValue="#{m}"/>
+					</p:selectOneMenu>
+				</div>
+				<div class="campo">
+					<p:outputLabel for="precioMin" value="Precio desde"/>
+					<p:inputNumber id="precioMin" value="#{buscadorBean.precioMin}" symbol="$ " symbolPosition="p"
+						decimalPlaces="0" thousandSeparator="." decimalSeparator="," minValue="0"/>
+				</div>
+				<div class="campo">
+					<p:outputLabel for="precioMax" value="Precio hasta"/>
+					<p:inputNumber id="precioMax" value="#{buscadorBean.precioMax}" symbol="$ " symbolPosition="p"
+						decimalPlaces="0" thousandSeparator="." decimalSeparator="," minValue="0"/>
+				</div>
+				<div class="campo">
+					<p:outputLabel for="anioMin" value="Año desde"/>
+					<p:inputNumber id="anioMin" value="#{buscadorBean.anioMin}" decimalPlaces="0"
+						thousandSeparator="" minValue="1950" maxValue="2030"/>
+				</div>
+				<div class="campo">
+					<p:outputLabel for="anioMax" value="Año hasta"/>
+					<p:inputNumber id="anioMax" value="#{buscadorBean.anioMax}" decimalPlaces="0"
+						thousandSeparator="" minValue="1950" maxValue="2030"/>
+				</div>
+				<div class="campo acciones-buscador">
+					<p:commandButton value="Buscar" icon="fa fa-search" action="#{buscadorBean.buscar}" ajax="false"/>
+					<p:button value="Limpiar" icon="fa fa-eraser" outcome="/resultados"/>
+				</div>
+			</div>
+		</h:form>
+	</div>
+</ui:composition>

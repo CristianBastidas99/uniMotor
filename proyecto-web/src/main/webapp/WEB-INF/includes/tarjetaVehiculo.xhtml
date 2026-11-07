@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+	<h:link outcome="/detalleVehiculo" styleClass="tarjeta-vehiculo">
+		<f:param name="id" value="#{vehiculo.codigo_vehiculo}"/>
+		<span class="foto-vehiculo">
+			<!-- img HTML y no h:graphicImage: su atributo url ya antepone el context path (quedaba /proyecto-web/proyecto-web/fotos/...) -->
+			<img src="#{empty formatoBean.fotoPrincipal(vehiculo) ? resource['img:sin-foto.svg'] : request.contextPath.concat(formatoBean.fotoPrincipal(vehiculo))}"
+				alt="#{formatoBean.titulo(vehiculo)}" loading="lazy"
+				onerror="this.onerror=null;this.src='#{resource['img:sin-foto.svg']}';"/>
+			<span class="insignia-condicion #{vehiculo.condicion eq 'NUEVO' ? 'nuevo' : 'usado'}">#{formatoBean.etiqueta(vehiculo.condicion)}</span>
+		</span>
+		<span class="cuerpo">
+			<span class="titulo">#{formatoBean.titulo(vehiculo)}</span>
+			<span class="precio">#{formatoBean.precio(vehiculo.precio)}</span>
+			<span class="datos-vehiculo">#{vehiculo.year} · #{formatoBean.kilometros(vehiculo.kilometros)} · #{formatoBean.etiqueta(vehiculo.tipo_trasmision)} · #{formatoBean.ciudad(vehiculo)}</span>
+		</span>
+	</h:link>
+</ui:composition>

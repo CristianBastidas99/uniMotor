@@ -6,13 +6,130 @@
 	xmlns:p="http://primefaces.org/ui"
 	template="/WEB-INF/template.xhtml">
 
+	<f:metadata>
+		<f:viewParam name="tipo" value="#{buscadorBean.tipo}"
+			converterMessage="El tipo de vehículo indicado en la dirección no es válido." />
+		<f:viewParam name="marca" value="#{buscadorBean.marca}" />
+		<f:viewParam name="precioMin" value="#{buscadorBean.precioMin}"
+			converterMessage="El precio mínimo indicado en la dirección no es válido." />
+		<f:viewParam name="precioMax" value="#{buscadorBean.precioMax}"
+			converterMessage="El precio máximo indicado en la dirección no es válido." />
+		<f:viewParam name="anioMin" value="#{buscadorBean.anioMin}"
+			converterMessage="El año mínimo indicado en la dirección no es válido." />
+		<f:viewParam name="anioMax" value="#{buscadorBean.anioMax}"
+			converterMessage="El año máximo indicado en la dirección no es válido." />
+		<f:viewAction action="#{resultadosBean.inicializar}" onPostback="false" />
+	</f:metadata>
+
 	<ui:define name="titulo">Buscar vehículos</ui:define>
 
 	<ui:define name="contenido">
 		<h1 class="pagina-titulo">Buscar vehículos</h1>
-		<div class="aviso-construccion">
-			<i class="fa fa-wrench"></i>
-			Aquí se mostrarán los filtros de búsqueda y el listado de resultados con paginación. Se implementa en la Fase 3.4.
+
+		<!-- Errores de los parámetros de la dirección (solo en la carga inicial) -->
+		<p:messages id="mensajesParametros" severity="error,warn" closable="true"
+			rendered="#{!facesContext.postback}" />
+
+		<ui:include src="/WEB-INF/includes/buscador.xhtml" />
+
+		<h:panelGroup id="resumenBusqueda" layout="block" styleClass="resumen-busqueda">
+			<strong>#{resultadosBean.total} #{resultadosBean.total eq 1 ? 'vehículo encontrado' : 'vehículos encontrados'}</strong>
+			<span class="resumen-criterios"> · #{resultadosBean.resumenCriterios}</span>
+		</h:panelGroup>
+
+		<div class="pagina-resultados">
+			<aside class="panel-filtros">
+				<h:form id="formFiltros">
+					<p:panel header="Filtros" toggleable="true" toggleSpeed="200">
+						<div class="campo">
+							<label>Características</label>
+							<p:selectManyCheckbox id="caracteristicas" value="#{resultadosBean.caracteristicasSeleccionadas}"
+								layout="pageDirection" styleClass="lista-caracteristicas">
+								<f:converter converterId="javax.faces.Long" />
+								<f:selectItems value="#{resultadosBean.caracteristicas}" var="c"
+									itemLabel="#{c.nombre}" itemValue="#{c.codigo_caracteristica}" />
+							</p:selectManyCheckbox>
+						</div>
+						<div class="campo">
+							<p:outputLabel for="combustible" value="Combustible" />
+							<p:selectOneMenu id="combustible" value="#{resultadosBean.combustible}">
+								<f:selectItem itemLabel="Cualquiera" itemValue="" noSelectionOption="true" />
+								<f:selectItems value="#{resultadosBean.combustibles}" var="x"
+									itemLabel="#{formatoBean.etiqueta(x)}" itemValue="#{x}" />
+							</p:selectOneMenu>
+						</div>
+						<div class="campo">
+							<p:outputLabel for="transmision" value="Transmisión" />
+							<p:selectOneMenu id="transmision" value="#{resultadosBean.transmision}">
+								<f:selectItem itemLabel="Cualquiera" itemValue="" noSelectionOption="true" />
+								<f:selectItems value="#{resultadosBean.transmisiones}" var="x"
+									itemLabel="#{formatoBean.etiqueta(x)}" itemValue="#{x}" />
+							</p:selectOneMenu>
+						</div>
+						<div class="campo">
+							<p:outputLabel for="condicion" value="Condición" />
+							<p:selectOneMenu id="condicion" value="#{resultadosBean.condicion}">
+								<f:selectItem itemLabel="Cualquiera" itemValue="" noSelectionOption="true" />
+								<f:selectItems value="#{resultadosBean.condiciones}" var="x"
+									itemLabel="#{formatoBean.etiqueta(x)}" itemValue="#{x}" />
+							</p:selectOneMenu>
+						</div>
+						<div class="campo">
+							<p:outputLabel for="kilometraje" value="Kilometraje máximo" />
+							<p:inputNumber id="kilometraje" value="#{resultadosBean.kilometrajeMaximo}"
+								decimalPlaces="0" thousandSeparator="." decimalSeparator="," minValue="0"
+								symbol=" km" symbolPosition="s" />
+						</div>
+						<div class="acciones-filtros">
+							<p:commandButton value="Aplicar filtros" icon="fa fa-filter"
+								action="#{resultadosBean.aplicarFiltros}" process="@form"
+								update="@form :formResultados :resumenBusqueda" />
+							<p:commandButton value="Limpiar filtros" icon="fa fa-eraser" styleClass="ui-button-secondary"
+								action="#{resultadosBean.limpiarFiltros}" process="@this"
+								update="@form :formResultados :resumenBusqueda" />
+						</div>
+					</p:panel>
+				</h:form>
+			</aside>
+
+			<section class="zona-resultados">
+				<h:form id="formResultados">
+					<div class="barra-orden">
+						<p:outputLabel for="orden" value="Ordenar por" />
+						<p:selectOneMenu id="orden" value="#{resultadosBean.orden}">
+							<f:selectItems value="#{resultadosBean.opcionesOrden}" />
+							<p:ajax listener="#{resultadosBean.aplicarFiltros}" update="@form" />
+						</p:selectOneMenu>
+					</div>
+
+					<p:dataView id="vista" widgetVar="vistaResultados" value="#{resultadosBean.resultados}" var="v"
+						rows="12" first="#{resultadosBean.primero}" paginator="true" paginatorPosition="bottom"
+						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+						layout="grid" gridIcon="fa fa-th-large" listIcon="fa fa-bars"
+						rendered="#{resultadosBean.total gt 0}" styleClass="vista-resultados">
+						<p:dataViewGridItem>
+							<ui:include src="/WEB-INF/includes/tarjetaVehiculo.xhtml">
+								<ui:param name="vehiculo" value="#{v}" />
+							</ui:include>
+						</p:dataViewGridItem>
+						<p:dataViewListItem>
+							<div class="fila-vehiculo">
+								<ui:include src="/WEB-INF/includes/tarjetaVehiculo.xhtml">
+									<ui:param name="vehiculo" value="#{v}" />
+								</ui:include>
+							</div>
+						</p:dataViewListItem>
+					</p:dataView>
+
+					<h:panelGroup layout="block" styleClass="sin-resultados"
+						rendered="#{resultadosBean.total eq 0}">
+						<i class="fa fa-search"></i>
+						<h2>No encontramos vehículos con esos criterios</h2>
+						<p>Pruebe ampliando el rango de precio o de año, quitando algún filtro o eligiendo otra marca.</p>
+						<p:button value="Ver todos" outcome="/resultados" icon="fa fa-list" />
+					</h:panelGroup>
+				</h:form>
+			</section>
 		</div>
 	</ui:define>
 </ui:composition>

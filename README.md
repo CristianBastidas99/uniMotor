@@ -196,4 +196,7 @@ mvn test
   común con el menú que cambia según haya sesión, la estructura de páginas (públicas y `usuario/`) y las páginas
   de error (404, 500 y sesión expirada). Los clientes ya pueden registrarse (con las ciudades de la API y varios
   teléfonos), iniciar y cerrar sesión y recuperar la contraseña por correo; las páginas de `usuario/` exigen sesión.
+  La página principal tiene el buscador (tipo, marca, rango de precio y de año) y los 10 vehículos más buscados
+  nuevos y usados; los resultados se pueden refinar por características, combustible, transmisión, condición y
+  kilometraje, ordenar y ver en cuadrícula o en lista.
   Para probar: `usuario1@servidor.com` / `12345` (los administradores entran solo por la aplicación de escritorio).

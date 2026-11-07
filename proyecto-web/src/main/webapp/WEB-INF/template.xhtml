@@ -62,7 +62,8 @@
 	</main>
 
 	<!-- globalOnly: los errores de campo ya los muestra cada p:message; el growl solo muestra los mensajes globales -->
-	<p:growl id="growl" showDetail="true" life="6000" globalOnly="true">
+	<!-- redisplay=false: no repetir mensajes que la página ya mostró en su propio p:messages -->
+	<p:growl id="growl" showDetail="true" life="6000" globalOnly="true" redisplay="false">
 		<p:autoUpdate/>
 	</p:growl>
 
