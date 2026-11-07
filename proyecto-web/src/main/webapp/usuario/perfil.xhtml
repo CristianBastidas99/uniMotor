@@ -31,7 +31,8 @@
 						<div class="campo campo-completo">
 							<p:outputLabel for="email" value="Correo electrónico"/>
 							<p:inputText id="email" value="#{perfilBean.email}" required="true"
-								requiredMessage="El correo electrónico es obligatorio." maxlength="100">
+								requiredMessage="El correo electrónico es obligatorio." maxlength="100"
+								validatorMessage="Ingresa un correo electrónico válido.">
 								<f:validateRegex pattern="^[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}$"/>
 							</p:inputText>
 							<p:message for="email"/>
@@ -49,7 +50,7 @@
 								itemLabel="#{ciudadesBean.etiqueta(c)}" itemValue="#{c}"
 								forceSelection="true" dropdown="true" minQueryLength="2" queryDelay="250"
 								maxResults="20" scrollHeight="250" required="true"
-								requiredMessage="Seleccione su ciudad." placeholder="Escriba su ciudad"/>
+								requiredMessage="Selecciona tu ciudad." placeholder="Escribe tu ciudad"/>
 							<p:message for="ciudad"/>
 						</div>
 						<div class="campo campo-completo">
@@ -91,15 +92,15 @@
 						<div class="campo campo-completo">
 							<p:outputLabel for="actual" value="Contraseña actual"/>
 							<p:password id="actual" value="#{perfilBean.passwordActual}" feedback="false"
-								required="true" requiredMessage="Escriba su contraseña actual." maxlength="100"/>
+								required="true" requiredMessage="Escribe tu contraseña actual." maxlength="100"/>
 							<p:message for="actual"/>
 						</div>
 						<div class="campo">
 							<p:outputLabel for="nueva" value="Contraseña nueva"/>
 							<p:password id="nueva" value="#{perfilBean.passwordNueva}" feedback="true" match="confirmacion"
-								promptLabel="Escriba una contraseña" weakLabel="Débil" goodLabel="Aceptable"
+								promptLabel="Escribe una contraseña" weakLabel="Débil" goodLabel="Aceptable"
 								strongLabel="Fuerte" required="true" requiredMessage="La contraseña nueva es obligatoria."
-								validatorMessage="Las contraseñas no coinciden." maxlength="100">
+								validatorMessage="La contraseña debe tener al menos 4 caracteres y coincidir con la confirmación." maxlength="100">
 								<f:validateLength minimum="4"/>
 							</p:password>
 							<p:message for="nueva"/>
@@ -107,7 +108,7 @@
 						<div class="campo">
 							<p:outputLabel for="confirmacion" value="Confirmar contraseña nueva"/>
 							<p:password id="confirmacion" value="#{perfilBean.passwordConfirmacion}" feedback="false"
-								required="true" requiredMessage="Confirme su contraseña nueva." maxlength="100"/>
+								required="true" requiredMessage="Confirma tu contraseña nueva." maxlength="100"/>
 							<p:message for="confirmacion"/>
 						</div>
 					</div>
@@ -192,7 +193,7 @@
 				<div class="campo">
 					<p:outputLabel for="passEliminar" value="Contraseña"/>
 					<p:password id="passEliminar" value="#{perfilBean.passwordEliminar}" feedback="false"
-						required="true" requiredMessage="Escriba su contraseña." maxlength="100"/>
+						required="true" requiredMessage="Escribe tu contraseña." maxlength="100"/>
 					<p:message for="passEliminar"/>
 				</div>
 				<div class="perfil-acciones">

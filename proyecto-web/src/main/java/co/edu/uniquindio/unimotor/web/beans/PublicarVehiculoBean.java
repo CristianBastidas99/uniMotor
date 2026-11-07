@@ -149,7 +149,7 @@ public class PublicarVehiculoBean implements Serializable {
 		try {
 			v = vehiculoEJB.buscarVehiculo(codigo);
 		} catch (ElementoNoEncontradoException e) {
-			rechazar(fc, "El vehículo que intenta editar no existe.");
+			rechazar(fc, "El vehículo que intentas editar no existe.");
 			return;
 		}
 		Cliente yo = seguridadBean.getCliente();
@@ -249,7 +249,7 @@ public class PublicarVehiculoBean implements Serializable {
 		}
 		if (!PLACA_CARRO.matcher(texto).matches() && !PLACA_MOTO.matcher(texto).matches()) {
 			throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"La placa no es válida. Use el formato ABC123 (carros) o ABC12D (motos).", null));
+					"La placa no es válida. Usa el formato ABC123 (carros) o ABC12D (motos).", null));
 		}
 	}
 
@@ -313,7 +313,7 @@ public class PublicarVehiculoBean implements Serializable {
 		} catch (IOException e) {
 			borrarSilencioso(destino);
 			Mensajes.error("No se pudo guardar la foto",
-					nombreMostrado + ": ocurrió un error al guardarla. Intente de nuevo.");
+					nombreMostrado + ": ocurrió un error al guardarla. Inténtalo de nuevo.");
 			return;
 		}
 		synchronized (fotos) {
@@ -413,12 +413,12 @@ public class PublicarVehiculoBean implements Serializable {
 			copiaFotos = new ArrayList<>(fotos);
 		}
 		if (copiaFotos.isEmpty()) {
-			Mensajes.error("Faltan fotos", "Suba al menos una foto del vehículo.");
+			Mensajes.error("Faltan fotos", "Sube al menos una foto del vehículo.");
 			return null;
 		}
 		Cliente yo = seguridadBean.getCliente();
 		if (yo == null) {
-			Mensajes.error("Sesión", "Debe iniciar sesión para publicar.");
+			Mensajes.error("Sesión", "Debes iniciar sesión para publicar.");
 			return null;
 		}
 		Cliente dueno = new Cliente();
@@ -457,7 +457,7 @@ public class PublicarVehiculoBean implements Serializable {
 			if (id == null) {
 				v.setFecha_publicacion(new Date());
 				resultado = vehiculoEJB.publicarVehiculo(v);
-				Mensajes.info("Vehículo publicado", "Su vehículo ya está publicado.");
+				Mensajes.info("Vehículo publicado", "Tu vehículo ya está publicado.");
 			} else {
 				resultado = vehiculoEJB.modificarVehiculo(v, yo.getEmail());
 				Mensajes.info("Vehículo actualizado", "Los cambios se guardaron correctamente.");

@@ -53,7 +53,7 @@ public class CiudadConverter implements Converter<Ciudad> {
 		}
 		if (ciudad == null) {
 			throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"Seleccione una ciudad de la lista.", null));
+					"Selecciona una ciudad de la lista.", null));
 		}
 		return ciudad;
 	}

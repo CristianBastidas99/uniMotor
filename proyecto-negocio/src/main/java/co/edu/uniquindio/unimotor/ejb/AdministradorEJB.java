@@ -157,7 +157,7 @@ public class AdministradorEJB implements AdministradorEJBRemote {
 	 */
 	@Override
 	public List<EstadisticaDTO> topVehiculosBuscados() {
-		return consultar(Vehiculo.ESTADISTICA_TOP_BUSCADOS, EstadisticaDTO.class, 10);
+		return sinMarcaRepetida(consultar(Vehiculo.ESTADISTICA_TOP_BUSCADOS, EstadisticaDTO.class, 10));
 	}
 
 	/**
@@ -173,7 +173,7 @@ public class AdministradorEJB implements AdministradorEJBRemote {
 	 */
 	@Override
 	public List<EstadisticaDTO> preguntasPorVehiculo() {
-		return consultar(Pregunta.ESTADISTICA_PREGUNTAS_POR_VEHICULO, EstadisticaDTO.class, MAXIMO_BARRAS);
+		return sinMarcaRepetida(consultar(Pregunta.ESTADISTICA_PREGUNTAS_POR_VEHICULO, EstadisticaDTO.class, MAXIMO_BARRAS));
 	}
 
 	/**
@@ -241,4 +241,29 @@ public class AdministradorEJB implements AdministradorEJBRemote {
 		return new ArrayList<>(query.getResultList());
 	}
 
+
+	/**
+	 * Quita la marca repetida de las etiquetas que empiezan por "marca modelo" cuando el nombre del modelo ya la
+	 * incluye (p. ej. "Mazda Mazda 3 ABC123" pasa a "Mazda 3 ABC123").
+	 *
+	 * @param lista estadísticas devueltas por la consulta
+	 * @return la misma lista con las etiquetas corregidas
+	 */
+	private static List<EstadisticaDTO> sinMarcaRepetida(List<EstadisticaDTO> lista) {
+		for (EstadisticaDTO e : lista) {
+			String etiqueta = e.getEtiqueta();
+			if (etiqueta == null) {
+				continue;
+			}
+			int espacio = etiqueta.indexOf(' ');
+			if (espacio > 0) {
+				String marca = etiqueta.substring(0, espacio);
+				String resto = etiqueta.substring(espacio + 1);
+				if (resto.toLowerCase(java.util.Locale.ROOT).startsWith(marca.toLowerCase(java.util.Locale.ROOT) + " ")) {
+					e.setEtiqueta(resto);
+				}
+			}
+		}
+		return lista;
+	}
 }

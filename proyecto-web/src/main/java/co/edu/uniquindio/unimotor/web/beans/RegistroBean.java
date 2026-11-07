@@ -134,7 +134,7 @@ public class RegistroBean implements Serializable {
 				return;
 			}
 		}
-		Mensajes.advertencia("Teléfonos", "Ya agregó un teléfono de cada tipo (máximo 3).");
+		Mensajes.advertencia("Teléfonos", "Ya agregaste un teléfono de cada tipo (máximo 3).");
 	}
 
 	/**
@@ -144,7 +144,7 @@ public class RegistroBean implements Serializable {
 	 */
 	public void quitarTelefono(TelefonoFila fila) {
 		if (telefonos.size() <= 1) {
-			Mensajes.advertencia("Teléfonos", "Debe conservar al menos un teléfono.");
+			Mensajes.advertencia("Teléfonos", "Debes conservar al menos un teléfono.");
 			return;
 		}
 		telefonos.remove(fila);
@@ -214,13 +214,13 @@ public class RegistroBean implements Serializable {
 				return null;
 			}
 			if (mapa.containsKey(f.getTipo())) {
-				Mensajes.error("Teléfono repetido", "Solo puede indicar un teléfono por tipo.");
+				Mensajes.error("Teléfono repetido", "Solo puedes indicar un teléfono por tipo.");
 				return null;
 			}
 			mapa.put(f.getTipo(), num);
 		}
 		if (mapa.isEmpty()) {
-			Mensajes.error("Teléfono obligatorio", "Indique al menos un número de teléfono.");
+			Mensajes.error("Teléfono obligatorio", "Indica al menos un número de teléfono.");
 			return null;
 		}
 		return mapa;

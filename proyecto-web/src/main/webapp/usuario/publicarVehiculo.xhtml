@@ -32,10 +32,10 @@
 					<div class="campo">
 						<p:outputLabel for="marca" value="Marca" />
 						<p:selectOneMenu id="marca" value="#{publicarVehiculoBean.marca}" required="true"
-							requiredMessage="Seleccione la marca." filter="true" filterMatchMode="contains">
+							requiredMessage="Selecciona la marca." filter="true" filterMatchMode="contains">
 							<p:ajax event="change" listener="#{publicarVehiculoBean.cambiarMarca}" process="@this"
 								update="modelo msgModelo" />
-							<f:selectItem itemLabel="Seleccione" itemValue="" noSelectionOption="true" />
+							<f:selectItem itemLabel="Selecciona" itemValue="" noSelectionOption="true" />
 							<f:selectItems value="#{publicarVehiculoBean.marcas}" />
 						</p:selectOneMenu>
 						<p:message for="marca" />
@@ -44,8 +44,8 @@
 					<div class="campo">
 						<p:outputLabel for="modelo" value="Modelo" />
 						<p:selectOneMenu id="modelo" value="#{publicarVehiculoBean.codigoModelo}" required="true"
-							requiredMessage="Seleccione el modelo.">
-							<f:selectItem itemLabel="Seleccione" itemValue="" noSelectionOption="true" />
+							requiredMessage="Selecciona el modelo.">
+							<f:selectItem itemLabel="Selecciona" itemValue="" noSelectionOption="true" />
 							<f:selectItems value="#{publicarVehiculoBean.modelos}" var="m" itemLabel="#{m.nombre}"
 								itemValue="#{m.codigo_modelo}" />
 						</p:selectOneMenu>
@@ -55,8 +55,8 @@
 					<div class="campo">
 						<p:outputLabel for="tipo" value="Tipo de vehículo" />
 						<p:selectOneMenu id="tipo" value="#{publicarVehiculoBean.tipo}" required="true"
-							requiredMessage="Seleccione el tipo de vehículo.">
-							<f:selectItem itemLabel="Seleccione" itemValue="" noSelectionOption="true" />
+							requiredMessage="Selecciona el tipo de vehículo.">
+							<f:selectItem itemLabel="Selecciona" itemValue="" noSelectionOption="true" />
 							<f:selectItems value="#{publicarVehiculoBean.tipos}" var="t" itemValue="#{t}"
 								itemLabel="#{formatoBean.etiqueta(t)}" />
 						</p:selectOneMenu>
@@ -66,10 +66,10 @@
 					<div class="campo">
 						<p:outputLabel for="condicion" value="Condición" />
 						<p:selectOneMenu id="condicion" value="#{publicarVehiculoBean.condicion}" required="true"
-							requiredMessage="Seleccione la condición.">
+							requiredMessage="Selecciona la condición.">
 							<p:ajax event="change" listener="#{publicarVehiculoBean.cambiarCondicion}" process="@this"
 								update="kilometros" />
-							<f:selectItem itemLabel="Seleccione" itemValue="" noSelectionOption="true" />
+							<f:selectItem itemLabel="Selecciona" itemValue="" noSelectionOption="true" />
 							<f:selectItems value="#{publicarVehiculoBean.condiciones}" var="c" itemValue="#{c}"
 								itemLabel="#{formatoBean.etiqueta(c)}" />
 						</p:selectOneMenu>
@@ -93,7 +93,9 @@
 						<p:inputNumber id="precio" value="#{publicarVehiculoBean.precio}" required="true"
 							requiredMessage="El precio es obligatorio." symbol="$ " symbolPosition="p"
 							decimalPlaces="0" decimalSeparator="," thousandSeparator="." minValue="1"
-							maxValue="99999999999" validatorMessage="El precio debe ser mayor que cero." />
+							maxValue="99999999999"
+							converterMessage="El precio debe ser un número válido."
+							validatorMessage="El precio debe ser mayor que cero." />
 						<p:message for="precio" />
 					</div>
 				</div>
@@ -118,8 +120,8 @@
 					<div class="campo">
 						<p:outputLabel for="combustible" value="Combustible" />
 						<p:selectOneMenu id="combustible" value="#{publicarVehiculoBean.combustible}" required="true"
-							requiredMessage="Seleccione el combustible.">
-							<f:selectItem itemLabel="Seleccione" itemValue="" noSelectionOption="true" />
+							requiredMessage="Selecciona el combustible.">
+							<f:selectItem itemLabel="Selecciona" itemValue="" noSelectionOption="true" />
 							<f:selectItems value="#{publicarVehiculoBean.combustibles}" var="x" itemValue="#{x}"
 								itemLabel="#{formatoBean.etiqueta(x)}" />
 						</p:selectOneMenu>
@@ -129,8 +131,8 @@
 					<div class="campo">
 						<p:outputLabel for="transmision" value="Transmisión" />
 						<p:selectOneMenu id="transmision" value="#{publicarVehiculoBean.transmision}" required="true"
-							requiredMessage="Seleccione la transmisión.">
-							<f:selectItem itemLabel="Seleccione" itemValue="" noSelectionOption="true" />
+							requiredMessage="Selecciona la transmisión.">
+							<f:selectItem itemLabel="Selecciona" itemValue="" noSelectionOption="true" />
 							<f:selectItems value="#{publicarVehiculoBean.transmisiones}" var="x" itemValue="#{x}"
 								itemLabel="#{formatoBean.etiqueta(x)}" />
 						</p:selectOneMenu>
@@ -190,7 +192,7 @@
 							itemLabel="#{ciudadesBean.etiqueta(c)}" itemValue="#{c}"
 							forceSelection="true" dropdown="true" minQueryLength="2" queryDelay="250"
 							maxResults="20" scrollHeight="250" required="true"
-							requiredMessage="Seleccione la ciudad del vehículo." placeholder="Escriba la ciudad" />
+							requiredMessage="Selecciona la ciudad del vehículo." placeholder="Escribe la ciudad" />
 						<p:message for="ciudad" />
 					</div>
 
@@ -199,7 +201,7 @@
 						<p:inputTextarea id="descripcion" value="#{publicarVehiculoBean.descripcion}" required="true"
 							requiredMessage="La descripción es obligatoria." rows="5" maxlength="1000"
 							counter="contadorDescripcion" counterTemplate="{0} caracteres restantes"
-							placeholder="Describa el estado, mantenimiento y detalles del vehículo" />
+							placeholder="Describe el estado, mantenimiento y detalles del vehículo" />
 						<h:outputText id="contadorDescripcion" styleClass="texto-suave contador-texto"/>
 						<p:message for="descripcion" />
 					</div>
@@ -221,7 +223,7 @@
 			<section class="seccion-formulario">
 				<h2>Fotos</h2>
 				<p class="texto-suave">
-					Suba entre 1 y #{publicarVehiculoBean.maximoFotos} fotos (JPG, PNG o WEBP, máximo 5 MB cada una).
+					Sube entre 1 y #{publicarVehiculoBean.maximoFotos} fotos (JPG, PNG o WEBP, máximo 5 MB cada una).
 					La primera foto es la principal.
 				</p>
 				<p:fileUpload id="subidor" mode="advanced" multiple="true" auto="true" sequential="true"
@@ -235,7 +237,7 @@
 				<h:panelGroup id="panelFotos" layout="block" styleClass="panel-fotos">
 					<h:panelGroup layout="block" styleClass="texto-suave sin-fotos"
 						rendered="#{empty publicarVehiculoBean.fotos}">
-						Aún no ha agregado fotos.
+						Aún no has agregado fotos.
 					</h:panelGroup>
 					<div class="rejilla-fotos">
 						<ui:repeat value="#{publicarVehiculoBean.fotos}" var="foto" varStatus="estado">

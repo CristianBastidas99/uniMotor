@@ -171,11 +171,11 @@ public class ComprasBean implements Serializable {
 		boolean ok = false;
 		try {
 			if (seleccionada == null || seleccionada.getVendedor() == null) {
-				Mensajes.error("No se pudo calificar", "Seleccione una compra.");
+				Mensajes.error("No se pudo calificar", "Selecciona una compra.");
 				return;
 			}
 			if (estrellas < 1 || estrellas > 5) {
-				Mensajes.error("Calificación", "Elija entre 1 y 5 estrellas.");
+				Mensajes.error("Calificación", "Elige entre 1 y 5 estrellas.");
 				return;
 			}
 			calificacionEJB.calificarVendedor(seguridadBean.getCliente().getEmail(),

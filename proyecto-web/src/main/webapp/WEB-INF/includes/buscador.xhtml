@@ -23,22 +23,22 @@
 				</div>
 				<div class="campo">
 					<p:outputLabel for="precioMin" value="Precio desde"/>
-					<p:inputNumber id="precioMin" value="#{buscadorBean.precioMin}" symbol="$ " symbolPosition="p"
+					<p:inputNumber id="precioMin" converterMessage="El precio mínimo no es válido." validatorMessage="El precio mínimo no es válido." value="#{buscadorBean.precioMin}" symbol="$ " symbolPosition="p"
 						decimalPlaces="0" thousandSeparator="." decimalSeparator="," minValue="0"/>
 				</div>
 				<div class="campo">
 					<p:outputLabel for="precioMax" value="Precio hasta"/>
-					<p:inputNumber id="precioMax" value="#{buscadorBean.precioMax}" symbol="$ " symbolPosition="p"
+					<p:inputNumber id="precioMax" converterMessage="El precio máximo no es válido." validatorMessage="El precio máximo no es válido." value="#{buscadorBean.precioMax}" symbol="$ " symbolPosition="p"
 						decimalPlaces="0" thousandSeparator="." decimalSeparator="," minValue="0"/>
 				</div>
 				<div class="campo">
 					<p:outputLabel for="anioMin" value="Año desde"/>
-					<p:inputNumber id="anioMin" value="#{buscadorBean.anioMin}" decimalPlaces="0"
+					<p:inputNumber id="anioMin" converterMessage="El año inicial no es válido." validatorMessage="El año inicial debe estar entre 1950 y 2030." value="#{buscadorBean.anioMin}" decimalPlaces="0"
 						thousandSeparator="" minValue="1950" maxValue="2030"/>
 				</div>
 				<div class="campo">
 					<p:outputLabel for="anioMax" value="Año hasta"/>
-					<p:inputNumber id="anioMax" value="#{buscadorBean.anioMax}" decimalPlaces="0"
+					<p:inputNumber id="anioMax" converterMessage="El año final no es válido." validatorMessage="El año final debe estar entre 1950 y 2030." value="#{buscadorBean.anioMax}" decimalPlaces="0"
 						thousandSeparator="" minValue="1950" maxValue="2030"/>
 				</div>
 				<div class="campo acciones-buscador">

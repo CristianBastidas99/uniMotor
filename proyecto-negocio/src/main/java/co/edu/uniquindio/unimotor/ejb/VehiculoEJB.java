@@ -302,7 +302,7 @@ public class VehiculoEJB {
 			throws ElementoNoEncontradoException, InformacionInvalidaException {
 		Vehiculo gestionado = obtenerDeDueno(codigoVehiculo, emailDueno, "eliminar");
 		if (gestionado.getCodigo_venta() != null) {
-			throw new InformacionInvalidaException("El vehículo tiene una venta registrada; use invalidar.");
+			throw new InformacionInvalidaException("El vehículo tiene una venta registrada: no se puede eliminar, solo desactivar.");
 		}
 
 		if (gestionado.getPreguntas() != null) {

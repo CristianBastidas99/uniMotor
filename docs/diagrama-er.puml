@@ -124,17 +124,17 @@ CIUDAD ||-left-o{ CLIENTE
 CARACTERISTICA ||-down-o{ caracteristica_vehiculo
 VEHICULO ||-down-o{ caracteristica_vehiculo
 
-USUARIO ||-down-o{ telefono_usuario
+CLIENTE ||-down-o{ telefono_usuario
 VEHICULO ||-down-o{ foto_Vehiculo
-USUARIO ||-right-o{ VEHICULO : dueno
-USUARIO ||-down-o{ favorito
+CLIENTE ||-right-o{ VEHICULO : dueno
+CLIENTE ||-down-o{ favorito
 VEHICULO ||-down-o{ favorito
-USUARIO ||-down-o{ PREGUNTA
+CLIENTE ||-down-o{ PREGUNTA
 VEHICULO ||-down-o{ PREGUNTA
-USUARIO ||-down-o{ VENTA : comprador
-VEHICULO ||-down-o{ VENTA
-USUARIO ||-down-o{ CALIFICACION : calificador
-USUARIO ||-down-o{ CALIFICACION : vendedor
+CLIENTE ||-down-o{ VENTA : comprador
+VEHICULO ||-down-o| VENTA
+CLIENTE ||-down-o{ CALIFICACION : calificador
+CLIENTE ||-down-o{ CALIFICACION : vendedor
 
 legend right
   |= Color |= Significado |

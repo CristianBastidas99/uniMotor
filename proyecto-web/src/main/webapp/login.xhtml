@@ -19,7 +19,7 @@
 		<h:panelGroup layout="block" styleClass="formulario-centrado" rendered="#{seguridadBean.autenticado}">
 			<p>
 				<i class="fa fa-info-circle"></i>
-				Ya ha iniciado sesión. <h:link outcome="/index" value="Ir al inicio" />
+				Ya iniciaste sesión. <h:link outcome="/index" value="Ir al inicio" />
 			</p>
 		</h:panelGroup>
 
@@ -30,7 +30,7 @@
 						<p:outputLabel for="email" value="Correo electrónico" />
 						<p:inputText id="email" value="#{seguridadBean.email}" label="Correo electrónico"
 							required="true" requiredMessage="El correo electrónico es obligatorio."
-							validatorMessage="Ingrese un correo electrónico válido."
+							validatorMessage="Ingresa un correo electrónico válido."
 							pt:type="email" pt:autocomplete="username">
 							<f:validateRegex pattern="^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$" />
 						</p:inputText>
@@ -49,9 +49,9 @@
 					</div>
 					<p:defaultCommand target="botonLogin" />
 					<div class="enlaces-formulario">
-						<h:link outcome="/recuperarPassword" value="¿Olvidó su contraseña?" />
+						<h:link outcome="/recuperarPassword" value="¿Olvidaste tu contraseña?" />
 						<br />
-						<h:link outcome="/registro" value="¿No tiene cuenta? Regístrese" />
+						<h:link outcome="/registro" value="¿No tienes cuenta? Regístrate" />
 					</div>
 				</p:panel>
 			</h:form>

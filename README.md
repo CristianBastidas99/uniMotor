@@ -7,24 +7,45 @@ Universidad del Quindío. Tiene dos clientes sobre la misma capa de negocio:
 - una **aplicación de escritorio** (JavaFX) para el administrador, que se conecta de forma remota
   al EJB desplegado en el servidor.
 
+Además expone una **API REST de solo lectura** en JSON (ver [API REST](#api-rest)).
+
+## Contenido
+
+1. [Arquitectura](#arquitectura)
+2. [Modelo de datos](#modelo-de-datos)
+3. [Requisitos previos](#requisitos-previos)
+4. [Puesta en marcha](#puesta-en-marcha): base de datos, Payara, correo, carpeta de fotos, compilar y desplegar,
+   aplicación de escritorio
+5. [Usuarios de prueba](#usuarios-de-prueba)
+6. [API REST](#api-rest)
+7. [Pruebas](#pruebas)
+8. [Documentación](#documentación)
+9. [Solución de problemas](#solución-de-problemas)
+10. [Estado del proyecto](#estado-del-proyecto)
+
 ## Arquitectura
 
 Proyecto Maven multimódulo (Java 8, Java EE 8). `groupId`: `co.edu.uniquindio.unimotor`.
 
-| Módulo | Contenido | Paquete base |
-|---|---|---|
-| `proyecto-persistencia` | Entidades JPA, enumeraciones, `NamedQuery` de negocio y de estadísticas, DTO (`EstadisticaDTO`, `PuntoDTO`) | `co.edu.uniquindio.unimotor.entidades`, `...dto` |
-| `proyecto-negocio` | EJB de negocio (`AdministradorEJB` con su interfaz remota, `ClienteEJB`, `VehiculoEJB`), `SetupEJB` (datos iniciales) y excepciones | `co.edu.uniquindio.unimotor.ejb`, `...excepciones` |
-| `proyecto-pruebas` | Pruebas de persistencia con JUnit 4, Arquillian (GlassFish embebido) y DBUnit con datasets JSON | `co.edu.uniquindio.unimotor.pruebas` |
-| `proyecto-ear` | Empaqueta `proyecto-negocio` y `proyecto-web` en `proyecto-ear-*.ear` | n/a |
-| `proyecto-web` | Aplicación web JSF + PrimeFaces (cliente) | n/a |
-| `proyecto-escritorio` | Aplicación JavaFX del administrador | `co.edu.uniquindio.unimotor.escritorio` (`app`, `controlador`, `modelo`) |
+| Módulo | Capa | Contenido | Paquete base |
+|---|---|---|---|
+| `proyecto-persistencia` | Persistencia | Entidades JPA, enumeraciones, `NamedQuery` de negocio y de estadísticas, DTO (`EstadisticaDTO`, `PuntoDTO`) | `co.edu.uniquindio.unimotor.entidades`, `...dto` |
+| `proyecto-negocio` | Negocio | EJB (`AdministradorEJB` con su interfaz remota, `ClienteEJB`, `VehiculoEJB`, `CorreoEJB`), `SetupEJB` (datos iniciales) y excepciones | `co.edu.uniquindio.unimotor.ejb`, `...excepciones` |
+| `proyecto-web` | Presentación (web y API REST) | Aplicación JSF + PrimeFaces (cliente) y API JAX-RS | `co.edu.uniquindio.unimotor.web` |
+| `proyecto-ear` | Empaquetado | Junta `proyecto-negocio` y `proyecto-web` en `proyecto-ear-0.0.1-SNAPSHOT.ear` | n/a |
+| `proyecto-escritorio` | Presentación (administrador) | Aplicación JavaFX con 17 gráficos de estadísticas | `co.edu.uniquindio.unimotor.escritorio` (`app`, `controlador`, `modelo`) |
+| `proyecto-pruebas` | Pruebas | JUnit 4, Arquillian (GlassFish embebido) y DBUnit con datasets JSON | `co.edu.uniquindio.unimotor.pruebas` |
+
+Tecnologías: Java 8, Java EE 8 (EJB 3.2, JPA 2.1 con EclipseLink, JSF 2.3 con CDI, JAX-RS), PrimeFaces 8.0 (tema
+`nova-light`), JavaFX 8, JavaMail, MySQL 8 (Connector/J 8.0.33), Payara Server 5.2022.5, Maven 3.9,
+Arquillian y DBUnit.
 
 ## Modelo de datos
 
-Entidades (`co.edu.uniquindio.unimotor.entidades`): `Usuario` (herencia JOINED), `Administrador`,
+Entidades (`co.edu.uniquindio.unimotor.entidades`): `Usuario` (herencia JOINED, columna `DTYPE`), `Administrador`,
 `Cliente`, `Ciudad`, `Modelo`, `Caracteristica`, `Vehiculo`, `Pregunta`, `Venta` y `Calificacion`,
 más las enumeraciones `Condicion`, `TipoCombustible`, `TipoTrasmision` y `TipoVehiculo`.
+Las tablas intermedias son `favorito`, `caracteristica_vehiculo`, `foto_Vehiculo` y `telefono_usuario`.
 
 Funcionalidades extra modeladas:
 
@@ -34,18 +55,18 @@ Funcionalidades extra modeladas:
 
 ![Diagrama E-R](docs/diagrama-er.png)
 
-## Requisitos
+## Requisitos previos
 
 | Herramienta | Versión |
 |---|---|
-| JDK con JavaFX | 8 (por ejemplo Azul Zulu 8 FX) |
+| JDK con JavaFX | 8 (por ejemplo Azul Zulu 8 FX); **no** use Java 17 (ver [Solución de problemas](#solución-de-problemas)) |
 | Maven | 3.9 |
 | Payara Server | 5.2022.5 (rama 5, compatible con Java 8) |
-| MySQL | 8 (se recomienda en Docker) |
+| Docker | para MySQL 8 y Mailpit (Docker Desktop en Windows) |
 | IntelliJ IDEA | opcional (el repositorio incluye configuraciones en `.run/`) |
 
 Variables de entorno recomendadas: `JAVA_HOME` (JDK 8 con JavaFX), `MAVEN_HOME` y `PAYARA_HOME`
-(carpeta de Payara), con sus `bin` en el `Path`.
+(carpeta de Payara), con sus `bin` en el `Path`. Los comandos de este documento son para `cmd` de Windows.
 
 ## Puesta en marcha
 
@@ -61,16 +82,27 @@ docker run -d --name unimotor-mysql --restart unless-stopped -p 3306:3306 ^
 docker exec unimotor-mysql mysql -uroot -p12345 -e "CREATE DATABASE IF NOT EXISTS prueba CHARACTER SET utf8mb4;"
 ```
 
-`unimotor` la usa el servidor y `prueba` las pruebas automáticas. Las credenciales son solo para
-desarrollo local.
+`unimotor` la usa el servidor y `prueba` las pruebas automáticas. Las credenciales (`root` / `12345`) son solo
+para desarrollo local. Consola SQL: `docker exec -it unimotor-mysql mysql -uroot -p12345 unimotor`.
 
-### 2. Payara
+El servidor crea las tablas si no existen (`schema-generation = create`) pero no las actualiza: si cambia una
+entidad, recree la base:
+
+```bat
+docker exec unimotor-mysql mysql -uroot -p12345 -e "DROP DATABASE unimotor; CREATE DATABASE unimotor CHARACTER SET utf8mb4;"
+```
+
+y vuelva a desplegar. Los nombres de tabla distinguen mayúsculas (MySQL en Linux): las entidades generan tablas
+en mayúsculas (`USUARIO`, `VEHICULO`...) y las intermedias con el nombre declarado (`favorito`,
+`caracteristica_vehiculo`, `foto_Vehiculo`, `telefono_usuario`).
+
+### 2. Payara y recurso JDBC
 
 1. Copie `mysql-connector-j-8.0.33.jar` en `%PAYARA_HOME%\glassfish\domains\domain1\lib`.
 2. Haga que Payara use el JDK 8: agregue `set AS_JAVA=<ruta del JDK 8>` al final de
    `%PAYARA_HOME%\glassfish\config\asenv.bat`.
 3. Inicie el dominio y cree el pool y el recurso JDBC (el nombre JNDI `jdbc/prueba` es el que
-   declara el `persistence.xml`):
+   declara `proyecto-persistencia/src/main/resources/META-INF/persistence.xml`):
 
 ```bat
 asadmin start-domain domain1
@@ -88,6 +120,9 @@ asadmin ping-connection-pool mysql_unimotor_pool
 > Los datos de conexión van como propiedades separadas del `MysqlDataSource` (`serverName`, `portNumber`,
 > `databaseName`...) en lugar de una URL, porque en `cmd` el `&` de la URL rompe el comando `asadmin`.
 
+La consola de administración queda en <http://localhost:4848> (sin contraseña en la configuración por defecto,
+solo para desarrollo local).
+
 Con el contenedor y Payara ya configurados, el día a día se resume en:
 
 ```bat
@@ -96,7 +131,50 @@ scripts\desplegar.bat           :: compila y despliega el EAR
 scripts\detener-entorno.bat     :: detiene Payara y MySQL
 ```
 
-### 3. Compilar y desplegar
+Los scripts usan `PAYARA_HOME` (si no está definida, asumen `C:\Users\cfbas\dev\payara5`; edítelos o defina la variable).
+
+### 3. Correo (JavaMail)
+
+El envío de correos (recuperación de contraseña, avisos de preguntas y de ventas) usa el recurso JNDI
+`mail/unimotor`. En desarrollo se usa [Mailpit](https://github.com/axllent/mailpit) en Docker, que recibe los
+correos sin entregarlos a nadie (bandeja en <http://localhost:8025>):
+
+```bat
+docker run -d --name unimotor-mailpit --restart unless-stopped -p 1025:1025 -p 8025:8025 axllent/mailpit
+asadmin create-javamail-resource --mailhost localhost --mailuser unimotor --fromaddress no-responder@unimotor.local --property mail.smtp.port=1025 mail/unimotor
+```
+
+Para usar **Gmail**, cree una contraseña de aplicación en la cuenta de Google, borre el recurso y créelo de nuevo:
+
+```bat
+asadmin delete-javamail-resource mail/unimotor
+asadmin create-javamail-resource --mailhost smtp.gmail.com --mailuser su.cuenta@gmail.com --fromaddress su.cuenta@gmail.com ^
+  --property "mail.smtp.port=587:mail.smtp.auth=true:mail.smtp.starttls.enable=true:mail.smtp.password=CONTRASENA_DE_APLICACION" mail/unimotor
+```
+
+En `asadmin`, los caracteres `:` y `=` dentro de los valores de `--property` se escapan con `\`. El recurso se lista con
+`asadmin list-javamail-resources`.
+
+Si el recurso `mail/unimotor` no existe, el sistema funciona en **modo simulado**: el correo solo se registra en el
+log del servidor (`[Correo simulado]`).
+
+### 4. Carpeta de fotos
+
+La web guarda y sirve las fotos de los vehículos desde una carpeta del servidor, por defecto
+`%USERPROFILE%\unimotor\fotos` (`${user.home}/unimotor/fotos`). Para cambiarla, defina la propiedad JVM
+`unimotor.fotos.carpeta` y reinicie Payara, o la variable de entorno `UNIMOTOR_FOTOS`:
+
+```bat
+asadmin create-jvm-options "-Dunimotor.fotos.carpeta=C\:/ruta/fotos"
+asadmin restart-domain domain1
+```
+
+El WAR lleva las 50 fotos de `fotos-demo/` (30 carros, 12 motos y 8 camionetas, con licencia libre de Wikimedia
+Commons; autores en `fotos-demo/CREDITOS.md`) en `WEB-INF/fotos-demo` y, al arrancar, las copia a esa carpeta sin
+sobrescribir las que ya existan. Se sirven en `http://localhost:8080/proyecto-web/fotos/<nombre>` (por ejemplo
+`carro-01.jpg`).
+
+### 5. Compilar y desplegar el EAR
 
 Opción rápida: `scripts\desplegar.bat` (ejecuta `mvn -B clean install -DskipTests` y luego
 `asadmin deploy --name proyecto-ear --force=true` sobre el `.ear`). Equivale a hacer a mano:
@@ -106,55 +184,55 @@ mvn clean install -DskipTests
 asadmin deploy --name proyecto-ear --force=true proyecto-ear\target\proyecto-ear-0.0.1-SNAPSHOT.ear
 ```
 
+Desde IntelliJ, la configuración **Compilar todo (mvn install)** (`.run/`) hace el `clean install` sin pruebas;
+después se despliega con el segundo comando.
+
 - Aplicación web: <http://localhost:8080/proyecto-web/>
 - Consola de administración de Payara: <http://localhost:4848>
-- El servidor crea las tablas si no existen (`schema-generation = create`) pero no las actualiza:
-  si cambia una entidad, recree la base `unimotor` y vuelva a desplegar. `SetupEJB` crea los usuarios
-  iniciales (por ejemplo `cristia@proyecto.com` / `123`).
-- **Datos de demostración:** si la base no tiene usuarios, `SetupEJB` llama además a `GeneradorDatosDemo`
-  (paquete `co.edu.uniquindio.unimotor.ejb.demo`), que crea unos 60 clientes, 400 vehículos, 800 preguntas,
-  100 ventas, 60 calificaciones y 150 favoritos. Los datos salen de listas reales (`CatalogoDemo`: nombres y
-  apellidos colombianos, 24 ciudades, unos 60 modelos vendidos en Colombia), respetan las reglas del negocio y,
-  como usan una semilla fija, son los mismos en cada despliegue. Todos los clientes tienen la contraseña `12345`.
-- **Fotos de demostración:** `fotos-demo/` tiene 50 fotos con licencia libre de Wikimedia Commons (30 carros,
-  12 motos y 8 camionetas). Cada vehículo recibe 5 fotos distintas de su tipo, repartidas de forma pareja
-  (`RepartidorFotos`). Los autores y las licencias están en `fotos-demo/CREDITOS.md`.
-- **Carpeta de fotos del servidor:** la web guarda y sirve las fotos de los vehículos desde una carpeta del
-  servidor, por defecto `%USERPROFILE%\unimotor\fotos` (`${user.home}/unimotor/fotos`). Se cambia con la
-  propiedad JVM `unimotor.fotos.carpeta` (`asadmin create-jvm-options "-Dunimotor.fotos.carpeta=C\:/ruta"` y
-  reiniciar Payara) o con la variable de entorno `UNIMOTOR_FOTOS`. El WAR lleva las fotos de `fotos-demo/` en
-  `WEB-INF/fotos-demo` y, al arrancar, las copia a esa carpeta sin sobrescribir las que ya existan. Se sirven en
-  `http://localhost:8080/proyecto-web/fotos/<nombre>` (por ejemplo `carro-01.jpg`).
+- Comandos útiles: `asadmin list-applications`, `asadmin undeploy proyecto-ear`; el log está en
+  `%PAYARA_HOME%\glassfish\domains\domain1\logs\server.log`.
+- Las ciudades se cargan al desplegar desde api-colombia.com, con respaldo en `ciudades-colombia.json`.
 
-### Correo (JavaMail)
+**Datos de demostración:** `SetupEJB` solo carga datos si la tabla de usuarios está vacía. Crea los usuarios
+iniciales (ver [Usuarios de prueba](#usuarios-de-prueba)) y llama además a `GeneradorDatosDemo` (paquete
+`co.edu.uniquindio.unimotor.ejb.demo`), que crea unos 60 clientes, 400 vehículos, 800 preguntas, 100 ventas,
+60 calificaciones y 150 favoritos. Los datos salen de listas reales (`CatalogoDemo`: nombres y apellidos
+colombianos, 24 ciudades, unos 60 modelos vendidos en Colombia), respetan las reglas del negocio y, como usan una
+semilla fija, son los mismos en cada despliegue. Cada vehículo recibe 5 fotos distintas de su tipo
+(`RepartidorFotos`). Para ver datos nuevos de `SetupEJB`, recree la base `unimotor` y redespliegue.
 
-El envío de correos (recuperación de contraseña, avisos de preguntas) usa el recurso JNDI `mail/unimotor`.
-En desarrollo se usa [Mailpit](https://github.com/axllent/mailpit) en Docker (bandeja en <http://localhost:8025>):
+### 6. Aplicación de escritorio
 
-```bat
-docker run -d --name unimotor-mailpit --restart unless-stopped -p 1025:1025 -p 8025:8025 axllent/mailpit
-asadmin create-javamail-resource --mailhost localhost --mailuser unimotor --fromaddress no-responder@unimotor.local --property mail.smtp.port=1025 mail/unimotor
-```
+El escritorio se conecta al servidor por **EJB remoto (IIOP/JNDI)**: `AdministradorDelegado` busca por JNDI
+`AdministradorEJBRemote.JNDI` (`java:global/proyecto-ear/proyecto-negocio/AdministradorEJB!co.edu.uniquindio.unimotor.ejb.AdministradorEJBRemote`)
+con un `InitialContext` sin configuración, usando el cliente de Payara que aporta la dependencia `payara-embedded-all`
+(ámbito `provided`). Por defecto busca el servidor en `localhost:3700`; se puede cambiar con las propiedades
+`-Dorg.omg.CORBA.ORBInitialHost=<host>` y `-Dorg.omg.CORBA.ORBInitialPort=<puerto>`.
 
-Para usar Gmail: `--mailhost smtp.gmail.com`, `--mailuser` con la cuenta, y las propiedades `mail.smtp.port=587`,
-`mail.smtp.auth=true`, `mail.smtp.starttls.enable=true` y `mail.smtp.password` con una contraseña de aplicación.
-En `asadmin`, los caracteres `:` y `=` dentro de los valores de `--property` se escapan con `\`.
-Si el recurso no existe, el sistema funciona en modo simulado: el correo solo se registra en el log del servidor.
+Con Payara arriba y el EAR desplegado, ejecute la clase `co.edu.uniquindio.unimotor.escritorio.app.Aplicacion`
+del módulo `proyecto-escritorio` con el JDK 8 con JavaFX. La forma más simple es en IntelliJ: configuración
+**Escritorio (Administrador)** (`.run/`), que incluye las dependencias `provided` necesarias para el cliente remoto.
+Si cambió el negocio, antes ejecute `scripts\desplegar.bat` (el escritorio usa el JAR de `proyecto-negocio` del
+repositorio local de Maven).
 
-Las ciudades se cargan al desplegar desde api-colombia.com, con respaldo en `ciudades-colombia.json`.
-
-### 4. Aplicación de escritorio
-
-Con Payara arriba y el EAR desplegado, ejecute la clase
-`co.edu.uniquindio.unimotor.escritorio.app.Aplicacion` del módulo `proyecto-escritorio`. En IntelliJ
-use la configuración **Escritorio (Administrador)** (`.run/`), que incluye las dependencias `provided`
-necesarias para el cliente remoto.
-
-- Inicie sesión con un administrador (por ejemplo `cristia@proyecto.com` / `123`); los clientes no pueden entrar.
+- Inicie sesión con un administrador; los clientes no pueden entrar.
 - "¿Olvidó su contraseña?" envía una contraseña temporal al correo del administrador.
 - La ventana principal muestra 17 gráficos de estadísticas (pastel, barras, barras apiladas, líneas, áreas,
   dispersión y burbujas) con botones para refrescar los datos y cerrar sesión.
-- Si Payara no está en ejecución, la aplicación lo indica con un mensaje de error.
+- Si Payara no está en ejecución, la aplicación lo indica con un mensaje de error en unos 2 segundos.
+
+## Usuarios de prueba
+
+Los crea `SetupEJB`:
+
+| Rol | Email | Contraseña | Dónde entra |
+|---|---|---|---|
+| Administrador | `cristia@proyecto.com` | `123` | solo escritorio |
+| Administrador | `profesor@proyecto.com` | `4444` | solo escritorio |
+| Cliente | `usuario1@servidor.com`, `usuario2@servidor.com`, `usuario3@servidor.com` | `12345` | web |
+
+Los unos 60 clientes de demostración también usan `12345` (el email sale del nombre, por ejemplo
+`oscar.patino@outlook.es`; se consultan con `SELECT email FROM USUARIO`).
 
 ## API REST
 
@@ -270,17 +348,45 @@ mvn test
 - Para una sola clase: `mvn test -Dtest=ConsultasTest`. No ejecute dos `mvn test` a la vez
   (comparten puertos y base).
 
+
 ## Documentación
 
-- Javadoc: `mvn javadoc:javadoc` (la configuración está en el `pom.xml` padre).
-- Diagrama entidad-relación: [`docs/diagrama-er.png`](docs/diagrama-er.png).
+- Javadoc: `mvn javadoc:javadoc` (la configuración está en el `pom.xml` padre; el HTML queda en
+  `proyecto-*/target/site/apidocs/index.html`). Para las pruebas: `cd proyecto-pruebas && mvn javadoc:test-javadoc`.
+- Diagrama entidad-relación: [`docs/diagrama-er.png`](docs/diagrama-er.png) (también `.svg`; fuente PlantUML en
+  `docs/diagrama-er.puml`, instrucciones para regenerarlo en [`docs/README.md`](docs/README.md)).
+
+## Solución de problemas
+
+- **Java 17 en lugar de 8:** las pruebas Arquillian fallan todas con `ArquillianServletRunner not found` (en el log:
+  `Unsupported class file major version 61`). Use el JDK 8 con JavaFX en `JAVA_HOME`, en `AS_JAVA` de Payara y, en
+  IntelliJ, como SDK del proyecto (*Language level* 8) y del *Maven Runner*.
+- **`AmbiguousTableNameException` en las pruebas:** DBUnit ve las tablas de todas las bases del servidor. Hacen falta
+  `schema=prueba` en `arquillian.xml` y `databaseTerm=SCHEMA` en la URL JDBC de `sun-resources.xml` (ya incluidos).
+- **Todas las pruebas fallan con `NoSuchColumnException`:** cambió una entidad y la base `prueba` quedó desactualizada;
+  recréela (solo contiene datos de DBUnit).
+- **Puertos ocupados:** la web usa 8080, la administración 4848, el EJB remoto (IIOP) 3700, MySQL 3306 y Mailpit
+  1025 y 8025. Las pruebas usan puertos propios (18080, 18181, 14848...), por lo que no hay que apagar Payara.
+- **El escritorio dice que no puede conectar:** compruebe que Payara está arriba, que el EAR está desplegado
+  (`asadmin list-applications`) y que el puerto 3700 es accesible.
+- **La web da error 500 o falla la conexión a la base:** revise `asadmin ping-connection-pool mysql_unimotor_pool`
+  y que el contenedor `unimotor-mysql` esté en marcha (Docker Desktop abierto).
+- **Cambié una entidad y falla el despliegue o faltan columnas:** el servidor no actualiza tablas existentes;
+  recree la base `unimotor`.
+- **No llegan correos:** sin el recurso `mail/unimotor` el envío es simulado (solo log). Con Mailpit, abra
+  <http://localhost:8025>.
+- **Tema de PrimeFaces inexistente (500 por `theme.css`):** con PrimeFaces 8.0 solo existen nova-light/dark/colored,
+  luna-amber/blue/green/pink, omega y aristo.
+- **Aviso de Chrome "cambia la contraseña"** al iniciar sesión con `12345`: lo genera el gestor de contraseñas del
+  navegador, no la aplicación.
+- **Redespliegue:** una `NoSuchFileException` en nivel INFO sobre `generated\ejb\proyecto-ear` es inofensiva.
 
 ## Estado del proyecto
 
 - **Entrega 1 (persistencia)**: completa: entidades, `NamedQuery`, datasets JSON y pruebas en verde.
 - **Entrega 2 (negocio y escritorio)**: completa: EJB con todos los requisitos (incluidas las funcionalidades
   extra), correo, API de ciudades, aplicación de escritorio con 17 gráficos y 367 pruebas en verde.
-- **Entrega 3 (presentación web)**: en curso. Hecha la configuración del módulo web (JSF 2.3 con CDI,
+- **Entrega 3 (presentación web)**: completa. Incluye la configuración del módulo web (JSF 2.3 con CDI,
   PrimeFaces 8 con el tema `nova-light`, estilos propios y carpeta de fotos servida en `/fotos/*`) y la plantilla
   común con el menú que cambia según haya sesión, la estructura de páginas (públicas y `usuario/`) y las páginas
   de error (404, 500 y sesión expirada). Los clientes ya pueden registrarse (con las ciudades de la API y varios
@@ -295,4 +401,7 @@ mvn test
   comprador); ver y quitar favoritos; responder las preguntas recibidas, y calificar al vendedor desde "Mis compras".
   Además, la aplicación expone una API REST de solo lectura en JSON (`/proyecto-web/api/vehiculos` y los catálogos;
   ver la sección "API REST").
+  La demo completa (registro, publicar, buscar, preguntar, responder, favorito, compartir, vender y calificar) se
+  probó de punta a punta, y las estadísticas del escritorio reflejan esa actividad. El guion de la sustentación está
+  en [`docs/GUION_SUSTENTACION.md`](docs/GUION_SUSTENTACION.md).
   Para probar: `usuario1@servidor.com` / `12345` (los administradores entran solo por la aplicación de escritorio).

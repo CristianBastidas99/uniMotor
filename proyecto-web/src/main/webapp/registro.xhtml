@@ -13,7 +13,7 @@
 
 		<h:panelGroup rendered="#{seguridadBean.autenticado}" layout="block" styleClass="aviso-construccion">
 			<i class="fa fa-info-circle"></i>
-			Ya tiene una sesión iniciada.
+			Ya tienes una sesión iniciada.
 			<h:link outcome="/index" value="Ir al inicio" />
 		</h:panelGroup>
 
@@ -31,6 +31,7 @@
 					<p:outputLabel for="email" value="Correo electrónico" />
 					<p:inputText id="email" value="#{registroBean.email}" required="true"
 						requiredMessage="El correo electrónico es obligatorio." maxlength="100"
+						validatorMessage="Ingresa un correo electrónico válido."
 						placeholder="usuario@correo.com">
 						<f:validateRegex pattern="^[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}$"
 							/>
@@ -41,9 +42,9 @@
 				<div class="campo">
 					<p:outputLabel for="password" value="Contraseña" />
 					<p:password id="password" value="#{registroBean.password}" feedback="true" match="confirmacion"
-						promptLabel="Escriba una contraseña" weakLabel="Débil" goodLabel="Aceptable"
+						promptLabel="Escribe una contraseña" weakLabel="Débil" goodLabel="Aceptable"
 						strongLabel="Fuerte" required="true" requiredMessage="La contraseña es obligatoria."
-						validatorMessage="Las contraseñas no coinciden." maxlength="100">
+						validatorMessage="La contraseña debe tener al menos 4 caracteres y coincidir con la confirmación." maxlength="100">
 						<f:validateLength minimum="4" />
 					</p:password>
 					<p:message for="password" />
@@ -52,7 +53,7 @@
 				<div class="campo">
 					<p:outputLabel for="confirmacion" value="Confirmar contraseña" />
 					<p:password id="confirmacion" value="#{registroBean.confirmacion}" feedback="false"
-						required="true" requiredMessage="Confirme su contraseña." maxlength="100" />
+						required="true" requiredMessage="Confirma tu contraseña." maxlength="100" />
 					<p:message for="confirmacion" />
 				</div>
 
@@ -71,7 +72,7 @@
 						itemLabel="#{ciudadesBean.etiqueta(c)}" itemValue="#{c}"
 						forceSelection="true" dropdown="true" minQueryLength="2" queryDelay="250"
 						maxResults="20" scrollHeight="250" required="true"
-						requiredMessage="Seleccione su ciudad." placeholder="Escriba su ciudad" />
+						requiredMessage="Selecciona tu ciudad." placeholder="Escribe tu ciudad" />
 					<p:message for="ciudad" />
 				</div>
 
@@ -105,7 +106,7 @@
 					ajax="false" />
 			</div>
 			<div class="enlaces-formulario">
-				<h:link outcome="/login" value="¿Ya tiene cuenta? Inicie sesión" />
+				<h:link outcome="/login" value="¿Ya tienes cuenta? Inicia sesión" />
 			</div>
 		</h:form>
 	</ui:define>

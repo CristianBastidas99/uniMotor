@@ -87,7 +87,7 @@
 								oncomplete="PF('dlgVenta').show()"/>
 							<p:commandButton value="Desactivar" icon="fa fa-pause" rendered="#{fila.activo}"
 								action="#{misVehiculosBean.desactivar(fila)}" process="@this" update="@form">
-								<p:confirm header="Desactivar vehículo" message="Dejará de aparecer en las búsquedas. ¿Deseas continuar?" icon="fa fa-exclamation-triangle"/>
+								<p:confirm header="Desactivar vehículo" message="El vehículo dejará de aparecer en las búsquedas. ¿Deseas continuar?" icon="fa fa-exclamation-triangle"/>
 							</p:commandButton>
 							<p:commandButton value="Eliminar" icon="fa fa-trash" rendered="#{!fila.vendido}"
 								action="#{misVehiculosBean.eliminar(fila)}" process="@this" update="@form">

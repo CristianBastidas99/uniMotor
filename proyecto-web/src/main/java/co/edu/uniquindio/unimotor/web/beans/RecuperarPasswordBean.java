@@ -37,11 +37,11 @@ public class RecuperarPasswordBean {
 		} catch (ElementoNoEncontradoException | InformacionInvalidaException e) {
 			// No se revela si el correo existe: se muestra el mismo mensaje.
 		} catch (EnvioCorreoException e) {
-			Mensajes.error("No se pudo enviar el correo", "Intente más tarde.");
+			Mensajes.error("No se pudo enviar el correo", "Inténtalo más tarde.");
 			return null;
 		}
 		Mensajes.info("Solicitud recibida",
-				"Si el correo está registrado como cliente, recibirá una contraseña temporal en unos minutos.");
+				"Si el correo está registrado como cliente, recibirás una contraseña temporal en unos minutos.");
 		Mensajes.conservarTrasRedireccion();
 		return "/login?faces-redirect=true";
 	}

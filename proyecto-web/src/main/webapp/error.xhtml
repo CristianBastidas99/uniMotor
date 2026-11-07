@@ -12,7 +12,7 @@
 		<div class="pagina-error">
 			<div class="codigo">#{empty requestScope['javax.servlet.error.status_code'] ? 'Error' : requestScope['javax.servlet.error.status_code']}</div>
 			<h1 class="pagina-titulo">Algo salió mal</h1>
-			<p>Ocurrió un problema inesperado. Por favor, inténtelo de nuevo más tarde.</p>
+			<p>Ocurrió un problema inesperado. Por favor, inténtalo de nuevo más tarde.</p>
 			<h:panelGroup layout="block" rendered="#{facesContext.application.projectStage eq 'Development'}">
 				<p><strong>Excepción:</strong> #{requestScope['javax.servlet.error.exception']}</p>
 				<p><strong>URI:</strong> #{requestScope['javax.servlet.error.request_uri']}</p>

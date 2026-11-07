@@ -34,7 +34,7 @@ public class ErrorGenericoMapper implements ExceptionMapper<Throwable> {
 			return ErrorJson.respuesta(400, "Solicitud inválida", causa.getMessage());
 		}
 		LOG.log(Level.SEVERE, "Error no controlado en la API REST", t);
-		return ErrorJson.respuesta(500, "Error interno", "Ocurrió un error inesperado. Intente más tarde.");
+		return ErrorJson.respuesta(500, "Error interno", "Ocurrió un error inesperado. Inténtalo más tarde.");
 	}
 
 	/** Atraviesa las envolturas EJBException hasta la causa real. */

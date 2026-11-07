@@ -76,7 +76,7 @@
 						</div>
 						<div class="campo">
 							<p:outputLabel for="kilometraje" value="Kilometraje máximo" />
-							<p:inputNumber id="kilometraje" value="#{resultadosBean.kilometrajeMaximo}"
+							<p:inputNumber id="kilometraje" converterMessage="El kilometraje no es válido." validatorMessage="El kilometraje no es válido." value="#{resultadosBean.kilometrajeMaximo}"
 								decimalPlaces="0" thousandSeparator="." decimalSeparator="," minValue="0"
 								symbol=" km" symbolPosition="s" />
 						</div>
@@ -125,7 +125,7 @@
 						rendered="#{resultadosBean.total eq 0}">
 						<i class="fa fa-search"></i>
 						<h2>No encontramos vehículos con esos criterios</h2>
-						<p>Pruebe ampliando el rango de precio o de año, quitando algún filtro o eligiendo otra marca.</p>
+						<p>Prueba ampliando el rango de precio o de año, quitando algún filtro o eligiendo otra marca.</p>
 						<p:button value="Ver todos" outcome="/resultados" icon="fa fa-list" />
 					</h:panelGroup>
 				</h:form>
