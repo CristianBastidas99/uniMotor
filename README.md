@@ -136,6 +136,12 @@ Con Payara arriba y el EAR desplegado, ejecute la clase
 use la configuración **Escritorio (Administrador)** (`.run/`), que incluye las dependencias `provided`
 necesarias para el cliente remoto.
 
+- Inicie sesión con un administrador (por ejemplo `cristia@proyecto.com` / `123`); los clientes no pueden entrar.
+- "¿Olvidó su contraseña?" envía una contraseña temporal al correo del administrador.
+- La ventana principal muestra 17 gráficos de estadísticas (pastel, barras, barras apiladas, líneas, áreas,
+  dispersión y burbujas) con botones para refrescar los datos y cerrar sesión.
+- Si Payara no está en ejecución, la aplicación lo indica con un mensaje de error.
+
 ## Pruebas
 
 ```bat
