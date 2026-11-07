@@ -156,6 +156,95 @@ necesarias para el cliente remoto.
   dispersión y burbujas) con botones para refrescar los datos y cerrar sesión.
 - Si Payara no está en ejecución, la aplicación lo indica con un mensaje de error.
 
+## API REST
+
+La aplicación web expone una API de **solo lectura** en JSON (JAX-RS) sobre los vehículos publicados y los
+catálogos. URL base: `http://localhost:8080/proyecto-web/api`
+
+| Método | Ruta | Parámetros (todos opcionales salvo indicación) | Respuesta |
+|---|---|---|---|
+| GET | `/vehiculos` | `tipo`, `marca`, `condicion`, `precioMin`, `precioMax`, `anioMin`, `anioMax`, `limite` (1 a 500), `pagina` (desde 1) | Lista de vehículos (resumen) activos y no vendidos, los más recientes primero; cabecera `X-Total-Count` con el total antes de paginar |
+| GET | `/vehiculos/{id}` | `id`: entero positivo | Detalle del vehículo (también si está inactivo o vendido, con `activo=false` o `vendido=true`) |
+| GET | `/vehiculos/top` | `condicion` (obligatoria): `NUEVO` o `USADO` | Los 10 vehículos activos más buscados de esa condición |
+| GET | `/ciudades` | `nombre`: texto contenido en el nombre, sin distinguir mayúsculas ni tildes | Lista de ciudades (`id`, `nombre`, `departamento`) |
+| GET | `/caracteristicas` | n/a | Lista de características (`id`, `nombre`) |
+| GET | `/modelos` | `marca` | Lista de modelos (`id`, `marca`, `nombre`) |
+| GET | `/marcas` | n/a | Lista de marcas (texto) |
+
+`tipo` y `condicion` usan el nombre de la enumeración (por ejemplo `CARRO`, `MOTOCICLETA`, `NUEVO`) sin
+distinguir mayúsculas; `marca` tampoco distingue mayúsculas. Sin `limite` ni `pagina` se devuelven todos los
+resultados; con `pagina` y sin `limite` el tamaño de página es 500.
+
+### Errores
+
+Los errores devuelven el estado HTTP y un cuerpo JSON con este formato:
+
+```json
+{ "estado": 400, "error": "Solicitud inválida", "mensaje": "El parámetro precioMin debe ser un número." }
+```
+
+| Estado | Cuándo |
+|---|---|
+| 400 | Parámetro mal formado (no numérico, negativo, enumeración inexistente, rango invertido, `limite` o `pagina` fuera de rango), `condicion` ausente en `/vehiculos/top`, o id no numérico o menor que 1 (incluido `/vehiculos/abc`) |
+| 404 | El vehículo no existe o la ruta no existe |
+| 405 | Método distinto de GET (la API es de solo lectura) |
+| 500 | Error inesperado del servidor |
+
+### Ejemplos
+
+```bat
+curl "http://localhost:8080/proyecto-web/api/vehiculos?tipo=carro&marca=Mazda&precioMax=80000000&limite=5"
+curl "http://localhost:8080/proyecto-web/api/vehiculos/2"
+curl "http://localhost:8080/proyecto-web/api/vehiculos/top?condicion=USADO"
+curl "http://localhost:8080/proyecto-web/api/ciudades?nombre=armenia"
+curl "http://localhost:8080/proyecto-web/api/modelos?marca=Renault"
+```
+
+Vehículo (detalle, `GET /vehiculos/2`, con los datos de demostración):
+
+```json
+{
+  "id": 2,
+  "titulo": "Audi A1 2018",
+  "marca": "Audi",
+  "modelo": "A1",
+  "anio": 2018,
+  "precio": 26000000.0,
+  "kilometros": 0,
+  "tipo": "CARRO",
+  "condicion": "NUEVO",
+  "combustible": "GASOLINA",
+  "transmision": "MECANICO",
+  "ciudad": "Armenia (Quindío)",
+  "fotoPrincipal": "/fotos/carro-12.jpg",
+  "numeroBusquedas": 120,
+  "activo": true,
+  "vendido": false,
+  "fechaPublicacion": "2026-10-08",
+  "url": "/detalleVehiculo.xhtml?id=2",
+  "descripcion": "Bolido perfectamente cuidado, con menos de mil kilometros, practicamente nuevo",
+  "color": "Negro",
+  "cilindraje": 2000,
+  "numeroPuertas": 2,
+  "placaTerminacion": "2",
+  "fotos": ["/fotos/carro-12.jpg", "/fotos/carro-11.jpg", "/fotos/carro-09.jpg"],
+  "caracteristicas": ["Aire acondicionado", "Bluetooth", "Sunroof"],
+  "vendedor": { "nombre": "Hector R.", "ciudad": "Armenia (Quindío)" },
+  "numeroPreguntas": 1
+}
+```
+
+La lista (`GET /vehiculos`) devuelve los mismos campos hasta `url` (sin los del detalle).
+
+Notas:
+
+- Es solo lectura (GET) y no requiere autenticación.
+- No expone datos personales: el vendedor se muestra con el nombre y la inicial del apellido, y de la placa solo
+  la terminación.
+- No altera los contadores: a diferencia de la búsqueda y el detalle de la web, la API no suma búsquedas ni visitas
+  (por eso filtra en memoria y no usa `buscarVehiculos` ni `registrarVisita`).
+- Las rutas de las fotos y de `url` son relativas al contexto de la aplicación (`/proyecto-web/`).
+
 ## Pruebas
 
 ```bat
@@ -204,4 +293,6 @@ mvn test
   El área del cliente permite editar el perfil, cambiar la contraseña y eliminar la cuenta; publicar y editar
   vehículos con sus fotos; gestionar las publicaciones (desactivar, eliminar y marcar como vendido, con correo al
   comprador); ver y quitar favoritos; responder las preguntas recibidas, y calificar al vendedor desde "Mis compras".
+  Además, la aplicación expone una API REST de solo lectura en JSON (`/proyecto-web/api/vehiculos` y los catálogos;
+  ver la sección "API REST").
   Para probar: `usuario1@servidor.com` / `12345` (los administradores entran solo por la aplicación de escritorio).
