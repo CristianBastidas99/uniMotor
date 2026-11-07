@@ -198,5 +198,7 @@ mvn test
   teléfonos), iniciar y cerrar sesión y recuperar la contraseña por correo; las páginas de `usuario/` exigen sesión.
   La página principal tiene el buscador (tipo, marca, rango de precio y de año) y los 10 vehículos más buscados
   nuevos y usados; los resultados se pueden refinar por características, combustible, transmisión, condición y
-  kilometraje, ordenar y ver en cuadrícula o en lista.
+  kilometraje, ordenar y ver en cuadrícula o en lista. El detalle de cada vehículo muestra la galería de fotos, la
+  ficha técnica, los datos del vendedor y las preguntas con sus respuestas; con sesión se puede preguntar (el
+  vendedor recibe un correo) y guardar en favoritos, y cualquiera puede compartirlo en Facebook o Twitter.
   Para probar: `usuario1@servidor.com` / `12345` (los administradores entran solo por la aplicación de escritorio).

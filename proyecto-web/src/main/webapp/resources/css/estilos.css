@@ -376,3 +376,143 @@ a.tarjeta-vehiculo:hover {
   .fila-vehiculo .tarjeta-vehiculo { flex-direction: column; }
   .fila-vehiculo .tarjeta-vehiculo .foto-vehiculo { flex-basis: auto; max-width: 100%; }
 }
+
+/* ===== Preguntas y favoritos ===== */
+.seccion-preguntas { margin-top: 24px; min-width: 0; }
+.seccion-preguntas h2 { margin: 0 0 12px; font-size: 1.25rem; }
+.lista-preguntas { display: grid; gap: 14px; margin-bottom: 18px; }
+.seccion-preguntas .pregunta { min-width: 0; padding: 0; }
+.seccion-preguntas .pregunta-cabecera { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px; font-size: .9rem; }
+.seccion-preguntas .pregunta-cabecera .fa { color: #888; }
+.seccion-preguntas .fecha { color: #777; font-size: .8rem; }
+.seccion-preguntas .pregunta-texto { margin: 4px 0 0 22px; white-space: pre-line; overflow-wrap: anywhere; }
+.seccion-preguntas .respuesta,
+.seccion-preguntas .sin-respuesta { margin: 8px 0 0 22px; padding: 6px 0 6px 12px; border-left: 3px solid #f57c00; min-width: 0; }
+.seccion-preguntas .respuesta { background: #fff8f0; }
+.seccion-preguntas .respuesta .pregunta-texto { margin-left: 0; }
+.seccion-preguntas .respuesta .fa-reply { color: #f57c00; }
+.seccion-preguntas .sin-respuesta { color: #777; font-style: italic; font-size: .9rem; }
+.sin-preguntas, .aviso-pregunta { padding: 14px; border: 1px dashed #bbb; border-radius: 6px; background: #fafafa; color: #444; overflow-wrap: anywhere; }
+.formulario-pregunta { display: grid; gap: 6px; margin-top: 8px; }
+.formulario-pregunta textarea { width: 100%; max-width: 100%; box-sizing: border-box; }
+.contador-pregunta { font-size: .8rem; color: #777; }
+.form-favorito { display: inline-block; max-width: 100%; }
+.boton-favorito { max-width: 100%; }
+.ui-button.boton-favorito.activo,
+.ui-button.boton-favorito.activo:enabled:hover { background: #fff3e6; border-color: #f57c00; color: #d84315; }
+.ui-button.boton-favorito.activo .fa { color: #e53935; }
+@media (max-width: 480px) {
+  .seccion-preguntas .pregunta-texto,
+  .seccion-preguntas .respuesta,
+  .seccion-preguntas .sin-respuesta { margin-left: 8px; }
+}
+
+/* ==========================================================================
+   Detalle del vehículo
+   ========================================================================== */
+.pagina-detalle { min-width: 0; }
+.texto-suave { color: var(--um-texto-suave); }
+
+.migas { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: .9rem; margin-bottom: 16px; color: var(--um-texto-suave); }
+.migas a { text-decoration: none; }
+.migas a:hover { text-decoration: underline; }
+.migas span { color: var(--um-texto); font-weight: 600; overflow-wrap: anywhere; }
+
+.aviso-no-disponible {
+  background: #fdecea; border: 1px solid #f5b5ae; color: #8a1f14;
+  border-radius: var(--um-radio); padding: 12px 16px; margin-bottom: 16px; font-weight: 600;
+}
+.aviso-no-disponible .fa { margin-right: 6px; }
+.aviso-propio {
+  background: #eaf3fc; border: 1px solid #b9d4ef; color: var(--um-azul);
+  border-radius: var(--um-radio); padding: 10px 12px; margin: 12px 0; font-size: .95rem;
+}
+
+.detalle-columnas { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 24px; align-items: start; }
+.detalle-principal, .detalle-lateral { min-width: 0; display: flex; flex-direction: column; gap: 20px; }
+
+/* Galería */
+.galeria { background: var(--um-superficie); border-radius: var(--um-radio); box-shadow: var(--um-sombra); padding: 12px; min-width: 0; }
+.galeria-visor { position: relative; aspect-ratio: 4 / 3; background: #e9edf2; border-radius: var(--um-radio); overflow: hidden; }
+.galeria-visor img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.galeria-flecha {
+  position: absolute; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; border: 0; border-radius: 50%;
+  background: rgba(31, 58, 95, .75); color: #fff; font-size: 1.1rem; cursor: pointer;
+}
+.galeria-flecha:hover { background: var(--um-naranja); }
+.galeria-flecha.anterior { left: 8px; }
+.galeria-flecha.siguiente { right: 8px; }
+.galeria-contador { position: absolute; right: 8px; bottom: 8px; background: rgba(0, 0, 0, .6); color: #fff; border-radius: 12px; padding: 2px 10px; font-size: .85rem; }
+.miniaturas { display: flex; gap: 8px; margin-top: 10px; overflow-x: auto; padding-bottom: 4px; position: relative; }
+.miniatura { flex: 0 0 76px; height: 58px; padding: 0; border: 2px solid transparent; border-radius: 6px; overflow: hidden; background: #e9edf2; cursor: pointer; opacity: .7; }
+.miniatura img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.miniatura:hover { opacity: 1; }
+.miniatura.activa { border-color: var(--um-naranja); opacity: 1; }
+
+/* Secciones */
+.detalle-seccion { background: var(--um-superficie); border-radius: var(--um-radio); box-shadow: var(--um-sombra); padding: 16px; min-width: 0; }
+.detalle-seccion h2, .compartir h2, .tarjeta-vendedor h2 { font-size: 1.15rem; margin-bottom: 12px; }
+.descripcion-vehiculo { white-space: pre-line; overflow-wrap: anywhere; margin: 0; }
+
+.ficha-tecnica { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 24px; margin: 0; }
+.ficha-tecnica > div { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--um-borde); min-width: 0; }
+.ficha-tecnica dt { color: var(--um-texto-suave); }
+.ficha-tecnica dd { margin: 0; font-weight: 600; text-align: right; overflow-wrap: anywhere; }
+
+.chips-caracteristicas { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.chips-caracteristicas li { background: #eef3f9; color: var(--um-azul); border-radius: 16px; padding: 4px 12px; font-size: .9rem; }
+.chips-caracteristicas .fa { color: #2e9e5b; margin-right: 4px; }
+
+/* Columna lateral */
+.detalle-resumen, .compartir, .tarjeta-vendedor { background: var(--um-superficie); border-radius: var(--um-radio); box-shadow: var(--um-sombra); padding: 16px; min-width: 0; }
+.detalle-titulo { font-size: 1.5rem; margin-bottom: 8px; overflow-wrap: anywhere; }
+.detalle-precio { font-size: 2rem; font-weight: 700; color: var(--um-naranja); line-height: 1.2; margin-bottom: 8px; }
+.detalle-resumen .insignia-condicion { position: static; display: inline-block; }
+.datos-clave { display: flex; flex-direction: column; gap: 4px; margin-top: 12px; color: var(--um-texto-suave); }
+.datos-clave .fa { width: 18px; color: var(--um-azul-claro); }
+
+.botones-compartir { display: flex; flex-wrap: wrap; gap: 8px; }
+.boton-compartir {
+  display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border: 0; border-radius: var(--um-radio);
+  color: #fff; font: inherit; font-size: .9rem; text-decoration: none; cursor: pointer;
+}
+.boton-compartir:hover { color: #fff; filter: brightness(1.1); }
+.boton-compartir.facebook { background: #3b5998; }
+.boton-compartir.twitter { background: #1da1f2; }
+.boton-compartir.copiar { background: var(--um-azul); }
+.aviso-copiado { display: block; min-height: 1.4em; margin-top: 6px; color: #2e9e5b; font-size: .9rem; }
+
+.vendedor-nombre { font-weight: 700; font-size: 1.05rem; overflow-wrap: anywhere; }
+.vendedor-ciudad { color: var(--um-texto-suave); margin-bottom: 8px; }
+.vendedor-calificacion { margin-bottom: 8px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.estrellas { color: #f5a623; letter-spacing: 2px; }
+.vendedor-telefonos { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.vendedor-telefonos li { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.tipo-telefono { color: var(--um-texto-suave); font-size: .85rem; min-width: 56px; }
+.enlace-whatsapp { background: #25d366; color: #fff; border-radius: 12px; padding: 2px 10px; text-decoration: none; font-size: .85rem; }
+.enlace-whatsapp:hover { color: #fff; filter: brightness(1.1); }
+
+/* Genéricos de preguntas y favoritos (la sección propia, si existe, va después y gana) */
+.seccion-preguntas { background: var(--um-superficie); border-radius: var(--um-radio); box-shadow: var(--um-sombra); padding: 16px; min-width: 0; }
+.seccion-preguntas h2 { font-size: 1.15rem; margin-bottom: 12px; }
+.pregunta { border-top: 1px solid var(--um-borde); padding: 10px 0; overflow-wrap: anywhere; }
+.pregunta .fecha { color: var(--um-texto-suave); font-size: .85rem; }
+.respuesta { margin: 6px 0 0 16px; padding: 8px 12px; background: #eef3f9; border-left: 3px solid var(--um-naranja); border-radius: 4px; overflow-wrap: anywhere; }
+.boton-favorito { margin-top: 12px; }
+
+@media (max-width: 899px) {
+  /* Una columna: galería, título y precio, compartir y vendedor, y después descripción, ficha y preguntas
+     (sin esto el resumen con el precio quedaba al final, debajo de las preguntas). */
+  .detalle-columnas { display: flex; flex-direction: column; gap: 20px; }
+  .detalle-principal, .detalle-lateral { display: contents; }
+  .detalle-columnas .galeria { order: 1; }
+  .detalle-columnas .detalle-resumen { order: 2; }
+  .detalle-lateral > * { order: 3; }
+  .detalle-principal > * { order: 4; }
+  .detalle-principal > *, .detalle-lateral > * { min-width: 0; width: 100%; max-width: 100%; box-sizing: border-box; }
+}
+@media (max-width: 480px) {
+  .ficha-tecnica { grid-template-columns: minmax(0, 1fr); }
+  .detalle-precio { font-size: 1.7rem; }
+  .miniatura { flex-basis: 64px; height: 48px; }
+}

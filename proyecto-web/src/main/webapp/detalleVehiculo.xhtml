@@ -6,13 +6,277 @@
 	xmlns:p="http://primefaces.org/ui"
 	template="/WEB-INF/template.xhtml">
 
-	<ui:define name="titulo">Detalle del vehículo</ui:define>
+	<f:metadata>
+		<!-- idTexto (String): un id no numérico no debe fallar la conversión, para que viewAction responda 404 -->
+		<f:viewParam name="id" value="#{detalleVehiculoBean.idTexto}" />
+		<f:viewAction action="#{detalleVehiculoBean.inicializar}" onPostback="false" />
+	</f:metadata>
+
+	<ui:define name="titulo">#{empty detalleVehiculoBean.vehiculo ? 'Detalle del vehículo' : formatoBean.titulo(detalleVehiculoBean.vehiculo)}</ui:define>
+
+	<ui:define name="head">
+		<ui:fragment rendered="#{detalleVehiculoBean.vehiculo ne null}">
+			<meta property="og:title" content="#{formatoBean.titulo(detalleVehiculoBean.vehiculo)}"/>
+			<meta property="og:description" content="#{formatoBean.precio(detalleVehiculoBean.vehiculo.precio)} · #{detalleVehiculoBean.vehiculo.year} · #{formatoBean.kilometros(detalleVehiculoBean.vehiculo.kilometros)} · #{formatoBean.ciudad(detalleVehiculoBean.vehiculo)}"/>
+			<meta property="og:image" content="#{detalleVehiculoBean.urlFotoAbsoluta}"/>
+			<meta property="og:url" content="#{detalleVehiculoBean.urlAbsoluta}"/>
+			<meta property="og:type" content="website"/>
+			<meta property="og:site_name" content="uniMotor"/>
+			<meta name="twitter:card" content="summary_large_image"/>
+		</ui:fragment>
+	</ui:define>
 
 	<ui:define name="contenido">
-		<h1 class="pagina-titulo">Detalle del vehículo</h1>
-		<div class="aviso-construccion">
-			<i class="fa fa-wrench"></i>
-			Aquí se mostrarán la galería de fotos, la ficha técnica, los datos del vendedor y las preguntas del vehículo. Se implementa en la Fase 3.5.
-		</div>
+		<ui:fragment rendered="#{detalleVehiculoBean.vehiculo eq null}">
+			<h1 class="pagina-titulo">Detalle del vehículo</h1>
+			<p>No se pudo cargar el vehículo solicitado.</p>
+			<h:link outcome="/resultados" value="Buscar vehículos" />
+		</ui:fragment>
+
+		<ui:fragment rendered="#{detalleVehiculoBean.vehiculo ne null}">
+			<div class="pagina-detalle">
+
+				<nav class="migas" aria-label="Ruta de navegación">
+					<h:link outcome="/index" value="Inicio" />
+					<i class="fa fa-angle-right" aria-hidden="true"></i>
+					<h:link outcome="/resultados" value="Buscar vehículos" />
+					<i class="fa fa-angle-right" aria-hidden="true"></i>
+					<span>#{formatoBean.titulo(detalleVehiculoBean.vehiculo)}</span>
+				</nav>
+
+				<ui:fragment rendered="#{!detalleVehiculoBean.disponible}">
+					<div class="aviso-no-disponible">
+						<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+						Este vehículo ya no está disponible.
+					</div>
+				</ui:fragment>
+
+				<div class="detalle-columnas">
+
+					<!-- Columna principal -->
+					<div class="detalle-principal">
+
+						<!-- Galería propia: PrimeFaces 8 solo ofrece una galleria de tamaño fijo en píxeles, no adaptable -->
+						<section class="galeria" id="galeria" aria-label="Fotos del vehículo">
+							<div class="galeria-visor">
+								<img id="galeriaPrincipal" alt="#{formatoBean.titulo(detalleVehiculoBean.vehiculo)}"
+									src="#{empty detalleVehiculoBean.fotos ? resource['img:sin-foto.svg'] : request.contextPath.concat('/fotos/').concat(detalleVehiculoBean.fotos.get(0))}"
+									onerror="this.onerror=null;this.src='#{resource['img:sin-foto.svg']}';"/>
+								<ui:fragment rendered="#{detalleVehiculoBean.fotos.size() gt 1}">
+									<button type="button" class="galeria-flecha anterior" id="galeriaAnterior" aria-label="Foto anterior">
+										<i class="fa fa-chevron-left" aria-hidden="true"></i>
+									</button>
+									<button type="button" class="galeria-flecha siguiente" id="galeriaSiguiente" aria-label="Foto siguiente">
+										<i class="fa fa-chevron-right" aria-hidden="true"></i>
+									</button>
+									<span class="galeria-contador" id="galeriaContador">1 / #{detalleVehiculoBean.fotos.size()}</span>
+								</ui:fragment>
+							</div>
+							<ui:fragment rendered="#{detalleVehiculoBean.fotos.size() gt 1}">
+								<div class="miniaturas" id="galeriaMiniaturas">
+									<ui:repeat value="#{detalleVehiculoBean.fotos}" var="foto" varStatus="estado">
+										<button type="button" class="miniatura #{estado.first ? 'activa' : ''}"
+											data-src="#{request.contextPath}/fotos/#{foto}"
+											aria-label="Ver foto #{estado.index + 1}">
+											<img src="#{request.contextPath}/fotos/#{foto}" alt="" loading="lazy"
+												onerror="this.onerror=null;this.src='#{resource['img:sin-foto.svg']}';"/>
+										</button>
+									</ui:repeat>
+								</div>
+							</ui:fragment>
+						</section>
+						<script type="text/javascript">
+//<![CDATA[
+(function () {
+	var principal = document.getElementById('galeriaPrincipal');
+	var contenedor = document.getElementById('galeriaMiniaturas');
+	if (!principal || !contenedor) { return; }
+	var miniaturas = contenedor.getElementsByClassName('miniatura');
+	var contador = document.getElementById('galeriaContador');
+	var actual = 0;
+	function mostrar(i) {
+		var n = miniaturas.length;
+		actual = (i + n) % n;
+		principal.onerror = function () { principal.onerror = null; };
+		principal.src = miniaturas[actual].getAttribute('data-src');
+		for (var k = 0; k !== n; k++) {
+			miniaturas[k].className = 'miniatura' + (k === actual ? ' activa' : '');
+		}
+		if (contador) { contador.textContent = (actual + 1) + ' / ' + n; }
+		if (miniaturas[actual].scrollIntoView) {
+			try { contenedor.scrollLeft = miniaturas[actual].offsetLeft - 8; } catch (e) { }
+		}
+	}
+	for (var j = 0; j !== miniaturas.length; j++) {
+		(function (idx) { miniaturas[idx].addEventListener('click', function () { mostrar(idx); }); })(j);
+	}
+	var ant = document.getElementById('galeriaAnterior');
+	var sig = document.getElementById('galeriaSiguiente');
+	if (ant) { ant.addEventListener('click', function () { mostrar(actual - 1); }); }
+	if (sig) { sig.addEventListener('click', function () { mostrar(actual + 1); }); }
+})();
+//]]>
+						</script>
+
+						<section class="detalle-seccion">
+							<h2>Descripción</h2>
+							<p class="descripcion-vehiculo">
+								<h:outputText value="#{empty detalleVehiculoBean.vehiculo.descripcion ? 'El vendedor no agregó una descripción.' : detalleVehiculoBean.vehiculo.descripcion}"/>
+							</p>
+						</section>
+
+						<section class="detalle-seccion">
+							<h2>Ficha técnica</h2>
+							<dl class="ficha-tecnica">
+								<div><dt>Marca</dt><dd>#{detalleVehiculoBean.vehiculo.codigo_modelo.marca}</dd></div>
+								<div><dt>Modelo</dt><dd>#{detalleVehiculoBean.vehiculo.codigo_modelo.nombre}</dd></div>
+								<div><dt>Año</dt><dd>#{detalleVehiculoBean.vehiculo.year}</dd></div>
+								<div><dt>Tipo</dt><dd>#{formatoBean.etiqueta(detalleVehiculoBean.vehiculo.tipo_vehiculo)}</dd></div>
+								<div><dt>Condición</dt><dd>#{formatoBean.etiqueta(detalleVehiculoBean.vehiculo.condicion)}</dd></div>
+								<div><dt>Kilómetros</dt><dd>#{formatoBean.kilometros(detalleVehiculoBean.vehiculo.kilometros)}</dd></div>
+								<div><dt>Combustible</dt><dd>#{formatoBean.etiqueta(detalleVehiculoBean.vehiculo.tipo_combustible)}</dd></div>
+								<div><dt>Transmisión</dt><dd>#{formatoBean.etiqueta(detalleVehiculoBean.vehiculo.tipo_trasmision)}</dd></div>
+								<div><dt>Cilindraje</dt><dd>#{detalleVehiculoBean.vehiculo.cilindraje} cc</dd></div>
+								<ui:fragment rendered="#{detalleVehiculoBean.vehiculo.numero_puertas gt 0}">
+									<div><dt>Puertas</dt><dd>#{detalleVehiculoBean.vehiculo.numero_puertas}</dd></div>
+								</ui:fragment>
+								<div><dt>Color</dt><dd>#{detalleVehiculoBean.vehiculo.color}</dd></div>
+								<div><dt>Ciudad</dt><dd>#{formatoBean.ciudad(detalleVehiculoBean.vehiculo)}</dd></div>
+								<ui:fragment rendered="#{not empty detalleVehiculoBean.vehiculo.placa}">
+									<div><dt>Placa</dt><dd>Terminada en #{detalleVehiculoBean.vehiculo.placa.substring(detalleVehiculoBean.vehiculo.placa.length() - 1)}</dd></div>
+								</ui:fragment>
+								<div><dt>Publicado</dt><dd><h:outputText value="#{detalleVehiculoBean.vehiculo.fecha_publicacion}"><f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Bogota"/></h:outputText></dd></div>
+								<div><dt>Visitas</dt><dd>#{detalleVehiculoBean.vehiculo.numero_busquedas}</dd></div>
+							</dl>
+						</section>
+
+						<section class="detalle-seccion">
+							<h2>Características</h2>
+							<ui:fragment rendered="#{empty detalleVehiculoBean.caracteristicas}">
+								<p class="texto-suave">Sin características registradas.</p>
+							</ui:fragment>
+							<ul class="chips-caracteristicas">
+								<ui:repeat value="#{detalleVehiculoBean.caracteristicas}" var="c">
+									<li><i class="fa fa-check" aria-hidden="true"></i> #{c}</li>
+								</ui:repeat>
+							</ul>
+						</section>
+
+						<ui:include src="/WEB-INF/includes/preguntasVehiculo.xhtml" />
+					</div>
+
+					<!-- Columna lateral -->
+					<aside class="detalle-lateral">
+						<div class="detalle-resumen">
+							<h1 class="detalle-titulo">#{formatoBean.titulo(detalleVehiculoBean.vehiculo)}</h1>
+							<div class="detalle-precio">#{formatoBean.precio(detalleVehiculoBean.vehiculo.precio)}</div>
+							<span class="insignia-condicion #{detalleVehiculoBean.vehiculo.condicion eq 'NUEVO' ? 'nuevo' : 'usado'}">#{formatoBean.etiqueta(detalleVehiculoBean.vehiculo.condicion)}</span>
+							<div class="datos-clave">
+								<span><i class="fa fa-calendar" aria-hidden="true"></i> #{detalleVehiculoBean.vehiculo.year}</span>
+								<span><i class="fa fa-tachometer" aria-hidden="true"></i> #{formatoBean.kilometros(detalleVehiculoBean.vehiculo.kilometros)}</span>
+								<span><i class="fa fa-map-marker" aria-hidden="true"></i> #{formatoBean.ciudad(detalleVehiculoBean.vehiculo)}</span>
+							</div>
+
+							<ui:fragment rendered="#{detalleVehiculoBean.propio}">
+								<div class="aviso-propio">
+									<i class="fa fa-info-circle" aria-hidden="true"></i> Este es tu vehículo.
+									<h:link outcome="/usuario/misVehiculos" value="Ir a Mis vehículos" />
+								</div>
+							</ui:fragment>
+
+							<ui:include src="/WEB-INF/includes/botonFavorito.xhtml" />
+						</div>
+
+						<div class="compartir">
+							<h2>Compartir</h2>
+							<div class="botones-compartir">
+								<a class="boton-compartir facebook" href="#{detalleVehiculoBean.urlFacebook}" target="_blank" rel="noopener">
+									<i class="fa fa-facebook" aria-hidden="true"></i> Facebook
+								</a>
+								<a class="boton-compartir twitter" href="#{detalleVehiculoBean.urlTwitter}" target="_blank" rel="noopener">
+									<i class="fa fa-twitter" aria-hidden="true"></i> Twitter
+								</a>
+								<button type="button" class="boton-compartir copiar" id="botonCopiarEnlace"
+									data-url="#{detalleVehiculoBean.urlAbsoluta}">
+									<i class="fa fa-link" aria-hidden="true"></i> Copiar enlace
+								</button>
+							</div>
+							<span class="aviso-copiado" id="avisoCopiado" role="status"></span>
+						</div>
+						<script type="text/javascript">
+//<![CDATA[
+(function () {
+	var boton = document.getElementById('botonCopiarEnlace');
+	var aviso = document.getElementById('avisoCopiado');
+	if (!boton) { return; }
+	function avisar(texto) {
+		aviso.textContent = texto;
+		setTimeout(function () { aviso.textContent = ''; }, 2500);
+	}
+	function alternativa(url) {
+		var t = document.createElement('textarea');
+		t.value = url;
+		t.style.position = 'fixed';
+		t.style.opacity = '0';
+		document.body.appendChild(t);
+		t.select();
+		var ok = false;
+		try { ok = document.execCommand('copy'); } catch (e) { }
+		document.body.removeChild(t);
+		avisar(ok ? 'Enlace copiado' : 'No se pudo copiar el enlace');
+	}
+	boton.addEventListener('click', function () {
+		var url = boton.getAttribute('data-url');
+		if (navigator.clipboard && navigator.clipboard.writeText) {
+			navigator.clipboard.writeText(url).then(function () { avisar('Enlace copiado'); },
+				function () { alternativa(url); });
+		} else {
+			alternativa(url);
+		}
+	});
+})();
+//]]>
+						</script>
+
+						<div class="tarjeta-vendedor">
+							<h2>Vendedor</h2>
+							<div class="vendedor-nombre"><i class="fa fa-user-circle" aria-hidden="true"></i> #{detalleVehiculoBean.vehiculo.codigo_dueno.nombre_completo}</div>
+							<div class="vendedor-ciudad"><i class="fa fa-map-marker" aria-hidden="true"></i> #{detalleVehiculoBean.vehiculo.codigo_dueno.codigo_ciudad.nombre}</div>
+
+							<div class="vendedor-calificacion">
+								<ui:fragment rendered="#{detalleVehiculoBean.promedioVendedor ne null}">
+									<span class="estrellas" title="#{detalleVehiculoBean.promedioTexto} de 5">
+										<ui:repeat value="#{detalleVehiculoBean.estrellas}" var="e">
+											<i class="fa #{e eq 2 ? 'fa-star' : (e eq 1 ? 'fa-star-half-o' : 'fa-star-o')}" aria-hidden="true"></i>
+										</ui:repeat>
+									</span>
+									<span>#{detalleVehiculoBean.promedioTexto} (#{detalleVehiculoBean.numeroCalificaciones} #{detalleVehiculoBean.numeroCalificaciones eq 1 ? 'calificación' : 'calificaciones'})</span>
+								</ui:fragment>
+								<ui:fragment rendered="#{detalleVehiculoBean.promedioVendedor eq null}">
+									<span class="texto-suave">Sin calificaciones aún</span>
+								</ui:fragment>
+							</div>
+
+							<ul class="vendedor-telefonos">
+								<ui:repeat value="#{detalleVehiculoBean.telefonos}" var="t">
+									<li>
+										<span class="tipo-telefono">#{t.key}</span>
+										<a href="tel:#{detalleVehiculoBean.soloDigitos(t.value)}"><i class="fa fa-phone" aria-hidden="true"></i> #{t.value}</a>
+										<ui:fragment rendered="#{t.key.toLowerCase() eq 'celular'}">
+											<a class="enlace-whatsapp" href="https://wa.me/57#{detalleVehiculoBean.soloDigitos(t.value)}" target="_blank" rel="noopener" title="Escribir por WhatsApp">
+												<i class="fa fa-whatsapp" aria-hidden="true"></i> WhatsApp
+											</a>
+										</ui:fragment>
+									</li>
+								</ui:repeat>
+							</ul>
+							<ui:fragment rendered="#{empty detalleVehiculoBean.telefonos}">
+								<p class="texto-suave">El vendedor no registró teléfonos.</p>
+							</ui:fragment>
+						</div>
+					</aside>
+				</div>
+			</div>
+		</ui:fragment>
 	</ui:define>
 </ui:composition>

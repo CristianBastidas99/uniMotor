@@ -83,13 +83,17 @@ public class SeguridadBean implements Serializable {
 
 	/**
 	 * Indica si una ruta de origen es segura. Solo se aceptan rutas internas
-	 * bajo {@code /usuario/} sin {@code //}, barra invertida, dos puntos ni
+	 * bajo {@code /usuario/} o exactamente {@code /detalleVehiculo.xhtml?id=N}
+	 * (N numérico), sin {@code //}, barra invertida, dos puntos ni
 	 * {@code ..}; así se evitan redirecciones abiertas hacia sitios externos.
 	 *
 	 * @param ruta la ruta a evaluar
 	 * @return {@code true} si la ruta es segura
 	 */
 	static boolean esRutaSegura(String ruta) {
+		if (ruta != null && ruta.matches("^/detalleVehiculo\\.xhtml\\?id=\\d{1,19}$")) {
+			return true;
+		}
 		return ruta != null && ruta.startsWith("/usuario/") && !ruta.contains("//") && !ruta.contains("\\")
 				&& !ruta.contains(":") && !ruta.contains("..");
 	}

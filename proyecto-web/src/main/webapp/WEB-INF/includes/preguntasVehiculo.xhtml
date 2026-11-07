@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<section class="seccion-preguntas">
+		<h:form id="formPreguntas">
+			<h2>Preguntas al vendedor (#{preguntasVehiculoBean.total})</h2>
+
+			<h:panelGroup layout="block" styleClass="lista-preguntas" rendered="#{preguntasVehiculoBean.total gt 0}">
+				<ui:repeat value="#{preguntasVehiculoBean.preguntas}" var="pregunta">
+					<div class="pregunta">
+						<div class="pregunta-cabecera">
+							<i class="fa fa-user-circle"></i>
+							<strong>#{preguntasVehiculoBean.nombrePublico(pregunta.cliente)}</strong>
+							<span class="fecha">
+								<h:outputText value="#{pregunta.fecha}">
+									<f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+								</h:outputText>
+							</span>
+						</div>
+						<p class="pregunta-texto"><h:outputText value="#{pregunta.descripcion}"/></p>
+						<h:panelGroup layout="block" styleClass="respuesta" rendered="#{not empty pregunta.respuesta}">
+							<div class="pregunta-cabecera">
+								<i class="fa fa-reply"></i>
+								<strong>Respuesta del vendedor</strong>
+								<span class="fecha">
+									<h:outputText value="#{pregunta.fecha_respuesta}">
+										<f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+									</h:outputText>
+								</span>
+							</div>
+							<p class="pregunta-texto"><h:outputText value="#{pregunta.respuesta}"/></p>
+						</h:panelGroup>
+						<h:panelGroup layout="block" styleClass="sin-respuesta" rendered="#{empty pregunta.respuesta}">
+							Aún sin respuesta del vendedor
+						</h:panelGroup>
+					</div>
+				</ui:repeat>
+			</h:panelGroup>
+			<h:panelGroup layout="block" styleClass="sin-preguntas" rendered="#{preguntasVehiculoBean.total eq 0}">
+				Todavía no hay preguntas. ¡Sé el primero en preguntar!
+			</h:panelGroup>
+
+			<h:panelGroup layout="block" styleClass="formulario-pregunta"
+				rendered="#{seguridadBean.autenticado and !detalleVehiculoBean.propio and detalleVehiculoBean.disponible}">
+				<p:outputLabel for="textoPregunta" value="Haz tu pregunta al vendedor"/>
+				<p:inputTextarea id="textoPregunta" value="#{preguntasVehiculoBean.texto}" rows="3" autoResize="true"
+					maxlength="500" counter="contadorPregunta" counterTemplate="{0} caracteres restantes"
+					label="Pregunta" required="true" requiredMessage="Escribe tu pregunta antes de enviarla."
+					validatorMessage="La pregunta no puede superar los 500 caracteres.">
+					<f:validateLength maximum="500"/>
+				</p:inputTextarea>
+				<h:outputText id="contadorPregunta" styleClass="contador-pregunta"/>
+				<p:message for="textoPregunta"/>
+				<div class="acciones-formulario">
+					<p:commandButton id="botonPregunta" widgetVar="botonPreguntaW" value="Enviar pregunta" icon="fa fa-paper-plane"
+						action="#{preguntasVehiculoBean.enviar}" process="@form" update="@form"
+						onstart="PF('botonPreguntaW').disable()" oncomplete="PF('botonPreguntaW').enable()"/>
+				</div>
+			</h:panelGroup>
+
+			<h:panelGroup layout="block" styleClass="aviso-pregunta" rendered="#{!seguridadBean.autenticado}">
+				<i class="fa fa-lock"></i>
+				<a href="#{preguntasVehiculoBean.urlLogin}">Inicia sesión para hacer una pregunta</a>
+				· <h:link outcome="/registro" value="Crear cuenta"/>
+			</h:panelGroup>
+			<h:panelGroup layout="block" styleClass="aviso-pregunta"
+				rendered="#{seguridadBean.autenticado and detalleVehiculoBean.propio}">
+				Este es tu vehículo: responde las preguntas desde la sección
+				<h:link outcome="/usuario/preguntas" value="Preguntas"/>.
+			</h:panelGroup>
+			<h:panelGroup layout="block" styleClass="aviso-pregunta"
+				rendered="#{seguridadBean.autenticado and !detalleVehiculoBean.propio and !detalleVehiculoBean.disponible}">
+				Este vehículo ya no recibe preguntas.
+			</h:panelGroup>
+		</h:form>
+	</section>
+</ui:composition>
