@@ -149,11 +149,13 @@ cd proyecto-pruebas
 mvn test
 ```
 
-- La suite tiene 238 pruebas (~7 min):
+- La suite tiene 367 pruebas (~11 min):
   - persistencia: CRUD de las 10 entidades y una prueba por cada `NamedQuery` (`EntidadTest`, `UsuarioCatalogoTest`,
     `VehiculoTest`, `ConsultasTest`);
   - negocio: `ClienteNegocioTest` (cliente: usuarios, vehículos, búsqueda, favoritos, preguntas, catálogos),
-    `ExtrasNegocioTest` (venta y calificación del vendedor) y `AdministradorNegocioTest` (login, recuperar contraseña y estadísticas).
+    `ExtrasNegocioTest` (venta y calificación del vendedor) y `AdministradorNegocioTest` (login, recuperar contraseña y estadísticas);
+  - validaciones y servicios: `ClienteValidacionTest`, `VehiculoPreguntaValidacionTest` y `ServiciosNegocioTest`
+    (correo, plantillas de correo, ciudades, casos límite de ventas y calificaciones).
 - En las pruebas de negocio el correo funciona en **modo simulado** (el GlassFish embebido no tiene `mail/unimotor`).
 - Cada prueba carga los datasets JSON de `src/test/resources` en la base **`prueba`** y hace rollback.
 - Requieren el contenedor `unimotor-mysql` en ejecución. **No** hay que apagar Payara: el GlassFish
@@ -173,5 +175,6 @@ mvn test
 ## Estado del proyecto
 
 - **Entrega 1 (persistencia)**: completa: entidades, `NamedQuery`, datasets JSON y pruebas en verde.
-- **Entrega 2 (negocio y escritorio)**: en curso.
+- **Entrega 2 (negocio y escritorio)**: completa: EJB con todos los requisitos (incluidas las funcionalidades
+  extra), correo, API de ciudades, aplicación de escritorio con 17 gráficos y 367 pruebas en verde.
 - **Entrega 3 (presentación web)**: en curso.
