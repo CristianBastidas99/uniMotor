@@ -214,15 +214,6 @@ public final class CatalogoDemo {
         return new ModeloDemo(marca, nombre, TipoVehiculo.CAMIONETA, precio, ccMin, ccMax, 4, comb, trans, desde, peso);
     }
 
-    /** Genera nombres de archivo de foto con formato prefijo-NN.jpg. */
-    private static String[] generarFotos(String prefijo, int cantidad) {
-        String[] fotos = new String[cantidad];
-        for (int i = 0; i < cantidad; i++) {
-            fotos[i] = String.format("%s-%02d.jpg", prefijo, i + 1);
-        }
-        return fotos;
-    }
-
     // ------------------------------------------------------------------
     // Personas y contacto
     // ------------------------------------------------------------------
@@ -607,36 +598,4 @@ public final class CatalogoDemo {
         new ComentarioDemo(5, "Gracias por la amabilidad y la honestidad. Un vendedor de los que da gusto encontrar."),
         new ComentarioDemo(5, "Muy buena experiencia, vehículo en excelentes condiciones y trato cordial.")
     };
-
-    // ------------------------------------------------------------------
-    // Fotos
-    // ------------------------------------------------------------------
-
-    /** Nombres de archivo de fotos de carros, de carro-01.jpg a carro-30.jpg. */
-    public static final String[] FOTOS_CARRO = generarFotos("carro", 30);
-
-    /** Nombres de archivo de fotos de motos, de moto-01.jpg a moto-12.jpg. */
-    public static final String[] FOTOS_MOTO = generarFotos("moto", 12);
-
-    /** Nombres de archivo de fotos de camionetas, de camioneta-01.jpg a camioneta-08.jpg. */
-    public static final String[] FOTOS_CAMIONETA = generarFotos("camioneta", 8);
-
-    /**
-     * Devuelve las fotos disponibles para un tipo de vehículo.
-     * @param tipo tipo de vehículo (CARRO, MOTOCICLETA o CAMIONETA)
-     * @return arreglo con los nombres de archivo de las fotos
-     * @throws IllegalArgumentException si el tipo no tiene fotos de demostración
-     */
-    public static String[] fotosDe(TipoVehiculo tipo) {
-        if (tipo == TipoVehiculo.CARRO) {
-            return FOTOS_CARRO;
-        }
-        if (tipo == TipoVehiculo.MOTOCICLETA) {
-            return FOTOS_MOTO;
-        }
-        if (tipo == TipoVehiculo.CAMIONETA) {
-            return FOTOS_CAMIONETA;
-        }
-        throw new IllegalArgumentException("Tipo de vehículo sin fotos de demostración: " + tipo);
-    }
 }

@@ -513,7 +513,7 @@ public class GeneradorDatosDemo {
 				propia.getVehiculos().add(vehiculo);
 			}
 			vehiculo.setClientes(new ArrayList<Cliente>());
-			vehiculo.setUrl_foto(new ArrayList<String>(fotos.siguientes(tipo, FOTOS_POR_VEHICULO)));
+			vehiculo.setUrl_foto(new ArrayList<String>(fotos.siguientes(demo.marca, demo.nombre, tipo, FOTOS_POR_VEHICULO)));
 			vehiculo.setFecha_publicacion(hace((int) (random.nextDouble() * MESES * 30.4)));
 			double r = random.nextDouble();
 			vehiculo.setNumero_busquedas((int) (3 + 1500 * r * r * r * r));

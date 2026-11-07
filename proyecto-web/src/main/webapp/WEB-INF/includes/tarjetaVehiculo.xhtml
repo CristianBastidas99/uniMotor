@@ -8,7 +8,7 @@
 		<f:param name="id" value="#{vehiculo.codigo_vehiculo}"/>
 		<span class="foto-vehiculo">
 			<!-- img HTML y no h:graphicImage: su atributo url ya antepone el context path (quedaba /proyecto-web/proyecto-web/fotos/...) -->
-			<img src="#{empty formatoBean.fotoPrincipal(vehiculo) ? resource['img:sin-foto.svg'] : request.contextPath.concat(formatoBean.fotoPrincipal(vehiculo))}"
+			<img src="#{empty formatoBean.fotoPrincipal(vehiculo) ? resource['img:sin-foto.svg'] : formatoBean.fotoPrincipal(vehiculo)}"
 				alt="#{formatoBean.titulo(vehiculo)}" loading="lazy"
 				onerror="this.onerror=null;this.src='#{resource['img:sin-foto.svg']}';"/>
 			<span class="insignia-condicion #{vehiculo.condicion eq 'NUEVO' ? 'nuevo' : 'usado'}">#{formatoBean.etiqueta(vehiculo.condicion)}</span>

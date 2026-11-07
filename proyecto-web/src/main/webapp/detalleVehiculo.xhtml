@@ -60,7 +60,7 @@
 						<section class="galeria" id="galeria" aria-label="Fotos del vehículo">
 							<div class="galeria-visor">
 								<img id="galeriaPrincipal" alt="#{formatoBean.titulo(detalleVehiculoBean.vehiculo)}"
-									src="#{empty detalleVehiculoBean.fotos ? resource['img:sin-foto.svg'] : request.contextPath.concat('/fotos/').concat(detalleVehiculoBean.fotos.get(0))}"
+									src="#{empty detalleVehiculoBean.fotos ? resource['img:sin-foto.svg'] : formatoBean.src(detalleVehiculoBean.fotos.get(0))}"
 									onerror="this.onerror=null;this.src='#{resource['img:sin-foto.svg']}';"/>
 								<ui:fragment rendered="#{detalleVehiculoBean.fotos.size() gt 1}">
 									<button type="button" class="galeria-flecha anterior" id="galeriaAnterior" aria-label="Foto anterior">
@@ -72,13 +72,25 @@
 									<span class="galeria-contador" id="galeriaContador">1 / #{detalleVehiculoBean.fotos.size()}</span>
 								</ui:fragment>
 							</div>
+							<!-- Crédito de la foto actual (fotos de Wikimedia Commons); el JS lo actualiza al cambiar de foto -->
+							<ui:fragment rendered="#{not empty detalleVehiculoBean.fotos}">
+								<p class="galeria-credito" id="galeriaCredito"
+									style="#{empty detalleVehiculoBean.credito(detalleVehiculoBean.fotos.get(0)) ? 'display:none' : ''}">
+									Foto: <span id="galeriaCreditoAutor">#{detalleVehiculoBean.credito(detalleVehiculoBean.fotos.get(0)).autor}</span>
+									&#183; <span id="galeriaCreditoLicencia">#{detalleVehiculoBean.credito(detalleVehiculoBean.fotos.get(0)).licencia}</span>
+									&#183; <a id="galeriaCreditoPagina" href="#{detalleVehiculoBean.credito(detalleVehiculoBean.fotos.get(0)).pagina}" target="_blank" rel="noopener">Wikimedia Commons</a>
+								</p>
+							</ui:fragment>
 							<ui:fragment rendered="#{detalleVehiculoBean.fotos.size() gt 1}">
 								<div class="miniaturas" id="galeriaMiniaturas">
 									<ui:repeat value="#{detalleVehiculoBean.fotos}" var="foto" varStatus="estado">
 										<button type="button" class="miniatura #{estado.first ? 'activa' : ''}"
-											data-src="#{request.contextPath}/fotos/#{foto}"
+											data-src="#{formatoBean.src(foto)}"
+											data-autor="#{detalleVehiculoBean.credito(foto).autor}"
+											data-licencia="#{detalleVehiculoBean.credito(foto).licencia}"
+											data-pagina="#{detalleVehiculoBean.credito(foto).pagina}"
 											aria-label="Ver foto #{estado.index + 1}">
-											<img src="#{request.contextPath}/fotos/#{foto}" alt="" loading="lazy"
+											<img src="#{formatoBean.src(foto)}" alt="" loading="lazy"
 												onerror="this.onerror=null;this.src='#{resource['img:sin-foto.svg']}';"/>
 										</button>
 									</ui:repeat>
@@ -93,7 +105,20 @@
 	if (!principal || !contenedor) { return; }
 	var miniaturas = contenedor.getElementsByClassName('miniatura');
 	var contador = document.getElementById('galeriaContador');
+	var credito = document.getElementById('galeriaCredito');
+	var creditoAutor = document.getElementById('galeriaCreditoAutor');
+	var creditoLicencia = document.getElementById('galeriaCreditoLicencia');
+	var creditoPagina = document.getElementById('galeriaCreditoPagina');
 	var actual = 0;
+	function actualizarCredito(m) {
+		if (!credito) { return; }
+		var pagina = m.getAttribute('data-pagina');
+		if (!pagina) { credito.style.display = 'none'; return; }
+		if (creditoAutor) { creditoAutor.textContent = m.getAttribute('data-autor') || ''; }
+		if (creditoLicencia) { creditoLicencia.textContent = m.getAttribute('data-licencia') || ''; }
+		if (creditoPagina) { creditoPagina.setAttribute('href', pagina); }
+		credito.style.display = '';
+	}
 	function mostrar(i) {
 		var n = miniaturas.length;
 		actual = (i + n) % n;
@@ -103,6 +128,7 @@
 			miniaturas[k].className = 'miniatura' + (k === actual ? ' activa' : '');
 		}
 		if (contador) { contador.textContent = (actual + 1) + ' / ' + n; }
+		actualizarCredito(miniaturas[actual]);
 		if (miniaturas[actual].scrollIntoView) {
 			try { contenedor.scrollLeft = miniaturas[actual].offsetLeft - 8; } catch (e) { }
 		}

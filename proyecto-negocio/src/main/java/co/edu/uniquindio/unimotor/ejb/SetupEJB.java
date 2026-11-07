@@ -97,7 +97,9 @@ public class SetupEJB {
 		RepartidorFotos repartidor = new RepartidorFotos(random);
 		for (Vehiculo vehiculo : vehiculos) {
 			vehiculo.setUrl_foto(new ArrayList<String>(
-					repartidor.siguientes(vehiculo.getTipo_vehiculo(), GeneradorDatosDemo.FOTOS_POR_VEHICULO)));
+					repartidor.siguientes(vehiculo.getCodigo_modelo().getMarca(),
+						vehiculo.getCodigo_modelo().getNombre(), vehiculo.getTipo_vehiculo(),
+						GeneradorDatosDemo.FOTOS_POR_VEHICULO)));
 		}
 		new GeneradorDatosDemo(entityManager, ciudadEJB, repartidor, random).generar(Arrays.asList(clientes),
 				Arrays.asList(vehiculos), Arrays.asList(modelos), Arrays.asList(caracteristicas),

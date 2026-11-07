@@ -130,7 +130,7 @@
 					<ui:repeat value="#{perfilBean.vehiculosRecientes}" var="v">
 						<li class="perfil-item">
 							<img class="perfil-miniatura"
-								src="#{empty formatoBean.fotoPrincipal(v) ? resource['img:sin-foto.svg'] : request.contextPath.concat(formatoBean.fotoPrincipal(v))}"
+								src="#{empty formatoBean.fotoPrincipal(v) ? resource['img:sin-foto.svg'] : formatoBean.fotoPrincipal(v)}"
 								alt="#{formatoBean.titulo(v)}" loading="lazy"
 								onerror="this.onerror=null;this.src='#{resource['img:sin-foto.svg']}';"/>
 							<div class="perfil-item-cuerpo">

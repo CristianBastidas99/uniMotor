@@ -169,10 +169,12 @@ asadmin create-jvm-options "-Dunimotor.fotos.carpeta=C\:/ruta/fotos"
 asadmin restart-domain domain1
 ```
 
-El WAR lleva las 50 fotos de `fotos-demo/` (30 carros, 12 motos y 8 camionetas, con licencia libre de Wikimedia
-Commons; autores en `fotos-demo/CREDITOS.md`) en `WEB-INF/fotos-demo` y, al arrancar, las copia a esa carpeta sin
-sobrescribir las que ya existan. Se sirven en `http://localhost:8080/proyecto-web/fotos/<nombre>` (por ejemplo
-`carro-01.jpg`).
+Esa carpeta solo guarda las fotos que suben los clientes (`http://localhost:8080/proyecto-web/fotos/<nombre>`).
+Las fotos de los **datos de demostración** no se copian al proyecto: son enlaces a Wikimedia Commons, elegidas por
+modelo (cada vehículo muestra fotos de su mismo modelo) y con licencia libre. Están en `FotosDemo` (`proyecto-negocio`,
+paquete `ejb.demo`); el detalle del vehículo muestra bajo cada una su autor, su licencia y el enlace a su página, y la
+lista completa de créditos está en [`docs/CREDITOS_FOTOS.md`](docs/CREDITOS_FOTOS.md). Para verlas hace falta conexión a
+internet; sin ella se muestra la imagen "sin foto".
 
 ### 5. Compilar y desplegar el EAR
 

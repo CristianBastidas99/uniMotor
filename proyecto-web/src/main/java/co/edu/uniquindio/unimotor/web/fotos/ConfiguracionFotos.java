@@ -149,4 +149,33 @@ public final class ConfiguracionFotos {
 		}
 		throw new IllegalArgumentException("Extensión de imagen no permitida: " + nombreOriginal);
 	}
+
+	/**
+	 * Indica si una foto es un enlace absoluto (http o https) y no un archivo local.
+	 *
+	 * @param foto nombre de archivo o enlace
+	 * @return {@code true} si es un enlace externo
+	 */
+	public static boolean esExterna(String foto) {
+		return foto != null && (foto.startsWith("http://") || foto.startsWith("https://"));
+	}
+
+	/**
+	 * Valor definitivo del atributo {@code src} de una foto.
+	 *
+	 * @param foto        nombre de archivo local o enlace absoluto
+	 * @param contextPath contexto de la aplicación (por ejemplo {@code /unimotor})
+	 * @return el enlace tal cual si es externo; si es local, contexto + {@link #URL_BASE} + nombre;
+	 *         {@code null} si la foto es nula o vacía
+	 */
+	public static String src(String foto, String contextPath) {
+		if (foto == null || foto.isEmpty()) {
+			return null;
+		}
+		if (esExterna(foto)) {
+			return foto;
+		}
+		return (contextPath == null ? "" : contextPath) + URL_BASE + foto;
+	}
+
 }

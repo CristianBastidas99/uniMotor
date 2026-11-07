@@ -191,7 +191,7 @@ public class Vehiculo implements Serializable {
 	 */
 	@ElementCollection
 	@CollectionTable(name = "foto_Vehiculo", joinColumns = @JoinColumn(name = "codigo_vehiculo"))
-	@Column(name = "url_foto")
+	@Column(name = "url_foto", length = 500)
 	private List<String> url_foto;
 
 	/**

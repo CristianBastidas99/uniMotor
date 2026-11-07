@@ -242,7 +242,7 @@
 					<div class="rejilla-fotos">
 						<ui:repeat value="#{publicarVehiculoBean.fotos}" var="foto" varStatus="estado">
 							<div class="miniatura-foto">
-								<img src="#{request.contextPath}/fotos/#{foto}" alt="Foto #{estado.index + 1}" loading="lazy" />
+								<img src="#{formatoBean.src(foto)}" alt="Foto #{estado.index + 1}" loading="lazy" />
 								<span class="insignia-principal" style="#{estado.first ? '' : 'display:none'}">Principal</span>
 								<div class="acciones-miniatura">
 									<p:commandButton icon="fa fa-star" title="Hacer principal"

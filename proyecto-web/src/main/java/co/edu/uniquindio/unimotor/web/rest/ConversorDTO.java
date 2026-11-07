@@ -66,7 +66,7 @@ public final class ConversorDTO {
 		List<String> fotos = new ArrayList<>();
 		for (String f : listaSegura(v.getUrl_foto())) {
 			if (f != null && !f.isEmpty()) {
-				fotos.add(ConfiguracionFotos.URL_BASE + f);
+				fotos.add(ConfiguracionFotos.esExterna(f) ? f : ConfiguracionFotos.URL_BASE + f);
 			}
 		}
 		d.setFotos(fotos);
@@ -213,7 +213,8 @@ public final class ConversorDTO {
 		d.setCiudad(textoCiudad(v.getCodigo_ciudad()));
 		List<String> fotos = listaSegura(v.getUrl_foto());
 		String primera = fotos.isEmpty() ? null : fotos.get(0);
-		d.setFotoPrincipal(primera == null || primera.isEmpty() ? null : ConfiguracionFotos.URL_BASE + primera);
+		d.setFotoPrincipal(primera == null || primera.isEmpty() ? null
+				: (ConfiguracionFotos.esExterna(primera) ? primera : ConfiguracionFotos.URL_BASE + primera));
 		d.setNumeroBusquedas(v.getNumero_busquedas());
 		d.setActivo(v.isActivo());
 		d.setVendido(v.getCodigo_venta() != null);

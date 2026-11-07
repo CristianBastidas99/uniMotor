@@ -22,10 +22,13 @@ import javax.servlet.http.HttpServletRequest;
 
 import co.edu.uniquindio.unimotor.ejb.CalificacionEJB;
 import co.edu.uniquindio.unimotor.ejb.VehiculoEJB;
+import co.edu.uniquindio.unimotor.ejb.demo.FotoDemo;
+import co.edu.uniquindio.unimotor.ejb.demo.FotosDemo;
 import co.edu.uniquindio.unimotor.entidades.Caracteristica;
 import co.edu.uniquindio.unimotor.entidades.Cliente;
 import co.edu.uniquindio.unimotor.entidades.Vehiculo;
 import co.edu.uniquindio.unimotor.excepciones.ElementoNoEncontradoException;
+import co.edu.uniquindio.unimotor.web.fotos.ConfiguracionFotos;
 
 /**
  * Bean de la página de detalle de un vehículo. Carga el vehículo una sola vez (suma una visita)
@@ -330,9 +333,20 @@ public class DetalleVehiculoBean implements Serializable {
 	 */
 	public String getUrlFotoAbsoluta() {
 		if (!fotos.isEmpty()) {
-			return urlBase + "/fotos/" + fotos.get(0);
+			String primera = fotos.get(0);
+			return ConfiguracionFotos.esExterna(primera) ? primera : urlBase + ConfiguracionFotos.URL_BASE + primera;
 		}
 		return origen + rutaSinFoto;
+	}
+
+	/**
+	 * Crédito de una foto de demostración.
+	 *
+	 * @param foto nombre de archivo local o enlace absoluto
+	 * @return datos de crédito (autor, licencia y página), o {@code null} si la foto no tiene crédito
+	 */
+	public FotoDemo credito(String foto) {
+		return FotosDemo.buscarPorUrl(foto);
 	}
 
 	/**

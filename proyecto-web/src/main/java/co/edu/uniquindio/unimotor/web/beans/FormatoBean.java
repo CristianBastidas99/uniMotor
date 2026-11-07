@@ -7,11 +7,13 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Named;
 
 import co.edu.uniquindio.unimotor.entidades.Ciudad;
 import co.edu.uniquindio.unimotor.entidades.Modelo;
 import co.edu.uniquindio.unimotor.entidades.Vehiculo;
+import co.edu.uniquindio.unimotor.web.fotos.ConfiguracionFotos;
 
 /**
  * Utilidades de formato para las páginas: etiquetas de enumerados, precios, kilometraje y
@@ -117,10 +119,10 @@ public class FormatoBean implements Serializable {
 	}
 
 	/**
-	 * Ruta de la foto principal de un vehículo.
+	 * Valor definitivo de {@code src} de la foto principal de un vehículo.
 	 *
 	 * @param v el vehículo (puede ser {@code null})
-	 * @return "/fotos/nombre" relativa a la aplicación, o {@code null} si no tiene fotos
+	 * @return enlace externo tal cual, o contexto + "/fotos/nombre" si es local; {@code null} si no tiene fotos
 	 */
 	public String fotoPrincipal(Vehiculo v) {
 		if (v == null) {
@@ -131,7 +133,7 @@ public class FormatoBean implements Serializable {
 			if (fotos == null || fotos.isEmpty() || fotos.get(0) == null || fotos.get(0).isEmpty()) {
 				return null;
 			}
-			return "/fotos/" + fotos.get(0);
+			return src(fotos.get(0));
 		} catch (RuntimeException e) {
 			return null;
 		}
@@ -153,4 +155,24 @@ public class FormatoBean implements Serializable {
 		}
 		return c.getDepartamento() == null ? c.getNombre() : c.getNombre() + " (" + c.getDepartamento() + ")";
 	}
+
+	/**
+	 * Valor definitivo de {@code src} de una foto, según el contexto de la petición actual.
+	 *
+	 * @param foto nombre de archivo local o enlace absoluto
+	 * @return enlace listo para usar en {@code <img src>}, o {@code null} si la foto es nula o vacía
+	 */
+	public String src(String foto) {
+		String contexto = "";
+		try {
+			FacesContext fc = FacesContext.getCurrentInstance();
+			if (fc != null) {
+				contexto = fc.getExternalContext().getRequestContextPath();
+			}
+		} catch (RuntimeException e) {
+			contexto = "";
+		}
+		return ConfiguracionFotos.src(foto, contexto);
+	}
+
 }

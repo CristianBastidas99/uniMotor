@@ -24,7 +24,7 @@
 				<ui:repeat value="#{comprasBean.compras}" var="fila">
 					<li class="perfil-item compra-item">
 						<img class="perfil-miniatura compra-foto"
-							src="#{empty formatoBean.fotoPrincipal(fila.venta.codigo_vehiculo) ? resource['img:sin-foto.svg'] : request.contextPath.concat(formatoBean.fotoPrincipal(fila.venta.codigo_vehiculo))}"
+							src="#{empty formatoBean.fotoPrincipal(fila.venta.codigo_vehiculo) ? resource['img:sin-foto.svg'] : formatoBean.fotoPrincipal(fila.venta.codigo_vehiculo)}"
 							alt="#{formatoBean.titulo(fila.venta.codigo_vehiculo)}" loading="lazy"
 							onerror="this.onerror=null;this.src='#{resource['img:sin-foto.svg']}';"/>
 						<div class="perfil-item-cuerpo">

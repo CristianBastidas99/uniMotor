@@ -50,7 +50,7 @@
 					emptyMessage="No hay vehículos con este estado.">
 					<p:column headerText="Foto" styleClass="col-foto">
 						<img class="miniatura" alt=""
-							src="#{empty formatoBean.fotoPrincipal(fila.vehiculo) ? resource['img:sin-foto.svg'] : request.contextPath.concat(formatoBean.fotoPrincipal(fila.vehiculo))}"
+							src="#{empty formatoBean.fotoPrincipal(fila.vehiculo) ? resource['img:sin-foto.svg'] : formatoBean.fotoPrincipal(fila.vehiculo)}"
 							loading="lazy" onerror="this.onerror=null;this.src='#{resource['img:sin-foto.svg']}';"/>
 					</p:column>
 					<p:column headerText="Vehículo" sortBy="#{formatoBean.titulo(fila.vehiculo)}">
