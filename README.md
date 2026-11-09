@@ -237,7 +237,10 @@ repositorio local de Maven).
 ## Demo publicada (Render + TomEE)
 
 Además de Payara, el EAR se puede desplegar sin cambios en **Apache TomEE 8 Plume** (Java EE 8 con EclipseLink y
-Mojarra, como Payara, pero con mucha menos memoria). Así se publica la demo gratuita que cualquiera puede abrir en **<https://unimotor.onrender.com/proyecto-web/>**:
+Mojarra, como Payara, pero con mucha menos memoria). Así se publica la demo gratuita que cualquiera puede abrir en **<https://unimotor.onrender.com/proyecto-web/>**.
+
+La guía completa para repetir este despliegue en otro proyecto (servicios gratuitos, paso a paso, plantillas y
+problemas encontrados) está en [`docs/GUIA_DESPLIEGUE_RENDER.md`](docs/GUIA_DESPLIEGUE_RENDER.md). Servicios:
 
 | Pieza | Servicio | Para qué |
 |---|---|---|
@@ -431,6 +434,8 @@ mvn test
   `proyecto-*/target/site/apidocs/index.html`). Para las pruebas: `cd proyecto-pruebas && mvn javadoc:test-javadoc`.
 - Diagrama entidad-relación: [`docs/diagrama-er.png`](docs/diagrama-er.png) (también `.svg`; fuente PlantUML en
   `docs/diagrama-er.puml`, instrucciones para regenerarlo en [`docs/README.md`](docs/README.md)).
+- Guía para publicar gratis una aplicación Java EE 8 en Render (reutilizable en otros proyectos):
+  [`docs/GUIA_DESPLIEGUE_RENDER.md`](docs/GUIA_DESPLIEGUE_RENDER.md).
 
 ## Solución de problemas
 
