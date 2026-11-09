@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- uniMotor: configuracion comun de las aplicaciones web en la imagen Docker (reemplaza conf/context.xml) -->
+<Context>
+    <WatchedResource>WEB-INF/web.xml</WatchedResource>
+    <WatchedResource>WEB-INF/tomcat-web.xml</WatchedResource>
+    <WatchedResource>${catalina.base}/conf/web.xml</WatchedResource>
+
+    <!-- Sin persistencia de sesiones entre reinicios (el disco del contenedor no se conserva) -->
+    <Manager pathname="" />
+
+    <!-- La demo publicada corre en modo Production: la pagina de error no muestra la excepcion.
+         override="false" hace que este valor gane sobre el Development del web.xml (que se usa en local). -->
+    <Parameter name="javax.faces.PROJECT_STAGE" value="Production" override="false" />
+</Context>

@@ -19,6 +19,12 @@
 			<type>jar</type>
 			<scope>provided</scope>
 		</dependency>
+		<!-- Cliente remoto de TomEE: llama al AdministradorEJBRemote por HTTP (http://servidor/tomee/ejb) -->
+		<dependency>
+			<groupId>org.apache.tomee</groupId>
+			<artifactId>openejb-client</artifactId>
+			<version>8.0.16</version>
+		</dependency>
 		<dependency>
 			<groupId>co.edu.uniquindio.unimotor</groupId>
 			<artifactId>proyecto-negocio</artifactId>

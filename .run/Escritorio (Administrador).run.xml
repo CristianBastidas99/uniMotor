@@ -1,6 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Escritorio (Administrador)" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="co.edu.uniquindio.unimotor.escritorio.app.Aplicacion" />
+    <option name="VM_PARAMETERS" value="-Dunimotor.servidor=iiop" />
     <module name="proyecto-escritorio" />
     <option name="INCLUDE_PROVIDED_SCOPE" value="true" />
     <method v="2">

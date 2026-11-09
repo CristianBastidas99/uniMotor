@@ -3,7 +3,11 @@ package co.edu.uniquindio.unimotor.escritorio.modelo;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.URI;
 import java.util.List;
+import java.util.Properties;
+
+import javax.naming.Context;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -22,11 +26,30 @@ import co.edu.uniquindio.unimotor.excepciones.InformacionInvalidaException;
  * EJB remoto {@link AdministradorEJBRemote} y le delega todas las operaciones.
  * La búsqueda se hace en el primer uso; si el servidor no responde se lanza
  * {@link ErrorConexionException} y se reintenta la búsqueda en la siguiente llamada.
+ * <p>
+ * El servidor se elige con la propiedad del sistema {@value #PROPIEDAD_SERVIDOR}:
+ * <ul>
+ * <li>una URL HTTP(S) de TomEE (por defecto {@value #SERVIDOR_POR_DEFECTO}); por ejemplo, para la demo
+ * publicada: {@code -Dunimotor.servidor=https://<servicio>.onrender.com/tomee/ejb};</li>
+ * <li>{@value #SERVIDOR_IIOP} para Payara por IIOP (puerto 3700, propiedades {@code org.omg.CORBA.*}).</li>
+ * </ul>
  */
 public class AdministradorDelegado implements AdministradorEJBRemote {
 
 	/** Mensaje mostrado cuando no se puede hablar con el servidor. */
-	private static final String MENSAJE_CONEXION = "No se pudo conectar con el servidor de uniMotor. Verifique que Payara esté en ejecución.";
+	private static final String MENSAJE_CONEXION = "No se pudo conectar con el servidor de uniMotor. Verifique que el servidor esté en ejecución.";
+
+	/** Propiedad del sistema con la dirección del servidor. */
+	public static final String PROPIEDAD_SERVIDOR = "unimotor.servidor";
+
+	/** Servidor usado si no se indica otro: TomEE local con los EJB remotos por HTTP. */
+	public static final String SERVIDOR_POR_DEFECTO = "http://localhost:8080/tomee/ejb";
+
+	/** Valor de {@value #PROPIEDAD_SERVIDOR} para conectarse a Payara por IIOP. */
+	public static final String SERVIDOR_IIOP = "iiop";
+
+	/** Fábrica de contextos JNDI del cliente remoto de TomEE (OpenEJB). */
+	private static final String FABRICA_TOMEE = "org.apache.openejb.client.RemoteInitialContextFactory";
 
 	/** Tiempo máximo, en milisegundos, para comprobar que el servidor responde. */
 	private static final int TIEMPO_ESPERA_MS = 3000;
@@ -96,23 +119,45 @@ public class AdministradorDelegado implements AdministradorEJBRemote {
 	 */
 	private synchronized AdministradorEJBRemote obtenerEJB() throws NamingException {
 		if (administradorEJB == null) {
-			verificarServidor();
-			administradorEJB = (AdministradorEJBRemote) new InitialContext().lookup(AdministradorEJBRemote.JNDI);
+			String servidor = getServidor();
+			if (SERVIDOR_IIOP.equalsIgnoreCase(servidor)) {
+				verificarServidor(System.getProperty("org.omg.CORBA.ORBInitialHost", "localhost"),
+						Integer.parseInt(System.getProperty("org.omg.CORBA.ORBInitialPort", "3700")));
+				administradorEJB = (AdministradorEJBRemote) new InitialContext().lookup(AdministradorEJBRemote.JNDI);
+			} else {
+				URI uri = URI.create(servidor);
+				int puerto = uri.getPort() != -1 ? uri.getPort() : ("https".equalsIgnoreCase(uri.getScheme()) ? 443 : 80);
+				verificarServidor(uri.getHost(), puerto);
+				Properties propiedades = new Properties();
+				propiedades.put(Context.INITIAL_CONTEXT_FACTORY, FABRICA_TOMEE);
+				propiedades.put(Context.PROVIDER_URL, servidor);
+				// El cliente de TomEE usa el nombre global sin el prefijo "java:"
+				String nombre = AdministradorEJBRemote.JNDI.replaceFirst("^java:", "");
+				administradorEJB = (AdministradorEJBRemote) new InitialContext(propiedades).lookup(nombre);
+			}
 		}
 		return administradorEJB;
 	}
 
 	/**
-	 * Comprueba rápidamente que el puerto IIOP del servidor acepte conexiones. Sin esta comprobación,
-	 * con el servidor apagado la búsqueda JNDI tarda cerca de 100 segundos en fallar.
-	 * Usa las propiedades {@code org.omg.CORBA.ORBInitialHost} y {@code org.omg.CORBA.ORBInitialPort}
-	 * (por defecto localhost y 3700).
+	 * Devuelve la dirección del servidor configurada en {@value #PROPIEDAD_SERVIDOR}.
 	 *
+	 * @return la URL del servidor TomEE, o {@value #SERVIDOR_IIOP} para Payara
+	 */
+	public static String getServidor() {
+		String servidor = System.getProperty(PROPIEDAD_SERVIDOR, SERVIDOR_POR_DEFECTO).trim();
+		return servidor.isEmpty() ? SERVIDOR_POR_DEFECTO : servidor;
+	}
+
+	/**
+	 * Comprueba rápidamente que el servidor acepte conexiones en el puerto indicado. Sin esta comprobación,
+	 * con el servidor apagado la búsqueda JNDI por IIOP tarda cerca de 100 segundos en fallar.
+	 *
+	 * @param host nombre o dirección del servidor
+	 * @param puerto puerto que debe aceptar conexiones
 	 * @throws NamingException si el servidor no responde en el tiempo de espera
 	 */
-	private void verificarServidor() throws NamingException {
-		String host = System.getProperty("org.omg.CORBA.ORBInitialHost", "localhost");
-		int puerto = Integer.parseInt(System.getProperty("org.omg.CORBA.ORBInitialPort", "3700"));
+	private void verificarServidor(String host, int puerto) throws NamingException {
 		try (Socket socket = new Socket()) {
 			socket.connect(new InetSocketAddress(host, puerto), TIEMPO_ESPERA_MS);
 		} catch (IOException e) {

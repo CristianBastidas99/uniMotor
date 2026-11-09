@@ -74,10 +74,8 @@ public class CorreoEJB {
 					"El destinatario no es una dirección de correo válida: " + destinatario);
 		}
 
-		Session sesion;
-		try {
-			sesion = (Session) new InitialContext().lookup(RECURSO_CORREO);
-		} catch (NamingException e) {
+		Session sesion = buscarSesion();
+		if (sesion == null) {
 			LOGGER.info("[Correo simulado] para=" + destinatario + ", asunto=" + asunto + "\n" + mensaje);
 			return false;
 		}
@@ -94,6 +92,27 @@ public class CorreoEJB {
 		} catch (MessagingException e) {
 			throw new EnvioCorreoException("No se pudo enviar el correo a " + destinatario, e);
 		}
+	}
+
+	/**
+	 * Busca la sesión de correo en JNDI probando los nombres de cada servidor: Payara/GlassFish la publica como
+	 * {@value #RECURSO_CORREO} y TomEE como {@code openejb:Resource/mail/unimotor}.
+	 *
+	 * @return la sesión de correo, o {@code null} si el recurso no existe en ningún nombre
+	 */
+	private Session buscarSesion() {
+		String[] nombres = { RECURSO_CORREO, "openejb:Resource/" + RECURSO_CORREO };
+		for (String nombre : nombres) {
+			try {
+				Object recurso = new InitialContext().lookup(nombre);
+				if (recurso instanceof Session) {
+					return (Session) recurso;
+				}
+			} catch (NamingException e) {
+				// se prueba el siguiente nombre
+			}
+		}
+		return null;
 	}
 
 }

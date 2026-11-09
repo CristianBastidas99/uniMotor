@@ -1,0 +1,44 @@
+# ==========================================================
+#  uniMotor - Blueprint de Render (https://render.com/docs/blueprint-spec)
+#
+#  Render lee este archivo al crear el servicio con "New > Blueprint" y, desde
+#  entonces, vuelve a construir y desplegar la imagen en cada push a la rama elegida.
+#  Las variables con "sync: false" se piden en el panel al crear el Blueprint
+#  (no se guardan en el repositorio). Ver la seccion "Demo publicada" del README.
+# ==========================================================
+services:
+  - type: web
+    name: unimotor
+    runtime: docker
+    plan: free
+    region: virginia
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    autoDeploy: true
+    healthCheckPath: /proyecto-web/api/marcas
+    envVars:
+      # Base de datos MySQL (Aiven): datos de la pestana "Connection information" del servicio
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        sync: false
+      - key: DB_NAME
+        value: defaultdb
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_SSL_MODE
+        value: REQUIRED
+      # Correo de prueba (Ethereal): smtp.ethereal.email, puerto 587 con STARTTLS
+      - key: MAIL_HOST
+        value: smtp.ethereal.email
+      - key: MAIL_PORT
+        value: "587"
+      - key: MAIL_USER
+        sync: false
+      - key: MAIL_PASSWORD
+        sync: false
+      # Memoria maxima de Java dentro de los 512 MB del plan gratuito
+      - key: JAVA_XMX
+        value: 320m

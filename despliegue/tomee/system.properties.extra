@@ -1,0 +1,9 @@
+
+# ----------------------------------------------------------
+# uniMotor (agregado por el Dockerfile)
+# EJB remotos por HTTP en /tomee/ejb: los usa la aplicacion de escritorio del administrador.
+tomee.remote.support = true
+# Solo se deserializan las clases de la aplicacion, las de TomEE y las de Java que viajan en las llamadas
+# (DTO, entidades, listas, fechas y excepciones); todo lo demas se rechaza.
+tomee.serialization.class.blacklist = -
+tomee.serialization.class.whitelist = org.apache.openejb.,co.edu.uniquindio.unimotor.,java.lang.,java.util.,java.math.,java.sql.,java.net.URI,[Ljava.lang.,[Ljava.net.URI,[Lco.edu.uniquindio.unimotor.,org.eclipse.persistence.indirection.,org.eclipse.persistence.internal.indirection.

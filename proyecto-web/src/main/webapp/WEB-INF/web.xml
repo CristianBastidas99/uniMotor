@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Descriptor web de uniMotor: JSF 2.3 (Mojarra) + PrimeFaces 8 sobre Payara 5 -->
+<!-- Descriptor web de uniMotor: JSF 2.3 (Mojarra) + PrimeFaces 8 sobre Payara 5 (local) o TomEE 8 Plume (demo publicada) -->
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns="http://xmlns.jcp.org/xml/ns/javaee"
 	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
 http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
 	id="WebApp_ID" version="4.0">
 	<display-name>proyecto-web</display-name>
+
+	<!-- Peticiones y respuestas en UTF-8 en cualquier servidor (Servlet 4.0). En Payara lo hace tambien
+	     glassfish-web.xml; en TomEE/Tomcat los formularios sin AJAX llegarian en ISO-8859-1 sin esto -->
+	<request-character-encoding>UTF-8</request-character-encoding>
+	<response-character-encoding>UTF-8</response-character-encoding>
 
 	<!-- Pagina de inicio -->
 	<welcome-file-list>

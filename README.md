@@ -16,12 +16,14 @@ Además expone una **API REST de solo lectura** en JSON (ver [API REST](#api-res
 3. [Requisitos previos](#requisitos-previos)
 4. [Puesta en marcha](#puesta-en-marcha): base de datos, Payara, correo, carpeta de fotos, compilar y desplegar,
    aplicación de escritorio
-5. [Usuarios de prueba](#usuarios-de-prueba)
-6. [API REST](#api-rest)
-7. [Pruebas](#pruebas)
-8. [Documentación](#documentación)
-9. [Solución de problemas](#solución-de-problemas)
-10. [Estado del proyecto](#estado-del-proyecto)
+5. [Demo publicada (Render + TomEE)](#demo-publicada-render--tomee): imagen Docker, base en Aiven, correo de prueba
+   en Ethereal y despliegue automático desde GitHub
+6. [Usuarios de prueba](#usuarios-de-prueba)
+7. [API REST](#api-rest)
+8. [Pruebas](#pruebas)
+9. [Documentación](#documentación)
+10. [Solución de problemas](#solución-de-problemas)
+11. [Estado del proyecto](#estado-del-proyecto)
 
 ## Arquitectura
 
@@ -205,15 +207,19 @@ semilla fija, son los mismos en cada despliegue. Cada vehículo recibe 5 fotos d
 
 ### 6. Aplicación de escritorio
 
-El escritorio se conecta al servidor por **EJB remoto (IIOP/JNDI)**: `AdministradorDelegado` busca por JNDI
-`AdministradorEJBRemote.JNDI` (`java:global/proyecto-ear/proyecto-negocio/AdministradorEJB!co.edu.uniquindio.unimotor.ejb.AdministradorEJBRemote`)
-con un `InitialContext` sin configuración, usando el cliente de Payara que aporta la dependencia `payara-embedded-all`
-(ámbito `provided`). Por defecto busca el servidor en `localhost:3700`; se puede cambiar con las propiedades
-`-Dorg.omg.CORBA.ORBInitialHost=<host>` y `-Dorg.omg.CORBA.ORBInitialPort=<puerto>`.
+El escritorio se conecta al servidor por **EJB remoto**: `AdministradorDelegado` busca por JNDI
+`AdministradorEJBRemote.JNDI` (`java:global/proyecto-ear/proyecto-negocio/AdministradorEJB!co.edu.uniquindio.unimotor.ejb.AdministradorEJBRemote`).
+El servidor se elige con la propiedad `-Dunimotor.servidor`:
+
+| Valor | Servidor | Cómo se conecta |
+|---|---|---|
+| `iiop` | Payara (esta guía) | IIOP con el cliente de Payara (`payara-embedded-all`, ámbito `provided`), en `localhost:3700`; se cambia con `-Dorg.omg.CORBA.ORBInitialHost` y `-Dorg.omg.CORBA.ORBInitialPort` |
+| una URL HTTP(S) (por defecto `http://localhost:8080/tomee/ejb`) | TomEE (la [demo publicada](#demo-publicada-render--tomee) o `scripts\demo-docker.bat`) | HTTP con el cliente de TomEE (`openejb-client`); para la demo en Render: `https://<servicio>.onrender.com/tomee/ejb` |
 
 Con Payara arriba y el EAR desplegado, ejecute la clase `co.edu.uniquindio.unimotor.escritorio.app.Aplicacion`
 del módulo `proyecto-escritorio` con el JDK 8 con JavaFX. La forma más simple es en IntelliJ: configuración
-**Escritorio (Administrador)** (`.run/`), que incluye las dependencias `provided` necesarias para el cliente remoto.
+**Escritorio (Administrador)** (`.run/`, con `-Dunimotor.servidor=iiop`), que incluye las dependencias `provided`
+necesarias para el cliente remoto. Para TomEE en local está **Escritorio (TomEE local)**.
 Si cambió el negocio, antes ejecute `scripts\desplegar.bat` (el escritorio usa el JAR de `proyecto-negocio` del
 repositorio local de Maven).
 
@@ -221,7 +227,69 @@ repositorio local de Maven).
 - "¿Olvidó su contraseña?" envía una contraseña temporal al correo del administrador.
 - La ventana principal muestra 17 gráficos de estadísticas (pastel, barras, barras apiladas, líneas, áreas,
   dispersión y burbujas) con botones para refrescar los datos y cerrar sesión.
-- Si Payara no está en ejecución, la aplicación lo indica con un mensaje de error en unos 2 segundos.
+- Si el servidor no está en ejecución, la aplicación lo indica con un mensaje de error en unos 2 segundos.
+
+## Demo publicada (Render + TomEE)
+
+Además de Payara, el EAR se puede desplegar sin cambios en **Apache TomEE 8 Plume** (Java EE 8 con EclipseLink y
+Mojarra, como Payara, pero con mucha menos memoria). Así se publica una demo gratuita que cualquiera puede abrir:
+
+| Pieza | Servicio | Para qué |
+|---|---|---|
+| Aplicación (web, API y EJB remoto del escritorio) | [Render](https://render.com) (plan gratuito, Docker) | Se conecta al repositorio de GitHub y despliega solo en cada push |
+| Base de datos MySQL | [Aiven](https://aiven.io) (plan gratuito) | Guarda los datos; `SetupEJB` la llena en el primer arranque |
+| Correo de prueba | [Ethereal](https://ethereal.email) | Recibe los correos de la aplicación y los muestra en su web, sin entregarlos a nadie |
+
+### Archivos
+
+- [`Dockerfile`](Dockerfile): compila el EAR con Maven y JDK 8 (`-pl proyecto-ear -am`) y lo copia a la imagen
+  `tomee:8.0.16-jre8-Temurin-plume`, con el driver de MySQL.
+- [`despliegue/tomee/iniciar.sh`](despliegue/tomee/iniciar.sh): al arrancar el contenedor genera `conf/tomee.xml`
+  con los recursos `jdbc/prueba` y `mail/unimotor` a partir de variables de entorno, escucha en el puerto `PORT` y
+  limita la memoria de Java a los 512 MB del plan gratuito.
+- [`despliegue/tomee/`](despliegue/tomee/): `system.properties.extra` (EJB remotos por HTTP en `/tomee/ejb` para el
+  escritorio, con lista blanca de clases serializables), `context.xml` (JSF en modo `Production` solo en la imagen) y
+  `ROOT/index.html` (redirige `/` a `/proyecto-web/`).
+- [`render.yaml`](render.yaml): Blueprint de Render (servicio web gratuito con Docker, comprobación de salud en
+  `/proyecto-web/api/marcas` y las variables de entorno).
+
+### Variables de entorno
+
+| Variable | Obligatoria | Valor |
+|---|---|---|
+| `DB_HOST`, `DB_USER`, `DB_PASSWORD` | sí | Datos de conexión de MySQL (en Aiven: *Connection information*) |
+| `DB_PORT`, `DB_NAME` | no | Puerto (`3306`) y base de datos (`unimotor`; en Aiven `defaultdb`) |
+| `DB_SSL_MODE` | no | `REQUIRED` por defecto (Aiven exige SSL); `DISABLED` para un MySQL local |
+| `DB_URL` | no | URL JDBC completa; si está, reemplaza a host, puerto, base y SSL |
+| `MAIL_HOST`, `MAIL_PORT` | no | Servidor SMTP (Ethereal: `smtp.ethereal.email`, `587`). **Sin `MAIL_HOST` los correos se simulan** y se escriben en el log |
+| `MAIL_USER`, `MAIL_PASSWORD` | no | Usuario y contraseña SMTP (si hay usuario, se autentica) |
+| `MAIL_FROM`, `MAIL_STARTTLS` | no | Remitente (`no-responder@unimotor.local`) y STARTTLS (`true`) |
+| `PORT`, `JAVA_XMX` | no | Puerto HTTP (8080; Render lo define solo) y heap de Java (`320m`) |
+
+### Publicarla
+
+1. **Aiven:** crear un servicio MySQL con el plan *Free*. Las tablas de colecciones de JPA (`foto_Vehiculo` y
+   `telefono_usuario`) no tienen clave primaria, así que en *Advanced configuration* hay que desactivar
+   `mysql.sql_require_primary_key`.
+2. **Ethereal:** <https://ethereal.email> → *Create Ethereal Account* y anotar usuario y contraseña SMTP.
+3. **Render:** entrar con la cuenta de GitHub → *New* → *Blueprint* → elegir este repositorio. Render lee
+   `render.yaml` y pide las variables marcadas con `sync: false` (base de datos y correo).
+4. Esperar a que termine el primer despliegue (compila el EAR y, como la base está vacía, `SetupEJB` carga las
+   ciudades y los datos de demostración). La demo queda en `https://<servicio>.onrender.com/proyecto-web/`.
+
+Desde entonces, cada push a la rama del servicio vuelve a desplegar la aplicación.
+
+Limitaciones del plan gratuito de Render:
+
+- el servicio se duerme tras 15 minutos sin visitas y la primera visita tarda cerca de un minuto en despertarlo;
+- el disco del contenedor no se conserva: las fotos que suban los usuarios se pierden al redesplegar o reiniciar
+  (las de los datos de demostración son enlaces a Wikimedia Commons y no se pierden);
+- los correos de Ethereal no llegan a nadie: se leen en la bandeja de la cuenta de Ethereal.
+
+### Probarla en local con Docker
+
+`scripts\demo-docker.bat` construye la imagen y la ejecuta con 512 MB contra el MySQL y el Mailpit de Docker (con
+Payara detenido, porque usa el puerto 8080). El escritorio se conecta con la configuración **Escritorio (TomEE local)**.
 
 ## Usuarios de prueba
 
@@ -369,8 +437,10 @@ mvn test
   recréela (solo contiene datos de DBUnit).
 - **Puertos ocupados:** la web usa 8080, la administración 4848, el EJB remoto (IIOP) 3700, MySQL 3306 y Mailpit
   1025 y 8025. Las pruebas usan puertos propios (18080, 18181, 14848...), por lo que no hay que apagar Payara.
-- **El escritorio dice que no puede conectar:** compruebe que Payara está arriba, que el EAR está desplegado
-  (`asadmin list-applications`) y que el puerto 3700 es accesible.
+- **El escritorio dice que no puede conectar:** con Payara, compruebe que está arriba, que el EAR está desplegado
+  (`asadmin list-applications`), que el puerto 3700 es accesible y que se ejecuta con `-Dunimotor.servidor=iiop`;
+  con TomEE, que `-Dunimotor.servidor` apunte a `http(s)://<servidor>/tomee/ejb`. En Render, si el servicio estaba
+  dormido, abra antes la web para despertarlo.
 - **La web da error 500 o falla la conexión a la base:** revise `asadmin ping-connection-pool mysql_unimotor_pool`
   y que el contenedor `unimotor-mysql` esté en marcha (Docker Desktop abierto).
 - **Cambié una entidad y falla el despliegue o faltan columnas:** el servidor no actualiza tablas existentes;
@@ -406,4 +476,6 @@ mvn test
   La demo completa (registro, publicar, buscar, preguntar, responder, favorito, compartir, vender y calificar) se
   probó de punta a punta, y las estadísticas del escritorio reflejan esa actividad. El guion de la sustentación está
   en [`docs/GUION_SUSTENTACION.md`](docs/GUION_SUSTENTACION.md).
+  El EAR también se despliega en TomEE 8 para publicar una demo gratuita en Render (ver
+  [Demo publicada](#demo-publicada-render--tomee)).
   Para probar: `usuario1@servidor.com` / `12345` (los administradores entran solo por la aplicación de escritorio).
