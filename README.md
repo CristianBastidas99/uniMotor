@@ -1,5 +1,9 @@
 # uniMotor
 
+> **Demo en línea:** **<https://unimotor.onrender.com/proyecto-web/>**
+> (servidor gratuito: si nadie la ha abierto en los últimos 15 minutos, la primera carga tarda cerca de un minuto).
+> Para entrar como cliente use uno de los [usuarios de prueba](#usuarios-de-prueba).
+
 Portal de compra y venta de vehículos desarrollado para el curso **Análisis de Algoritmos II** de la
 Universidad del Quindío. Tiene dos clientes sobre la misma capa de negocio:
 
@@ -16,8 +20,8 @@ Además expone una **API REST de solo lectura** en JSON (ver [API REST](#api-res
 3. [Requisitos previos](#requisitos-previos)
 4. [Puesta en marcha](#puesta-en-marcha): base de datos, Payara, correo, carpeta de fotos, compilar y desplegar,
    aplicación de escritorio
-5. [Demo publicada (Render + TomEE)](#demo-publicada-render--tomee): imagen Docker, base en TiDB Cloud, correo de prueba
-   en Ethereal y despliegue automático desde GitHub
+5. [Demo publicada (Render + TomEE)](#demo-publicada-render--tomee): imagen Docker, base en TiDB Cloud y despliegue
+   automático desde GitHub
 6. [Usuarios de prueba](#usuarios-de-prueba)
 7. [API REST](#api-rest)
 8. [Pruebas](#pruebas)
@@ -219,7 +223,8 @@ El servidor se elige con la propiedad `-Dunimotor.servidor`:
 Con Payara arriba y el EAR desplegado, ejecute la clase `co.edu.uniquindio.unimotor.escritorio.app.Aplicacion`
 del módulo `proyecto-escritorio` con el JDK 8 con JavaFX. La forma más simple es en IntelliJ: configuración
 **Escritorio (Administrador)** (`.run/`, con `-Dunimotor.servidor=iiop`), que incluye las dependencias `provided`
-necesarias para el cliente remoto. Para TomEE en local está **Escritorio (TomEE local)**.
+necesarias para el cliente remoto. Para TomEE en local está **Escritorio (TomEE local)** y para la [demo publicada](#demo-publicada-render--tomee),
+**Escritorio (Render)** (`-Dunimotor.servidor=https://unimotor.onrender.com/tomee/ejb`).
 Si cambió el negocio, antes ejecute `scripts\desplegar.bat` (el escritorio usa el JAR de `proyecto-negocio` del
 repositorio local de Maven).
 
@@ -232,13 +237,12 @@ repositorio local de Maven).
 ## Demo publicada (Render + TomEE)
 
 Además de Payara, el EAR se puede desplegar sin cambios en **Apache TomEE 8 Plume** (Java EE 8 con EclipseLink y
-Mojarra, como Payara, pero con mucha menos memoria). Así se publica una demo gratuita que cualquiera puede abrir:
+Mojarra, como Payara, pero con mucha menos memoria). Así se publica la demo gratuita que cualquiera puede abrir en **<https://unimotor.onrender.com/proyecto-web/>**:
 
 | Pieza | Servicio | Para qué |
 |---|---|---|
 | Aplicación (web, API y EJB remoto del escritorio) | [Render](https://render.com) (plan gratuito, Docker) | Se conecta al repositorio de GitHub y despliega solo en cada push |
 | Base de datos compatible con MySQL | [TiDB Cloud](https://tidbcloud.com) (plan *Starter*, gratuito y sin tarjeta) | Guarda los datos; `SetupEJB` la llena en el primer arranque |
-| Correo de prueba | [Ethereal](https://ethereal.email) | Recibe los correos de la aplicación y los muestra en su web, sin entregarlos a nadie |
 
 ### Archivos
 
@@ -261,7 +265,7 @@ Mojarra, como Payara, pero con mucha menos memoria). Así se publica una demo gr
 | `DB_PORT`, `DB_NAME` | no | Puerto (`3306`; en TiDB Cloud `4000`) y base de datos (`unimotor`) |
 | `DB_SSL_MODE` | no | `REQUIRED` por defecto (TiDB Cloud exige SSL); `DISABLED` para un MySQL local |
 | `DB_URL` | no | URL JDBC completa; si está, reemplaza a host, puerto, base y SSL |
-| `MAIL_HOST`, `MAIL_PORT` | no | Servidor SMTP (Ethereal: `smtp.ethereal.email`, `587`). **Sin `MAIL_HOST` los correos se simulan** y se escriben en el log |
+| `MAIL_HOST`, `MAIL_PORT` | no | Servidor SMTP (puerto `587` por defecto). **Sin `MAIL_HOST` los correos se simulan** y se escriben en el log (así está la demo en Render) |
 | `MAIL_USER`, `MAIL_PASSWORD` | no | Usuario y contraseña SMTP (si hay usuario, se autentica) |
 | `MAIL_FROM`, `MAIL_STARTTLS` | no | Remitente (`no-responder@unimotor.local`) y STARTTLS (`true`) |
 | `PORT`, `JAVA_XMX` | no | Puerto HTTP (8080; Render lo define solo) y heap de Java (`320m`) |
@@ -272,10 +276,9 @@ Mojarra, como Payara, pero con mucha menos memoria). Así se publica una demo gr
 1. **TiDB Cloud:** entrar con GitHub → *Create Resource* → plan *Starter*, AWS `us-east-1` (la región de Render)
    y límite de gasto 0. En *Connect* (*Public*, *General*) generar la contraseña y anotar host, puerto y usuario;
    en *SQL Editor* ejecutar `CREATE DATABASE unimotor;`. EclipseLink crea las tablas en el primer arranque.
-2. **Ethereal:** <https://ethereal.email> → *Create Ethereal Account* y anotar usuario y contraseña SMTP.
-3. **Render:** entrar con la cuenta de GitHub → *New* → *Blueprint* → elegir este repositorio. Render lee
-   `render.yaml` y pide las variables marcadas con `sync: false` (base de datos y correo).
-4. Esperar a que termine el primer despliegue (compila el EAR y, como la base está vacía, `SetupEJB` carga las
+2. **Render:** entrar con la cuenta de GitHub → *New* → *Blueprint* → elegir este repositorio. Render lee
+   `render.yaml` y pide las variables marcadas con `sync: false` (`DB_HOST`, `DB_USER` y `DB_PASSWORD`).
+3. Esperar a que termine el primer despliegue (compila el EAR y, como la base está vacía, `SetupEJB` carga las
    ciudades y los datos de demostración). La demo queda en `https://<servicio>.onrender.com/proyecto-web/`.
 
 Desde entonces, cada push a la rama del servicio vuelve a desplegar la aplicación.
@@ -285,7 +288,9 @@ Limitaciones del plan gratuito de Render:
 - el servicio se duerme tras 15 minutos sin visitas y la primera visita tarda cerca de un minuto en despertarlo;
 - el disco del contenedor no se conserva: las fotos que suban los usuarios se pierden al redesplegar o reiniciar
   (las de los datos de demostración son enlaces a Wikimedia Commons y no se pierden);
-- los correos de Ethereal no llegan a nadie: se leen en la bandeja de la cuenta de Ethereal.
+- bloquea el SMTP saliente (puertos 25, 465 y 587), así que la demo no define `MAIL_HOST` y los correos (pregunta,
+  compra, recuperación de contraseña) se simulan: la acción se completa y el correo solo se escribe en el log. Con un
+  servidor propio o un plan de pago basta con definir las variables `MAIL_*`.
 
 ### Probarla en local con Docker
 

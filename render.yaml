@@ -31,15 +31,9 @@ services:
         sync: false
       - key: DB_SSL_MODE
         value: REQUIRED
-      # Correo de prueba (Ethereal): smtp.ethereal.email, puerto 587 con STARTTLS
-      - key: MAIL_HOST
-        value: smtp.ethereal.email
-      - key: MAIL_PORT
-        value: "587"
-      - key: MAIL_USER
-        sync: false
-      - key: MAIL_PASSWORD
-        sync: false
+      # Sin correo: el plan gratuito de Render bloquea el SMTP saliente (puertos 25, 465 y 587).
+      # Sin MAIL_HOST la aplicacion simula los correos (los escribe en el log). Con un plan de pago
+      # o un SMTP en otro puerto, agregar MAIL_HOST, MAIL_PORT, MAIL_USER y MAIL_PASSWORD.
       # Memoria maxima de Java dentro de los 512 MB del plan gratuito
       - key: JAVA_XMX
         value: 320m
