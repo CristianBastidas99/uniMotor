@@ -1,5 +1,11 @@
 # uniMotor
 
+> **Demo en línea:** **<https://unimotor.onrender.com/proyecto-web/>**
+> (servidor gratuito: si nadie la ha abierto en los últimos 15 minutos, la primera carga tarda cerca de un minuto).
+> Para entrar como cliente use uno de los [usuarios de prueba](#usuarios-de-prueba). La demo corre en Apache TomEE 8
+> con Docker; sus archivos de despliegue y la guía para publicarla están en la rama
+> [`despliegue-render`](https://github.com/CristianBastidas99/uniMotor/tree/despliegue-render).
+
 Portal de compra y venta de vehículos desarrollado para el curso **Análisis de Algoritmos II** de la
 Universidad del Quindío. Tiene dos clientes sobre la misma capa de negocio:
 
