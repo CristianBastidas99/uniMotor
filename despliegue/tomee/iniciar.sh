@@ -14,7 +14,9 @@
 #    Correo (opcional; sin MAIL_HOST los correos se simulan y se escriben en el log):
 #      MAIL_HOST, MAIL_PORT (587), MAIL_USER, MAIL_PASSWORD,
 #      MAIL_FROM (no-responder@unimotor.local), MAIL_STARTTLS (true)
-#    Servidor: PORT (8080; Render la define sola), JAVA_XMX (320m)
+#    Servidor: PORT (8080; Render la define sola), JAVA_XMX (320m),
+#      TX_TIMEOUT (1 hour: tiempo maximo de una transaccion; el de TomEE es 10 minutes
+#      y la primera carga de datos de demostracion contra una base lejana puede pasarlo)
 # ==========================================================
 set -e
 
@@ -36,6 +38,9 @@ fi
 	echo '<?xml version="1.0" encoding="UTF-8"?>'
 	echo '<!-- Generado por iniciar.sh al arrancar el contenedor: no editar -->'
 	echo '<tomee>'
+	echo '  <TransactionManager id="TransactionManager" type="TransactionManager">'
+	echo "    defaultTransactionTimeout = ${TX_TIMEOUT:-1 hour}"
+	echo '  </TransactionManager>'
 	echo '  <Resource id="jdbc/prueba" type="javax.sql.DataSource">'
 	echo "    JdbcDriver = com.mysql.cj.jdbc.Driver"
 	echo "    JdbcUrl = $(xml "$DB_URL")"

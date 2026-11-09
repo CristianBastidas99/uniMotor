@@ -16,7 +16,7 @@ Además expone una **API REST de solo lectura** en JSON (ver [API REST](#api-res
 3. [Requisitos previos](#requisitos-previos)
 4. [Puesta en marcha](#puesta-en-marcha): base de datos, Payara, correo, carpeta de fotos, compilar y desplegar,
    aplicación de escritorio
-5. [Demo publicada (Render + TomEE)](#demo-publicada-render--tomee): imagen Docker, base en Aiven, correo de prueba
+5. [Demo publicada (Render + TomEE)](#demo-publicada-render--tomee): imagen Docker, base en TiDB Cloud, correo de prueba
    en Ethereal y despliegue automático desde GitHub
 6. [Usuarios de prueba](#usuarios-de-prueba)
 7. [API REST](#api-rest)
@@ -237,7 +237,7 @@ Mojarra, como Payara, pero con mucha menos memoria). Así se publica una demo gr
 | Pieza | Servicio | Para qué |
 |---|---|---|
 | Aplicación (web, API y EJB remoto del escritorio) | [Render](https://render.com) (plan gratuito, Docker) | Se conecta al repositorio de GitHub y despliega solo en cada push |
-| Base de datos MySQL | [Aiven](https://aiven.io) (plan gratuito) | Guarda los datos; `SetupEJB` la llena en el primer arranque |
+| Base de datos compatible con MySQL | [TiDB Cloud](https://tidbcloud.com) (plan *Starter*, gratuito y sin tarjeta) | Guarda los datos; `SetupEJB` la llena en el primer arranque |
 | Correo de prueba | [Ethereal](https://ethereal.email) | Recibe los correos de la aplicación y los muestra en su web, sin entregarlos a nadie |
 
 ### Archivos
@@ -257,20 +257,21 @@ Mojarra, como Payara, pero con mucha menos memoria). Así se publica una demo gr
 
 | Variable | Obligatoria | Valor |
 |---|---|---|
-| `DB_HOST`, `DB_USER`, `DB_PASSWORD` | sí | Datos de conexión de MySQL (en Aiven: *Connection information*) |
-| `DB_PORT`, `DB_NAME` | no | Puerto (`3306`) y base de datos (`unimotor`; en Aiven `defaultdb`) |
-| `DB_SSL_MODE` | no | `REQUIRED` por defecto (Aiven exige SSL); `DISABLED` para un MySQL local |
+| `DB_HOST`, `DB_USER`, `DB_PASSWORD` | sí | Datos de conexión de MySQL (en TiDB Cloud: botón *Connect*; el usuario lleva prefijo, p. ej. `xxxx.root`) |
+| `DB_PORT`, `DB_NAME` | no | Puerto (`3306`; en TiDB Cloud `4000`) y base de datos (`unimotor`) |
+| `DB_SSL_MODE` | no | `REQUIRED` por defecto (TiDB Cloud exige SSL); `DISABLED` para un MySQL local |
 | `DB_URL` | no | URL JDBC completa; si está, reemplaza a host, puerto, base y SSL |
 | `MAIL_HOST`, `MAIL_PORT` | no | Servidor SMTP (Ethereal: `smtp.ethereal.email`, `587`). **Sin `MAIL_HOST` los correos se simulan** y se escriben en el log |
 | `MAIL_USER`, `MAIL_PASSWORD` | no | Usuario y contraseña SMTP (si hay usuario, se autentica) |
 | `MAIL_FROM`, `MAIL_STARTTLS` | no | Remitente (`no-responder@unimotor.local`) y STARTTLS (`true`) |
 | `PORT`, `JAVA_XMX` | no | Puerto HTTP (8080; Render lo define solo) y heap de Java (`320m`) |
+| `TX_TIMEOUT` | no | Tiempo máximo de una transacción (`1 hour`; el de TomEE es `10 minutes`). La primera carga de datos de demostración contra una base lejana puede tardar más de 10 minutos |
 
 ### Publicarla
 
-1. **Aiven:** crear un servicio MySQL con el plan *Free*. Las tablas de colecciones de JPA (`foto_Vehiculo` y
-   `telefono_usuario`) no tienen clave primaria, así que en *Advanced configuration* hay que desactivar
-   `mysql.sql_require_primary_key`.
+1. **TiDB Cloud:** entrar con GitHub → *Create Resource* → plan *Starter*, AWS `us-east-1` (la región de Render)
+   y límite de gasto 0. En *Connect* (*Public*, *General*) generar la contraseña y anotar host, puerto y usuario;
+   en *SQL Editor* ejecutar `CREATE DATABASE unimotor;`. EclipseLink crea las tablas en el primer arranque.
 2. **Ethereal:** <https://ethereal.email> → *Create Ethereal Account* y anotar usuario y contraseña SMTP.
 3. **Render:** entrar con la cuenta de GitHub → *New* → *Blueprint* → elegir este repositorio. Render lee
    `render.yaml` y pide las variables marcadas con `sync: false` (base de datos y correo).

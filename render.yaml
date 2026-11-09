@@ -17,13 +17,14 @@ services:
     autoDeploy: true
     healthCheckPath: /proyecto-web/api/marcas
     envVars:
-      # Base de datos MySQL (Aiven): datos de la pestana "Connection information" del servicio
+      # Base de datos MySQL (TiDB Cloud Starter, compatible con MySQL): datos del boton
+      # "Connect" de la instancia (Public / General). El usuario lleva el prefijo, p. ej. "xxxx.root"
       - key: DB_HOST
         sync: false
       - key: DB_PORT
-        sync: false
+        value: "4000"
       - key: DB_NAME
-        value: defaultdb
+        value: unimotor
       - key: DB_USER
         sync: false
       - key: DB_PASSWORD
